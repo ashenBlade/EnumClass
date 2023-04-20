@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EEBC4D9F-FCE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Generator", "src\EnumClass.Generator\EnumClass.Generator.csproj", "{2B03E852-A29E-4881-A013-BDC01C5021FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Attributes", "src\EnumClass.Attributes\EnumClass.Attributes.csproj", "{B231FC95-BBE9-487B-9DCD-50078DE2E938}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Example", "src\EnumClass.Example\EnumClass.Example.csproj", "{52224B76-4942-4D29-9915-187A889DD28C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,13 +22,13 @@ Global
 		{2B03E852-A29E-4881-A013-BDC01C5021FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B03E852-A29E-4881-A013-BDC01C5021FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B03E852-A29E-4881-A013-BDC01C5021FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B231FC95-BBE9-487B-9DCD-50078DE2E938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B231FC95-BBE9-487B-9DCD-50078DE2E938}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B231FC95-BBE9-487B-9DCD-50078DE2E938}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B231FC95-BBE9-487B-9DCD-50078DE2E938}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52224B76-4942-4D29-9915-187A889DD28C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52224B76-4942-4D29-9915-187A889DD28C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52224B76-4942-4D29-9915-187A889DD28C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52224B76-4942-4D29-9915-187A889DD28C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2B03E852-A29E-4881-A013-BDC01C5021FF} = {EEBC4D9F-FCE9-4F37-8C48-7D9512302129}
-		{B231FC95-BBE9-487B-9DCD-50078DE2E938} = {EEBC4D9F-FCE9-4F37-8C48-7D9512302129}
+		{52224B76-4942-4D29-9915-187A889DD28C} = {EEBC4D9F-FCE9-4F37-8C48-7D9512302129}
 	EndGlobalSection
 EndGlobal
