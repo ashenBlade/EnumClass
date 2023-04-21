@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis;
 
-namespace EnumClass.Generator;
+namespace EnumClass.Generator.Generators;
 
 [Generator]
 public class EnumClassAttributeIncrementalGenerator: IIncrementalGenerator
