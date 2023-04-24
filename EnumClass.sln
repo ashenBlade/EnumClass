@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EEBC4D9F-FCE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Generator", "src\EnumClass.Generator\EnumClass.Generator.csproj", "{2B03E852-A29E-4881-A013-BDC01C5021FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Example", "src\EnumClass.Example\EnumClass.Example.csproj", "{52224B76-4942-4D29-9915-187A889DD28C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClassExample", "src\EnumClassExample\EnumClassExample.csproj", "{52224B76-4942-4D29-9915-187A889DD28C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

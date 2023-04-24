@@ -6,8 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EnumClass.Generator\EnumClass.Generator.csproj"
-                          OutputItemType="Analyzer"/>
-<!--                          ReferenceOutputAssembly="false"-->
+        <ProjectReference Include="..\EnumClass.Generator\EnumClass.Generator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     </ItemGroup>
 </Project>
