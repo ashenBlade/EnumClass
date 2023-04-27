@@ -9,6 +9,6 @@ public enum PetKind
     [Display(Name = "Sample dog")]
     Dog,
     Cat,
-    Parrot,
+    Parrot = 50,
     Hamster,
 }

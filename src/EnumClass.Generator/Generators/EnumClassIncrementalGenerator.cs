@@ -183,7 +183,6 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                           .FirstOrDefault(a => SymbolEqualityComparer.IncludeNullability.Equals(a.AttributeClass, displayAttributeSymbol)) is {} attribute)
                 {
                     // Try find name from Property arguments
-                    // attribute.
                     name = attribute.NamedArguments
                                     .Where(argument => argument is
                                                        {
