@@ -128,8 +128,8 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 builder.AppendLine("    {");
                 
                 // Override required abstract fields
-                builder.AppendFormat("        public override int Value => {0};", enumValue.IntValue);
-                builder.AppendFormat("        public override {0} Enum => {1};", enumInfo.FullyQualifiedEnumName, enumValue.FullyQualifiedName);
+                builder.AppendFormat("        public override int Value => {0};\n", enumValue.IntValue);
+                builder.AppendFormat("        public override {0} Enum => {1};\n", enumInfo.FullyQualifiedEnumName, enumValue.FullyQualifiedName);
                 builder.AppendLine();
                 
                 // Override default ToString() 
@@ -151,26 +151,76 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                                                      CancellationToken ct)
     {
         var enumClassAttributeSymbol = compilation.GetTypeByMetadataName(Constants.EnumClassAttributeFullName);
-        var enumInfos = new List<EnumInfo>();
+        var enumInfos = new List<EnumInfo>(enums.Length);
         if (enumClassAttributeSymbol is null)
         {
             return enumInfos;
         }
 
+        var displayAttributeSymbol = compilation.GetTypeByMetadataName(Constants.DisplayAttributeFullName);
+
         foreach (var syntax in enums)
         {
             ct.ThrowIfCancellationRequested();
             var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
-            if (ModelExtensions.GetDeclaredSymbol(semanticModel, syntax) is not INamedTypeSymbol enumSymbol)
+            if (semanticModel.GetDeclaredSymbol(syntax) is not { } enumSymbol)
             {
                 continue;
             }
 
             var @namespace = enumSymbol.ContainingNamespace.Name;
-            var memberNames = enumSymbol.GetMembers()
-                                        .Where(member => member is IFieldSymbol {ConstantValue: not null})
-                                        .Select((e, i) => new EnumValueInfo(e.Name, enumSymbol.Name, @namespace, i + 1))
-                                        .ToArray();
+            List<EnumValueInfo> list = new List<EnumValueInfo>();
+            var currentOrdinalNumber = 0;
+            foreach (var symbol in enumSymbol.GetMembers()
+                                             .OfType<IFieldSymbol>()
+                                             .Where(m => m.ConstantValue is not null))
+            {
+                string? name = null;
+                
+                // Try get name from [Display]
+                if (displayAttributeSymbol is not null && 
+                    symbol.GetAttributes()
+                          .FirstOrDefault(a => SymbolEqualityComparer.IncludeNullability.Equals(a.AttributeClass, displayAttributeSymbol)) is {} attribute)
+                {
+                    // Try find name from Property arguments
+                    // attribute.
+                    name = attribute.NamedArguments
+                                    .Where(argument => argument is
+                                                       {
+                                                           Key: "Name",
+                                                           Value:
+                                                           {
+                                                               Kind: TypedConstantKind.Primitive,
+                                                               IsNull: false,
+                                                           }
+                                                       })
+                                    .Select(a => a.Value.Value!.ToString())
+                                    .FirstOrDefault();
+                }
+
+                var value = currentOrdinalNumber;
+                
+                // Try determine next ordinal value from assigning operators
+                if (symbol.HasConstantValue && 
+                    symbol.ConstantValue is {} constantValue && 
+                    int.TryParse(constantValue.ToString(), out var parsed))
+                {
+                    value = parsed;
+                }
+                
+                var valueInfo = new EnumValueInfo(symbol.Name, enumSymbol.ToDisplayString(), value, name ?? symbol.Name);
+                currentOrdinalNumber = value + 1;
+                list.Add(valueInfo);
+            }
+            // foreach (var e in enumSymbol.GetMembers()
+            //                             .Where(member => member is IFieldSymbol {ConstantValue: not null}))
+            // {
+            //     
+            //     list.Add(new EnumValueInfo(e.Name, enumSymbol.Name, @namespace));
+            // }
+
+            var memberNames = list
+               .ToArray();
 
             enumInfos.Add(new EnumInfo(enumSymbol.Name, @namespace, memberNames));
         }

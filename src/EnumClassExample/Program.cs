@@ -1,8 +1,8 @@
 using System;
 using EnumClassExample;
 
-PrintEnumClassComparison("Cat", EnumClassExample.EnumClass.PetKind.Cat, PetKind.Cat);
 PrintEnumClassComparison("Dog", EnumClassExample.EnumClass.PetKind.Dog, PetKind.Dog);
+PrintEnumClassComparison("Cat", EnumClassExample.EnumClass.PetKind.Cat, PetKind.Cat);
 PrintEnumClassComparison("Parrot", EnumClassExample.EnumClass.PetKind.Parrot, PetKind.Parrot);
 PrintEnumClassComparison("Hamser", EnumClassExample.EnumClass.PetKind.Hamster, PetKind.Hamster);
 
