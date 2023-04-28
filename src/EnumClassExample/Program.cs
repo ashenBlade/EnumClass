@@ -23,7 +23,7 @@ void PrintEnumClassComparison(string representationName, PetKind enumClassKind, 
     
     var result = enumClassKind.Switch(2, 2,
         static (dog,     i, j) => i + j * 2,
-        static (cat,     i, j) => i - j,
+        static (cat,     i, j) => cat.CalculateValue(i, j),
         static (parrot,  i, j) => i * j + 1,
         static (hamster, i, j) => i + j);
     Console.WriteLine($"It says that 2+2 is {result}");
@@ -34,5 +34,7 @@ void PrintEnumClassComparison(string representationName, PetKind enumClassKind, 
         parrot => 56,
         hamster => 78);
     Console.WriteLine($"It's value is \"{sampleValue}\"");
+
+    Console.WriteLine($"It's average weight is {enumClassKind.AverageWeight}");
     Console.WriteLine("-----------------------------------");
 }
