@@ -32,10 +32,41 @@ internal class EnumInfo
             return definition;
         }
         
-        var builder = new StringBuilder("void Switch(");
+        var builder = new StringBuilder("void Switch");
+        // Generate action that accepts arguments
+        if (argsCount > 0)
+        {
+            // Generate method generic arguments
+            builder.Append("<");
+            for (int i = 0; i < argsCount; i++)
+            {
+                builder.AppendFormat("T{0}", i);
+                if (i < argsCount - 1)
+                {
+                    builder.Append(", ");
+                }
+            }
+
+            // Generate input parameters
+            builder.Append(">(");
+            for (var i = 0; i < argsCount; i++)
+            {
+                builder.AppendFormat("T{0} arg{0}", i);
+                if (i < argsCount)
+                {
+                    builder.Append(", ");
+                }
+            }
+        }
+        else
+        {
+            builder.Append("(");
+        }
+
+        // Generate switch arguments
         foreach (var (value, i) in Values.Select((info, i) => (info, i)))
         {
-            builder.AppendFormat("{0} {1}", value.GetActionSwitchType(0), value.GetSwitchArgName());
+            builder.AppendFormat("{0} {1}", value.GetActionSwitchType(argsCount), value.GetSwitchArgName());
             if (i < Values.Length - 1)
             {
                 builder.Append(", ");
@@ -43,7 +74,7 @@ internal class EnumInfo
         }
 
         builder.Append(")");
-
+        // return builder.ToString();
         definition = builder.ToString();
         SaveSwitchActionInCache(argsCount, definition);
         return definition;
@@ -65,6 +96,13 @@ internal class EnumInfo
         }
 
         builder.Append(">(");
+        if (argsCount > 0)
+        {
+            for (var i = 0; i < argsCount; i++)
+            {
+                builder.AppendFormat("T{0} arg{0}, ", i);
+            }
+        }
         foreach (var (value, i) in Values.Select((info, i) => (info, i)))
         {
             builder.AppendFormat("{0} {1}", value.GetFuncSwitchType(argsCount, "TResult"), value.GetSwitchArgName());

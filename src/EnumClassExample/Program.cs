@@ -20,26 +20,19 @@ void PrintEnumClassComparison(string representationName, PetKind enumClassKind, 
     Console.WriteLine($"Equals: {enumClassKind.Equals(enumKind)}");
     Console.WriteLine($"==: {enumClassKind == enumKind}");
     Console.WriteLine($"!=: {enumClassKind == enumKind}");
-    Console.Write("It wants to say: ");
-    enumClassKind.Switch(
-        dog =>
-        {
-            Console.WriteLine("I am the dog");    
-        },
-        cat =>
-        {
-            Console.WriteLine("I am the cat");
-        }, 
-        parrot =>
-        {
-            Console.WriteLine("I am the parrot");
-        },
-        hamster =>
-        {
-            Console.WriteLine("I am the hamster");
-        });
     
-    var sampleValue = enumClassKind.Switch(dog => 12, cat => 34, parrot => 56, hamster => 78);
+    var result = enumClassKind.Switch(2, 2,
+        static (dog,     i, j) => i + j * 2,
+        static (cat,     i, j) => i - j,
+        static (parrot,  i, j) => i * j + 1,
+        static (hamster, i, j) => i + j);
+    Console.WriteLine($"It says that 2+2 is {result}");
+    
+    var sampleValue = enumClassKind.Switch(
+        dog => 12,
+        cat => 34,
+        parrot => 56,
+        hamster => 78);
     Console.WriteLine($"It's value is \"{sampleValue}\"");
     Console.WriteLine("-----------------------------------");
 }

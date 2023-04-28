@@ -22,9 +22,9 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
         generatorContext.RegisterSourceOutput(provider, (context, tuple) => GenerateAllEnumClasses(tuple.Left, tuple.Right, context));
     }
 
-    private static void GenerateAllEnumClasses(Compilation compilation,
+    private static void GenerateAllEnumClasses(Compilation                           compilation,
                                                ImmutableArray<EnumDeclarationSyntax> enums,
-                                               SourceProductionContext context)
+                                               SourceProductionContext               context)
     {
         if (enums.IsDefaultOrEmpty)
         {
@@ -32,7 +32,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
         }
 
         var enumInfos = GetTypesToGenerate(compilation, enums, context.CancellationToken);
-        var builder = new StringBuilder();
+        var builder   = new StringBuilder();
         foreach (var enumInfo in enumInfos)
         {
             builder.Clear();
@@ -119,8 +119,12 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             builder.AppendLine();
             
             // Generate switches definitions
-            builder.AppendFormat("    public abstract {0};\n", enumInfo.GenerateSwitchActionDefinition(0));
-            builder.AppendFormat("    public abstract {0};\n", enumInfo.GenerateSwitchFuncDefinition(0));
+            var maxArgsCount = 8;
+            for (var i = 0; i < maxArgsCount; i++)
+            {
+                builder.AppendFormat("    public abstract {0};\n", enumInfo.GenerateSwitchActionDefinition(i));
+                builder.AppendFormat("    public abstract {0};\n", enumInfo.GenerateSwitchFuncDefinition(i));
+            }
             
             foreach (var enumValue in enumInfo.Values)
             {
@@ -143,19 +147,36 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 builder.AppendLine("        }");
                 builder.AppendLine();
                 
-                // Generate zero in args count Action switch
-                builder.AppendFormat("        public override {0}\n", enumInfo.GenerateSwitchActionDefinition(0));
-                builder.AppendLine("        {");
-                builder.AppendFormat("            {0}(this);\n", enumValue.GetSwitchArgName());
-                builder.AppendLine("        }");
-                builder.AppendLine();
+                for (var i = 0; i < maxArgsCount; i++)
+                {
+                    // Action
+                    builder.AppendFormat("        public override {0}\n", enumInfo.GenerateSwitchActionDefinition(i));
+                    builder.AppendLine("        {");
+                    
+                    builder.AppendFormat("            {0}(this", enumValue.GetSwitchArgName());
+                    for (var j = 0; j < i; j++)
+                    {
+                        builder.AppendFormat(", arg{0}", j);
+                    }
+
+                    builder.AppendLine(");");
+                    builder.AppendLine("        }");
+                    builder.AppendLine();
+                    
+                    // Func
+                    builder.AppendFormat("        public override {0}\n", enumInfo.GenerateSwitchFuncDefinition(i));
+                    builder.AppendLine("        {");
+                    builder.AppendFormat("            return {0}(this", enumValue.GetSwitchArgName());
+                    for (var j = 0; j < i; j++)
+                    {
+                        builder.AppendFormat(", arg{0}", j);
+                    }
+
+                    builder.AppendLine(");");
+                    builder.AppendLine("        }");
+                    builder.AppendLine();
+                }
                 
-                // Generate zero in args count Func switch
-                builder.AppendFormat("        public override {0}\n", enumInfo.GenerateSwitchFuncDefinition(0));
-                builder.AppendLine("        {");
-                builder.AppendFormat("            return {0}(this);\n", enumValue.GetSwitchArgName());
-                builder.AppendLine("        }");
-                builder.AppendLine();
 
                 builder.AppendLine("    }");
             }
@@ -165,12 +186,12 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
         }
     }
     
-    private static List<EnumInfo> GetTypesToGenerate(Compilation compilation,
+    private static List<EnumInfo> GetTypesToGenerate(Compilation                           compilation,
                                                      ImmutableArray<EnumDeclarationSyntax> enums,
-                                                     CancellationToken ct)
+                                                     CancellationToken                     ct)
     {
         var enumClassAttributeSymbol = compilation.GetTypeByMetadataName(Constants.EnumClassAttributeFullName);
-        var enumInfos = new List<EnumInfo>(enums.Length);
+        var enumInfos                = new List<EnumInfo>(enums.Length);
         if (enumClassAttributeSymbol is null)
         {
             return enumInfos;
@@ -187,9 +208,9 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 continue;
             }
 
-            var @namespace = enumSymbol.ContainingNamespace.Name;
-            List<EnumValueInfo> list = new List<EnumValueInfo>();
-            var currentOrdinalNumber = 0;
+            var                 @namespace           = enumSymbol.ContainingNamespace.Name;
+            List<EnumValueInfo> list                 = new List<EnumValueInfo>();
+            var                 currentOrdinalNumber = 0;
             foreach (var symbol in enumSymbol.GetMembers()
                                              .OfType<IFieldSymbol>()
                                              .Where(m => m.ConstantValue is not null))
@@ -247,7 +268,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
 
     private static EnumDeclarationSyntax? GetSemanticModelForEnumClass(GeneratorSyntaxContext context, CancellationToken token)
     {
-        var syntax = ( EnumDeclarationSyntax ) context.Node;
+        var syntax         = ( EnumDeclarationSyntax ) context.Node;
         var attributeLists = syntax.AttributeLists;
         for (var i = 0; i < attributeLists.Count; i++)
         {
