@@ -118,6 +118,10 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             builder.AppendLine("    }");
             builder.AppendLine();
             
+            // Generate switches definitions
+            builder.AppendFormat("    public abstract {0};\n", enumInfo.GenerateSwitchActionDefinition(0));
+            builder.AppendFormat("    public abstract {0};\n", enumInfo.GenerateSwitchFuncDefinition(0));
+            
             foreach (var enumValue in enumInfo.Values)
             {
                 // Generate static field for required Enum
@@ -137,7 +141,22 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 builder.AppendLine("        {");
                 builder.AppendFormat("            return {0};\n", enumValue.GetStringRepresentationQuoted());
                 builder.AppendLine("        }");
+                builder.AppendLine();
                 
+                // Generate zero in args count Action switch
+                builder.AppendFormat("        public override {0}\n", enumInfo.GenerateSwitchActionDefinition(0));
+                builder.AppendLine("        {");
+                builder.AppendFormat("            {0}(this);\n", enumValue.GetSwitchArgName());
+                builder.AppendLine("        }");
+                builder.AppendLine();
+                
+                // Generate zero in args count Func switch
+                builder.AppendFormat("        public override {0}\n", enumInfo.GenerateSwitchFuncDefinition(0));
+                builder.AppendLine("        {");
+                builder.AppendFormat("            return {0}(this);\n", enumValue.GetSwitchArgName());
+                builder.AppendLine("        }");
+                builder.AppendLine();
+
                 builder.AppendLine("    }");
             }
 
@@ -211,12 +230,6 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 currentOrdinalNumber = value + 1;
                 list.Add(valueInfo);
             }
-            // foreach (var e in enumSymbol.GetMembers()
-            //                             .Where(member => member is IFieldSymbol {ConstantValue: not null}))
-            // {
-            //     
-            //     list.Add(new EnumValueInfo(e.Name, enumSymbol.Name, @namespace));
-            // }
 
             var memberNames = list
                .ToArray();
