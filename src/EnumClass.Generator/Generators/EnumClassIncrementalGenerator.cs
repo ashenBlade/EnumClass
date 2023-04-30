@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 
 namespace EnumClass.Generator.Generators;
 
@@ -12,19 +13,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext generatorContext)
     {
-        generatorContext.RegisterPostInitializationOutput(context =>
-        {
-            // Attribute made internal to not conflict with another existing attributes
-            var sourceCode = @"using System;
-
-namespace EnumClass.Attributes
-{
-    [AttributeUsage(AttributeTargets.Enum, AllowMultiple = false)]
-    internal class EnumClassAttribute: Attribute
-    { }
-}";
-            context.AddSource("EnumClassAttribute.g.cs", sourceCode);
-        });
+        RegisterAttributesOutput(generatorContext);
         
         IncrementalValuesProvider<EnumDeclarationSyntax> enums = 
             generatorContext
@@ -34,6 +23,36 @@ namespace EnumClass.Attributes
 
         var provider = generatorContext.CompilationProvider.Combine(enums.Collect());
         generatorContext.RegisterSourceOutput(provider, (context, tuple) => GenerateAllEnumClasses(tuple.Left, tuple.Right, context));
+    }
+
+    private static void RegisterAttributesOutput(IncrementalGeneratorInitializationContext generatorContext)
+    {
+        generatorContext.RegisterPostInitializationOutput(context =>
+        {
+            // Attribute made internal to not conflict with another existing attributes
+            var enumClassAttributeCode = @"using System;
+
+namespace EnumClass.Attributes
+{
+    [AttributeUsage(AttributeTargets.Enum, AllowMultiple = false)]
+    internal class EnumClassAttribute: Attribute
+    { }
+}";
+            context.AddSource("EnumClassAttribute.g.cs", SourceText.From(enumClassAttributeCode, Encoding.UTF8));
+
+            var stringRepresentationAttributeCode = @"using System;
+
+namespace EnumClass.Attributes
+{
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    internal class StringValueAttribute: Attribute
+    {
+        internal StringValueAttribute(string value)
+        { }
+    }
+}";
+            context.AddSource("StringValueAttribute.g.cs", SourceText.From(stringRepresentationAttributeCode, Encoding.UTF8));
+        });
     }
 
     private static void GenerateAllEnumClasses(Compilation                           compilation,
@@ -211,7 +230,7 @@ namespace EnumClass.Attributes
             return enumInfos;
         }
 
-        var displayAttributeSymbol = compilation.GetTypeByMetadataName(Constants.DisplayAttributeFullName);
+        var stringRepresentationAttribute = compilation.GetTypeByMetadataName(Constants.StringRepresentationAttributeFullName);
 
         foreach (var syntax in enums)
         {
@@ -221,36 +240,18 @@ namespace EnumClass.Attributes
             {
                 continue;
             }
-
-            var                 @namespace           = enumSymbol.ContainingNamespace.Name;
-            List<EnumValueInfo> list                 = new List<EnumValueInfo>();
-            var                 currentOrdinalNumber = 0;
+            
+            var @namespace           = enumSymbol.ContainingNamespace.Name;
+            var list                 = new List<EnumValueInfo>();
+            var currentOrdinalNumber = 0;
             foreach (var symbol in enumSymbol.GetMembers()
                                              .OfType<IFieldSymbol>()
                                              .Where(m => m.ConstantValue is not null))
             {
-                string? name = null;
+                var name = GetToStringEnumFieldValue(stringRepresentationAttribute, symbol);
                 
-                // Try get name from [Display]
-                if (displayAttributeSymbol is not null && 
-                    symbol.GetAttributes()
-                          .FirstOrDefault(a => SymbolEqualityComparer.IncludeNullability.Equals(a.AttributeClass, displayAttributeSymbol)) is {} attribute)
-                {
-                    // Try find name from Property arguments
-                    name = attribute.NamedArguments
-                                    .Where(argument => argument is
-                                                       {
-                                                           Key: "Name",
-                                                           Value:
-                                                           {
-                                                               Kind: TypedConstantKind.Primitive,
-                                                               IsNull: false,
-                                                           }
-                                                       })
-                                    .Select(a => a.Value.Value!.ToString())
-                                    .FirstOrDefault();
-                }
-
+                
+                
                 var value = currentOrdinalNumber;
                 
                 // Try determine next ordinal value from assigning operators
@@ -261,7 +262,7 @@ namespace EnumClass.Attributes
                     value = parsed;
                 }
                 
-                var valueInfo = new EnumValueInfo(symbol.Name, enumSymbol.ToDisplayString(), value, name ?? symbol.Name);
+                var valueInfo = new EnumValueInfo(symbol.Name, enumSymbol.ToDisplayString(), value, name);
                 currentOrdinalNumber = value + 1;
                 list.Add(valueInfo);
             }
@@ -274,11 +275,45 @@ namespace EnumClass.Attributes
 
         return enumInfos;
     }
-    
+
+    private static string GetToStringEnumFieldValue(INamedTypeSymbol? stringRepresentationAttribute, IFieldSymbol symbol)
+    {
+        bool IsStringValueAttribute(AttributeData attributeData)
+        {
+            return SymbolEqualityComparer.Default.Equals(attributeData.AttributeClass, stringRepresentationAttribute);
+        }
+
+        if (stringRepresentationAttribute is not null && 
+            symbol.GetAttributes() is {Length: > 0} attributes)
+        {
+            foreach (var attributeData in attributes)
+            {
+                if (attributeData.ConstructorArguments is {Length:>0} constructorArguments && 
+                    IsStringValueAttribute(attributeData))
+                {
+                    // It has only one constructor argument
+                    if (constructorArguments.FirstOrDefault(arg => 
+                                arg is
+                                {
+                                    IsNull:false, 
+                                    Kind:TypedConstantKind.Primitive
+                                }) 
+                            is var constant
+                     && constant.Value?.ToString() is {Length: > 0} toStringValue)
+                    {
+                        return toStringValue;
+                    }
+                }
+            }
+        }
+
+        // Fallback value is it's name
+        return symbol.Name;
+    }
+
     private static bool FilterEnumDeclarations(SyntaxNode node, CancellationToken token)
     {
-        var filterEnumDeclarations = node is EnumDeclarationSyntax {AttributeLists.Count: > 0};
-        return filterEnumDeclarations;
+        return node is EnumDeclarationSyntax {AttributeLists.Count: > 0};
     }
 
     private static EnumDeclarationSyntax? GetSemanticModelForEnumClass(GeneratorSyntaxContext context, CancellationToken token)
@@ -293,10 +328,8 @@ namespace EnumClass.Attributes
             for (var j = 0; j < attributes.Count; j++)
             {
                 var attributeSyntax = attributes[j];
-                var info            = ModelExtensions.GetSymbolInfo(context.SemanticModel, attributeSyntax);
-                
-                var symbolInfo      = info.Symbol;
-                if (symbolInfo is not IMethodSymbol attributeSymbol)
+
+                if (context.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
                 {
                     continue;
                 }

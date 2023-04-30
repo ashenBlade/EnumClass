@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using EnumClass.Attributes;
 
 namespace EnumClassExample
@@ -7,7 +6,7 @@ namespace EnumClassExample
     [EnumClass]
     public enum PetKind
     {
-        [Display(Name = "Sample dog")]
+        [StringValue("Sample dog")]
         Dog,
         Cat,
         Parrot = 50,
@@ -36,6 +35,7 @@ namespace EnumClassExample.EnumClass
         public partial class DogEnumValue
         {
             public override double AverageWeight => 20.5;
+
         }
 
         public partial class HamsterEnumValue

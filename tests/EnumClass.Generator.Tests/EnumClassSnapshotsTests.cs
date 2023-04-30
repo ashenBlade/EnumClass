@@ -25,7 +25,7 @@ namespace Sample
         Cat
     }
 }";
-        return SnapshotTestHelper.CompileSourceCode(source);
+        return CompileSourceCode(source);
     }
 
     [Fact]
@@ -42,27 +42,48 @@ namespace Sample
         Dog = 42
     }
 }";
-        return SnapshotTestHelper.CompileSourceCode(source);
+        return CompileSourceCode(source);
     }
     
     [Fact]
     public Task With5EnumValuesAndDisplayAttribute__ShouldGenerateCodeWithChangedToStringRepresentation()
     {
         var source = @"using EnumClass.Attributes;
-using System.ComponentModel.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sample 
 {
     [EnumClass]
     public enum PetKind
     {
-        [Display(Name = ""Sample cat"")]
+        [StringValue(""Sample cat"")]
         Cat,
         Dog,
         Parrot,
-        Hamster
+        [StringValue(""Big Boy"")]
+        Hamster,
+        Crocodile
     }
 }";
-        return SnapshotTestHelper.CompileSourceCode(source);
+        return CompileSourceCode(source);
+    }
+    
+    private static Task CompileSourceCode(string sourceCode)
+    {
+        var syntaxTree          = CSharpSyntaxTree.ParseText(sourceCode);
+        var compilation = CSharpCompilation.Create(
+            assemblyName: "TestAssembly",
+            syntaxTrees: new[] { syntaxTree },
+            references: new[]
+            {
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            });
+
+        var cSharpGeneratorDriver = CSharpGeneratorDriver.Create(new EnumClassIncrementalGenerator());
+
+        var generalDriver = cSharpGeneratorDriver.RunGenerators(compilation);
+        return Verify(generalDriver)
+              .UseDirectory("Snapshots")
+              .UseUniqueDirectory();
     }
 }
