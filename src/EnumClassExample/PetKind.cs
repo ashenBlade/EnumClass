@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using EnumClass.Generated;
+using EnumClass.Attributes;
 
 namespace EnumClassExample
 {
@@ -23,7 +23,7 @@ namespace EnumClassExample.EnumClass
         /// Average weight of pet in kg
         /// </summary>
         public abstract double AverageWeight { get; }
-        public partial class CatEnumValue: PetKind
+        public partial class CatEnumValue
         {
             public override double AverageWeight => 4.5;
 

@@ -12,6 +12,20 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext generatorContext)
     {
+        generatorContext.RegisterPostInitializationOutput(context =>
+        {
+            // Attribute made internal to not conflict with another existing attributes
+            var sourceCode = @"using System;
+
+namespace EnumClass.Attributes
+{
+    [AttributeUsage(AttributeTargets.Enum, AllowMultiple = false)]
+    internal class EnumClassAttribute: Attribute
+    { }
+}";
+            context.AddSource("EnumClassAttribute.g.cs", sourceCode);
+        });
+        
         IncrementalValuesProvider<EnumDeclarationSyntax> enums = 
             generatorContext
                .SyntaxProvider
@@ -263,20 +277,26 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
     
     private static bool FilterEnumDeclarations(SyntaxNode node, CancellationToken token)
     {
-        return node is EnumDeclarationSyntax {AttributeLists.Count: > 0};
+        var filterEnumDeclarations = node is EnumDeclarationSyntax {AttributeLists.Count: > 0};
+        return filterEnumDeclarations;
     }
 
     private static EnumDeclarationSyntax? GetSemanticModelForEnumClass(GeneratorSyntaxContext context, CancellationToken token)
     {
         var syntax         = ( EnumDeclarationSyntax ) context.Node;
         var attributeLists = syntax.AttributeLists;
+        
+        // Flatten all attribute lists
         for (var i = 0; i < attributeLists.Count; i++)
         {
             var attributes = attributeLists[i].Attributes;
             for (var j = 0; j < attributes.Count; j++)
             {
                 var attributeSyntax = attributes[j];
-                if (ModelExtensions.GetSymbolInfo(context.SemanticModel, attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
+                var info            = ModelExtensions.GetSymbolInfo(context.SemanticModel, attributeSyntax);
+                
+                var symbolInfo      = info.Symbol;
+                if (symbolInfo is not IMethodSymbol attributeSymbol)
                 {
                     continue;
                 }
