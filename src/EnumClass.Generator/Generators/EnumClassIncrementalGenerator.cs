@@ -71,15 +71,15 @@ namespace EnumClass.Attributes
             builder.Clear();
             builder.AppendLine("using System;");
             builder.AppendLine();
-            builder.AppendFormat("namespace {0}.EnumClass;", enumInfo.Namespace);
+            builder.AppendFormat("namespace {0}.EnumClass\n{{\n", enumInfo.Namespace);
             builder.AppendLine();
             builder.AppendFormat("public abstract partial class {0}: IEquatable<{0}>, IEquatable<{1}>\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("{");
             builder.AppendLine("    public abstract int Value { get; }");
-            builder.AppendFormat("    public abstract {0} Enum {{ get; }}\n", enumInfo.FullyQualifiedEnumName);
+            builder.AppendFormat("    public abstract global::{0} Enum {{ get; }}\n", enumInfo.FullyQualifiedEnumName);
             
             // Cast to original enum
-            builder.AppendFormat("    public static implicit operator {0}({1} value)\n", enumInfo.FullyQualifiedEnumName, enumInfo.ClassName);
+            builder.AppendFormat("    public static implicit operator global::{0}({1} value)\n", enumInfo.FullyQualifiedEnumName, enumInfo.ClassName);
             builder.AppendLine("    {");
             builder.AppendLine("        return value.Enum;");
             builder.AppendLine("    }");
@@ -111,7 +111,7 @@ namespace EnumClass.Attributes
             builder.AppendFormat("            return this.Equals(({0}) other);\n", enumInfo.ClassName);
             builder.AppendLine("        }");
             // Then check it is raw original enum
-            builder.AppendFormat("        if (other is {0})\n", enumInfo.FullyQualifiedEnumName);
+            builder.AppendFormat("        if (other is global::{0})\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("        {");
             builder.AppendFormat("            return this.Equals(({0}) other);\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("        }");
@@ -170,7 +170,7 @@ namespace EnumClass.Attributes
                 
                 // Override required abstract fields
                 builder.AppendFormat("        public override int Value => {0};\n", enumValue.IntValue);
-                builder.AppendFormat("        public override {0} Enum => {1};\n", enumInfo.FullyQualifiedEnumName, enumValue.FullyQualifiedName);
+                builder.AppendFormat("        public override global::{0} Enum => global::{1};\n", enumInfo.FullyQualifiedEnumName, enumValue.FullyQualifiedName);
                 builder.AppendLine();
                 
                 // Override default ToString() 
@@ -214,6 +214,10 @@ namespace EnumClass.Attributes
                 builder.AppendLine("    }");
             }
 
+            // Class
+            builder.AppendLine("}");
+            
+            // Namespace
             builder.AppendLine("}");
             context.AddSource($"{enumInfo.ClassName}.g.cs", builder.ToString());
         }
