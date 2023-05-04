@@ -1,24 +1,37 @@
 ﻿//HintName: PetKind.g.cs
 using System;
+using System.Runtime.CompilerServices;
 
-namespace Sample.EnumClass;
-public abstract partial class PetKind: IEquatable<PetKind>, IEquatable<Sample.PetKind>
+namespace Sample.EnumClass
 {
-    public abstract int Value { get; }
-    public abstract Sample.PetKind Enum { get; }
-    public static implicit operator Sample.PetKind(PetKind value)
+
+public abstract partial class PetKind: IEquatable<PetKind>, IEquatable<global::Sample.PetKind>
+{
+    protected readonly global::Sample.PetKind _realEnumValue;
+
+    protected PetKind(global::Sample.PetKind enumValue)
     {
-        return value.Enum;
+        this._realEnumValue = enumValue;
+    }
+
+    public static implicit operator global::Sample.PetKind(PetKind value)
+    {
+        return value._realEnumValue;
+    }
+
+    public static explicit operator int(PetKind value)
+    {
+        return (int) value._realEnumValue;
     }
 
     public bool Equals(PetKind other)
     {
-        return !ReferenceEquals(other, null) && other.Enum == this.Enum;
+        return !ReferenceEquals(other, null) && other._realEnumValue == this._realEnumValue;
     }
 
-    public bool Equals(Sample.PetKind other)
+    public bool Equals(global::Sample.PetKind other)
     {
-        return other == this.Enum;
+        return other == this._realEnumValue;
     }
 
     public override bool Equals(object other)
@@ -29,512 +42,508 @@ public abstract partial class PetKind: IEquatable<PetKind>, IEquatable<Sample.Pe
         {
             return this.Equals((PetKind) other);
         }
-        if (other is Sample.PetKind)
+        if (other is global::Sample.PetKind)
         {
-            return this.Equals((Sample.PetKind) other);
+            return this.Equals((global::Sample.PetKind) other);
         }
         return false;
     }
 
-    public static bool operator ==(PetKind left, Sample.PetKind right)
+    public static bool operator ==(PetKind left, global::Sample.PetKind right)
     {
         return left.Equals(right);
     }
 
-    public static bool operator !=(PetKind left, Sample.PetKind right)
+    public static bool operator !=(PetKind left, global::Sample.PetKind right)
     {
         return !left.Equals(right);
     }
 
-    public static bool operator ==(Sample.PetKind left, PetKind right)
+    public static bool operator ==(global::Sample.PetKind left, PetKind right)
     {
         return right.Equals(left);
     }
 
-    public static bool operator !=(Sample.PetKind left, PetKind right)
+    public static bool operator !=(global::Sample.PetKind left, PetKind right)
     {
         return !right.Equals(left);
     }
 
     public override int GetHashCode()
     {
-        return this.Value;
+        return (int) this._realEnumValue;
     }
 
-    public abstract void Switch(Action<CatEnumValue> catEnumValueSwitch, Action<DogEnumValue> dogEnumValueSwitch, Action<ParrotEnumValue> parrotEnumValueSwitch, Action<HamsterEnumValue> hamsterEnumValueSwitch, Action<CrocodileEnumValue> crocodileEnumValueSwitch);
-    public abstract TResult Switch<TResult>(Func<CatEnumValue, TResult> catEnumValueSwitch, Func<DogEnumValue, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, TResult> crocodileEnumValueSwitch);
-    public abstract void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catEnumValueSwitch, Action<DogEnumValue, T0> dogEnumValueSwitch, Action<ParrotEnumValue, T0> parrotEnumValueSwitch, Action<HamsterEnumValue, T0> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0> crocodileEnumValueSwitch);
-    public abstract TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileEnumValueSwitch);
-    public abstract void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catEnumValueSwitch, Action<DogEnumValue, T0, T1> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1> crocodileEnumValueSwitch);
-    public abstract TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileEnumValueSwitch);
-    public abstract void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileEnumValueSwitch);
-    public abstract TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileEnumValueSwitch);
-    public abstract void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileEnumValueSwitch);
-    public abstract TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileEnumValueSwitch);
-    public abstract void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileEnumValueSwitch);
-    public abstract TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileEnumValueSwitch);
-    public abstract void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileEnumValueSwitch);
-    public abstract TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileEnumValueSwitch);
-    public abstract void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileEnumValueSwitch);
-    public abstract TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileEnumValueSwitch);
+    public abstract void Switch(Action<CatEnumValue> catSwitch, Action<DogEnumValue> dogSwitch, Action<ParrotEnumValue> parrotSwitch, Action<HamsterEnumValue> hamsterSwitch, Action<CrocodileEnumValue> crocodileSwitch);
+    public abstract TResult Switch<TResult>(Func<CatEnumValue, TResult> catSwitch, Func<DogEnumValue, TResult> dogSwitch, Func<ParrotEnumValue, TResult> parrotSwitch, Func<HamsterEnumValue, TResult> hamsterSwitch, Func<CrocodileEnumValue, TResult> crocodileSwitch);
+    public abstract void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catSwitch, Action<DogEnumValue, T0> dogSwitch, Action<ParrotEnumValue, T0> parrotSwitch, Action<HamsterEnumValue, T0> hamsterSwitch, Action<CrocodileEnumValue, T0> crocodileSwitch);
+    public abstract TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catSwitch, Func<DogEnumValue, T0, TResult> dogSwitch, Func<ParrotEnumValue, T0, TResult> parrotSwitch, Func<HamsterEnumValue, T0, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileSwitch);
+    public abstract void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catSwitch, Action<DogEnumValue, T0, T1> dogSwitch, Action<ParrotEnumValue, T0, T1> parrotSwitch, Action<HamsterEnumValue, T0, T1> hamsterSwitch, Action<CrocodileEnumValue, T0, T1> crocodileSwitch);
+    public abstract TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catSwitch, Func<DogEnumValue, T0, T1, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileSwitch);
+    public abstract void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catSwitch, Action<DogEnumValue, T0, T1, T2> dogSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileSwitch);
+    public abstract TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileSwitch);
+    public abstract void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileSwitch);
+    public abstract TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileSwitch);
+    public abstract void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileSwitch);
+    public abstract TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileSwitch);
+    public abstract void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileSwitch);
+    public abstract TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileSwitch);
+    public abstract void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileSwitch);
+    public abstract TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileSwitch);
+
     public static readonly CatEnumValue Cat = new CatEnumValue();
     public partial class CatEnumValue: PetKind
     {
-        public override int Value => 0;
-        public override Sample.PetKind Enum => Sample.PetKind.Cat;
-
+        public CatEnumValue(): base(global::Sample.PetKind.Cat) { }
         public override string ToString()
         {
             return "Sample cat";
         }
 
-        public override void Switch(Action<CatEnumValue> catEnumValueSwitch, Action<DogEnumValue> dogEnumValueSwitch, Action<ParrotEnumValue> parrotEnumValueSwitch, Action<HamsterEnumValue> hamsterEnumValueSwitch, Action<CrocodileEnumValue> crocodileEnumValueSwitch)
+        public override void Switch(Action<CatEnumValue> catSwitch, Action<DogEnumValue> dogSwitch, Action<ParrotEnumValue> parrotSwitch, Action<HamsterEnumValue> hamsterSwitch, Action<CrocodileEnumValue> crocodileSwitch)
         {
-            catEnumValueSwitch(this);
+            catSwitch(this);
         }
 
-        public override TResult Switch<TResult>(Func<CatEnumValue, TResult> catEnumValueSwitch, Func<DogEnumValue, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult>(Func<CatEnumValue, TResult> catSwitch, Func<DogEnumValue, TResult> dogSwitch, Func<ParrotEnumValue, TResult> parrotSwitch, Func<HamsterEnumValue, TResult> hamsterSwitch, Func<CrocodileEnumValue, TResult> crocodileSwitch)
         {
-            return catEnumValueSwitch(this);
+            return catSwitch(this);
         }
 
-        public override void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catEnumValueSwitch, Action<DogEnumValue, T0> dogEnumValueSwitch, Action<ParrotEnumValue, T0> parrotEnumValueSwitch, Action<HamsterEnumValue, T0> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0> crocodileEnumValueSwitch)
+        public override void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catSwitch, Action<DogEnumValue, T0> dogSwitch, Action<ParrotEnumValue, T0> parrotSwitch, Action<HamsterEnumValue, T0> hamsterSwitch, Action<CrocodileEnumValue, T0> crocodileSwitch)
         {
-            catEnumValueSwitch(this, arg0);
+            catSwitch(this, arg0);
         }
 
-        public override TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catSwitch, Func<DogEnumValue, T0, TResult> dogSwitch, Func<ParrotEnumValue, T0, TResult> parrotSwitch, Func<HamsterEnumValue, T0, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileSwitch)
         {
-            return catEnumValueSwitch(this, arg0);
+            return catSwitch(this, arg0);
         }
 
-        public override void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catEnumValueSwitch, Action<DogEnumValue, T0, T1> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catSwitch, Action<DogEnumValue, T0, T1> dogSwitch, Action<ParrotEnumValue, T0, T1> parrotSwitch, Action<HamsterEnumValue, T0, T1> hamsterSwitch, Action<CrocodileEnumValue, T0, T1> crocodileSwitch)
         {
-            catEnumValueSwitch(this, arg0, arg1);
+            catSwitch(this, arg0, arg1);
         }
 
-        public override TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catSwitch, Func<DogEnumValue, T0, T1, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileSwitch)
         {
-            return catEnumValueSwitch(this, arg0, arg1);
+            return catSwitch(this, arg0, arg1);
         }
 
-        public override void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catSwitch, Action<DogEnumValue, T0, T1, T2> dogSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileSwitch)
         {
-            catEnumValueSwitch(this, arg0, arg1, arg2);
+            catSwitch(this, arg0, arg1, arg2);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileSwitch)
         {
-            return catEnumValueSwitch(this, arg0, arg1, arg2);
+            return catSwitch(this, arg0, arg1, arg2);
         }
 
-        public override void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileSwitch)
         {
-            catEnumValueSwitch(this, arg0, arg1, arg2, arg3);
+            catSwitch(this, arg0, arg1, arg2, arg3);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileSwitch)
         {
-            return catEnumValueSwitch(this, arg0, arg1, arg2, arg3);
+            return catSwitch(this, arg0, arg1, arg2, arg3);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileSwitch)
         {
-            catEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4);
+            catSwitch(this, arg0, arg1, arg2, arg3, arg4);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileSwitch)
         {
-            return catEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4);
+            return catSwitch(this, arg0, arg1, arg2, arg3, arg4);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileSwitch)
         {
-            catEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
+            catSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileSwitch)
         {
-            return catEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
+            return catSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileSwitch)
         {
-            catEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            catSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileSwitch)
         {
-            return catEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            return catSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         }
 
     }
+
     public static readonly DogEnumValue Dog = new DogEnumValue();
     public partial class DogEnumValue: PetKind
     {
-        public override int Value => 1;
-        public override Sample.PetKind Enum => Sample.PetKind.Dog;
-
+        public DogEnumValue(): base(global::Sample.PetKind.Dog) { }
         public override string ToString()
         {
             return "Dog";
         }
 
-        public override void Switch(Action<CatEnumValue> catEnumValueSwitch, Action<DogEnumValue> dogEnumValueSwitch, Action<ParrotEnumValue> parrotEnumValueSwitch, Action<HamsterEnumValue> hamsterEnumValueSwitch, Action<CrocodileEnumValue> crocodileEnumValueSwitch)
+        public override void Switch(Action<CatEnumValue> catSwitch, Action<DogEnumValue> dogSwitch, Action<ParrotEnumValue> parrotSwitch, Action<HamsterEnumValue> hamsterSwitch, Action<CrocodileEnumValue> crocodileSwitch)
         {
-            dogEnumValueSwitch(this);
+            dogSwitch(this);
         }
 
-        public override TResult Switch<TResult>(Func<CatEnumValue, TResult> catEnumValueSwitch, Func<DogEnumValue, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult>(Func<CatEnumValue, TResult> catSwitch, Func<DogEnumValue, TResult> dogSwitch, Func<ParrotEnumValue, TResult> parrotSwitch, Func<HamsterEnumValue, TResult> hamsterSwitch, Func<CrocodileEnumValue, TResult> crocodileSwitch)
         {
-            return dogEnumValueSwitch(this);
+            return dogSwitch(this);
         }
 
-        public override void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catEnumValueSwitch, Action<DogEnumValue, T0> dogEnumValueSwitch, Action<ParrotEnumValue, T0> parrotEnumValueSwitch, Action<HamsterEnumValue, T0> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0> crocodileEnumValueSwitch)
+        public override void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catSwitch, Action<DogEnumValue, T0> dogSwitch, Action<ParrotEnumValue, T0> parrotSwitch, Action<HamsterEnumValue, T0> hamsterSwitch, Action<CrocodileEnumValue, T0> crocodileSwitch)
         {
-            dogEnumValueSwitch(this, arg0);
+            dogSwitch(this, arg0);
         }
 
-        public override TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catSwitch, Func<DogEnumValue, T0, TResult> dogSwitch, Func<ParrotEnumValue, T0, TResult> parrotSwitch, Func<HamsterEnumValue, T0, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileSwitch)
         {
-            return dogEnumValueSwitch(this, arg0);
+            return dogSwitch(this, arg0);
         }
 
-        public override void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catEnumValueSwitch, Action<DogEnumValue, T0, T1> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catSwitch, Action<DogEnumValue, T0, T1> dogSwitch, Action<ParrotEnumValue, T0, T1> parrotSwitch, Action<HamsterEnumValue, T0, T1> hamsterSwitch, Action<CrocodileEnumValue, T0, T1> crocodileSwitch)
         {
-            dogEnumValueSwitch(this, arg0, arg1);
+            dogSwitch(this, arg0, arg1);
         }
 
-        public override TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catSwitch, Func<DogEnumValue, T0, T1, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileSwitch)
         {
-            return dogEnumValueSwitch(this, arg0, arg1);
+            return dogSwitch(this, arg0, arg1);
         }
 
-        public override void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catSwitch, Action<DogEnumValue, T0, T1, T2> dogSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileSwitch)
         {
-            dogEnumValueSwitch(this, arg0, arg1, arg2);
+            dogSwitch(this, arg0, arg1, arg2);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileSwitch)
         {
-            return dogEnumValueSwitch(this, arg0, arg1, arg2);
+            return dogSwitch(this, arg0, arg1, arg2);
         }
 
-        public override void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileSwitch)
         {
-            dogEnumValueSwitch(this, arg0, arg1, arg2, arg3);
+            dogSwitch(this, arg0, arg1, arg2, arg3);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileSwitch)
         {
-            return dogEnumValueSwitch(this, arg0, arg1, arg2, arg3);
+            return dogSwitch(this, arg0, arg1, arg2, arg3);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileSwitch)
         {
-            dogEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4);
+            dogSwitch(this, arg0, arg1, arg2, arg3, arg4);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileSwitch)
         {
-            return dogEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4);
+            return dogSwitch(this, arg0, arg1, arg2, arg3, arg4);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileSwitch)
         {
-            dogEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
+            dogSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileSwitch)
         {
-            return dogEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
+            return dogSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileSwitch)
         {
-            dogEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            dogSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileSwitch)
         {
-            return dogEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            return dogSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         }
 
     }
+
     public static readonly ParrotEnumValue Parrot = new ParrotEnumValue();
     public partial class ParrotEnumValue: PetKind
     {
-        public override int Value => 2;
-        public override Sample.PetKind Enum => Sample.PetKind.Parrot;
-
+        public ParrotEnumValue(): base(global::Sample.PetKind.Parrot) { }
         public override string ToString()
         {
             return "Parrot";
         }
 
-        public override void Switch(Action<CatEnumValue> catEnumValueSwitch, Action<DogEnumValue> dogEnumValueSwitch, Action<ParrotEnumValue> parrotEnumValueSwitch, Action<HamsterEnumValue> hamsterEnumValueSwitch, Action<CrocodileEnumValue> crocodileEnumValueSwitch)
+        public override void Switch(Action<CatEnumValue> catSwitch, Action<DogEnumValue> dogSwitch, Action<ParrotEnumValue> parrotSwitch, Action<HamsterEnumValue> hamsterSwitch, Action<CrocodileEnumValue> crocodileSwitch)
         {
-            parrotEnumValueSwitch(this);
+            parrotSwitch(this);
         }
 
-        public override TResult Switch<TResult>(Func<CatEnumValue, TResult> catEnumValueSwitch, Func<DogEnumValue, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult>(Func<CatEnumValue, TResult> catSwitch, Func<DogEnumValue, TResult> dogSwitch, Func<ParrotEnumValue, TResult> parrotSwitch, Func<HamsterEnumValue, TResult> hamsterSwitch, Func<CrocodileEnumValue, TResult> crocodileSwitch)
         {
-            return parrotEnumValueSwitch(this);
+            return parrotSwitch(this);
         }
 
-        public override void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catEnumValueSwitch, Action<DogEnumValue, T0> dogEnumValueSwitch, Action<ParrotEnumValue, T0> parrotEnumValueSwitch, Action<HamsterEnumValue, T0> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0> crocodileEnumValueSwitch)
+        public override void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catSwitch, Action<DogEnumValue, T0> dogSwitch, Action<ParrotEnumValue, T0> parrotSwitch, Action<HamsterEnumValue, T0> hamsterSwitch, Action<CrocodileEnumValue, T0> crocodileSwitch)
         {
-            parrotEnumValueSwitch(this, arg0);
+            parrotSwitch(this, arg0);
         }
 
-        public override TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catSwitch, Func<DogEnumValue, T0, TResult> dogSwitch, Func<ParrotEnumValue, T0, TResult> parrotSwitch, Func<HamsterEnumValue, T0, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileSwitch)
         {
-            return parrotEnumValueSwitch(this, arg0);
+            return parrotSwitch(this, arg0);
         }
 
-        public override void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catEnumValueSwitch, Action<DogEnumValue, T0, T1> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catSwitch, Action<DogEnumValue, T0, T1> dogSwitch, Action<ParrotEnumValue, T0, T1> parrotSwitch, Action<HamsterEnumValue, T0, T1> hamsterSwitch, Action<CrocodileEnumValue, T0, T1> crocodileSwitch)
         {
-            parrotEnumValueSwitch(this, arg0, arg1);
+            parrotSwitch(this, arg0, arg1);
         }
 
-        public override TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catSwitch, Func<DogEnumValue, T0, T1, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileSwitch)
         {
-            return parrotEnumValueSwitch(this, arg0, arg1);
+            return parrotSwitch(this, arg0, arg1);
         }
 
-        public override void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catSwitch, Action<DogEnumValue, T0, T1, T2> dogSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileSwitch)
         {
-            parrotEnumValueSwitch(this, arg0, arg1, arg2);
+            parrotSwitch(this, arg0, arg1, arg2);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileSwitch)
         {
-            return parrotEnumValueSwitch(this, arg0, arg1, arg2);
+            return parrotSwitch(this, arg0, arg1, arg2);
         }
 
-        public override void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileSwitch)
         {
-            parrotEnumValueSwitch(this, arg0, arg1, arg2, arg3);
+            parrotSwitch(this, arg0, arg1, arg2, arg3);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileSwitch)
         {
-            return parrotEnumValueSwitch(this, arg0, arg1, arg2, arg3);
+            return parrotSwitch(this, arg0, arg1, arg2, arg3);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileSwitch)
         {
-            parrotEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4);
+            parrotSwitch(this, arg0, arg1, arg2, arg3, arg4);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileSwitch)
         {
-            return parrotEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4);
+            return parrotSwitch(this, arg0, arg1, arg2, arg3, arg4);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileSwitch)
         {
-            parrotEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
+            parrotSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileSwitch)
         {
-            return parrotEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
+            return parrotSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileSwitch)
         {
-            parrotEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            parrotSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileSwitch)
         {
-            return parrotEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            return parrotSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         }
 
     }
+
     public static readonly HamsterEnumValue Hamster = new HamsterEnumValue();
     public partial class HamsterEnumValue: PetKind
     {
-        public override int Value => 3;
-        public override Sample.PetKind Enum => Sample.PetKind.Hamster;
-
+        public HamsterEnumValue(): base(global::Sample.PetKind.Hamster) { }
         public override string ToString()
         {
-            return "Hamster";
+            return "Big Boy";
         }
 
-        public override void Switch(Action<CatEnumValue> catEnumValueSwitch, Action<DogEnumValue> dogEnumValueSwitch, Action<ParrotEnumValue> parrotEnumValueSwitch, Action<HamsterEnumValue> hamsterEnumValueSwitch, Action<CrocodileEnumValue> crocodileEnumValueSwitch)
+        public override void Switch(Action<CatEnumValue> catSwitch, Action<DogEnumValue> dogSwitch, Action<ParrotEnumValue> parrotSwitch, Action<HamsterEnumValue> hamsterSwitch, Action<CrocodileEnumValue> crocodileSwitch)
         {
-            hamsterEnumValueSwitch(this);
+            hamsterSwitch(this);
         }
 
-        public override TResult Switch<TResult>(Func<CatEnumValue, TResult> catEnumValueSwitch, Func<DogEnumValue, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult>(Func<CatEnumValue, TResult> catSwitch, Func<DogEnumValue, TResult> dogSwitch, Func<ParrotEnumValue, TResult> parrotSwitch, Func<HamsterEnumValue, TResult> hamsterSwitch, Func<CrocodileEnumValue, TResult> crocodileSwitch)
         {
-            return hamsterEnumValueSwitch(this);
+            return hamsterSwitch(this);
         }
 
-        public override void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catEnumValueSwitch, Action<DogEnumValue, T0> dogEnumValueSwitch, Action<ParrotEnumValue, T0> parrotEnumValueSwitch, Action<HamsterEnumValue, T0> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0> crocodileEnumValueSwitch)
+        public override void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catSwitch, Action<DogEnumValue, T0> dogSwitch, Action<ParrotEnumValue, T0> parrotSwitch, Action<HamsterEnumValue, T0> hamsterSwitch, Action<CrocodileEnumValue, T0> crocodileSwitch)
         {
-            hamsterEnumValueSwitch(this, arg0);
+            hamsterSwitch(this, arg0);
         }
 
-        public override TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catSwitch, Func<DogEnumValue, T0, TResult> dogSwitch, Func<ParrotEnumValue, T0, TResult> parrotSwitch, Func<HamsterEnumValue, T0, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileSwitch)
         {
-            return hamsterEnumValueSwitch(this, arg0);
+            return hamsterSwitch(this, arg0);
         }
 
-        public override void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catEnumValueSwitch, Action<DogEnumValue, T0, T1> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catSwitch, Action<DogEnumValue, T0, T1> dogSwitch, Action<ParrotEnumValue, T0, T1> parrotSwitch, Action<HamsterEnumValue, T0, T1> hamsterSwitch, Action<CrocodileEnumValue, T0, T1> crocodileSwitch)
         {
-            hamsterEnumValueSwitch(this, arg0, arg1);
+            hamsterSwitch(this, arg0, arg1);
         }
 
-        public override TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catSwitch, Func<DogEnumValue, T0, T1, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileSwitch)
         {
-            return hamsterEnumValueSwitch(this, arg0, arg1);
+            return hamsterSwitch(this, arg0, arg1);
         }
 
-        public override void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catSwitch, Action<DogEnumValue, T0, T1, T2> dogSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileSwitch)
         {
-            hamsterEnumValueSwitch(this, arg0, arg1, arg2);
+            hamsterSwitch(this, arg0, arg1, arg2);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileSwitch)
         {
-            return hamsterEnumValueSwitch(this, arg0, arg1, arg2);
+            return hamsterSwitch(this, arg0, arg1, arg2);
         }
 
-        public override void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileSwitch)
         {
-            hamsterEnumValueSwitch(this, arg0, arg1, arg2, arg3);
+            hamsterSwitch(this, arg0, arg1, arg2, arg3);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileSwitch)
         {
-            return hamsterEnumValueSwitch(this, arg0, arg1, arg2, arg3);
+            return hamsterSwitch(this, arg0, arg1, arg2, arg3);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileSwitch)
         {
-            hamsterEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4);
+            hamsterSwitch(this, arg0, arg1, arg2, arg3, arg4);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileSwitch)
         {
-            return hamsterEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4);
+            return hamsterSwitch(this, arg0, arg1, arg2, arg3, arg4);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileSwitch)
         {
-            hamsterEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
+            hamsterSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileSwitch)
         {
-            return hamsterEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
+            return hamsterSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileSwitch)
         {
-            hamsterEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            hamsterSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileSwitch)
         {
-            return hamsterEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            return hamsterSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         }
 
     }
+
     public static readonly CrocodileEnumValue Crocodile = new CrocodileEnumValue();
     public partial class CrocodileEnumValue: PetKind
     {
-        public override int Value => 4;
-        public override Sample.PetKind Enum => Sample.PetKind.Crocodile;
-
+        public CrocodileEnumValue(): base(global::Sample.PetKind.Crocodile) { }
         public override string ToString()
         {
             return "Crocodile";
         }
 
-        public override void Switch(Action<CatEnumValue> catEnumValueSwitch, Action<DogEnumValue> dogEnumValueSwitch, Action<ParrotEnumValue> parrotEnumValueSwitch, Action<HamsterEnumValue> hamsterEnumValueSwitch, Action<CrocodileEnumValue> crocodileEnumValueSwitch)
+        public override void Switch(Action<CatEnumValue> catSwitch, Action<DogEnumValue> dogSwitch, Action<ParrotEnumValue> parrotSwitch, Action<HamsterEnumValue> hamsterSwitch, Action<CrocodileEnumValue> crocodileSwitch)
         {
-            crocodileEnumValueSwitch(this);
+            crocodileSwitch(this);
         }
 
-        public override TResult Switch<TResult>(Func<CatEnumValue, TResult> catEnumValueSwitch, Func<DogEnumValue, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult>(Func<CatEnumValue, TResult> catSwitch, Func<DogEnumValue, TResult> dogSwitch, Func<ParrotEnumValue, TResult> parrotSwitch, Func<HamsterEnumValue, TResult> hamsterSwitch, Func<CrocodileEnumValue, TResult> crocodileSwitch)
         {
-            return crocodileEnumValueSwitch(this);
+            return crocodileSwitch(this);
         }
 
-        public override void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catEnumValueSwitch, Action<DogEnumValue, T0> dogEnumValueSwitch, Action<ParrotEnumValue, T0> parrotEnumValueSwitch, Action<HamsterEnumValue, T0> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0> crocodileEnumValueSwitch)
+        public override void Switch<T0>(T0 arg0, Action<CatEnumValue, T0> catSwitch, Action<DogEnumValue, T0> dogSwitch, Action<ParrotEnumValue, T0> parrotSwitch, Action<HamsterEnumValue, T0> hamsterSwitch, Action<CrocodileEnumValue, T0> crocodileSwitch)
         {
-            crocodileEnumValueSwitch(this, arg0);
+            crocodileSwitch(this, arg0);
         }
 
-        public override TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0>(T0 arg0, Func<CatEnumValue, T0, TResult> catSwitch, Func<DogEnumValue, T0, TResult> dogSwitch, Func<ParrotEnumValue, T0, TResult> parrotSwitch, Func<HamsterEnumValue, T0, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, TResult> crocodileSwitch)
         {
-            return crocodileEnumValueSwitch(this, arg0);
+            return crocodileSwitch(this, arg0);
         }
 
-        public override void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catEnumValueSwitch, Action<DogEnumValue, T0, T1> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1>(T0 arg0, T1 arg1, Action<CatEnumValue, T0, T1> catSwitch, Action<DogEnumValue, T0, T1> dogSwitch, Action<ParrotEnumValue, T0, T1> parrotSwitch, Action<HamsterEnumValue, T0, T1> hamsterSwitch, Action<CrocodileEnumValue, T0, T1> crocodileSwitch)
         {
-            crocodileEnumValueSwitch(this, arg0, arg1);
+            crocodileSwitch(this, arg0, arg1);
         }
 
-        public override TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1>(T0 arg0, T1 arg1, Func<CatEnumValue, T0, T1, TResult> catSwitch, Func<DogEnumValue, T0, T1, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, TResult> crocodileSwitch)
         {
-            return crocodileEnumValueSwitch(this, arg0, arg1);
+            return crocodileSwitch(this, arg0, arg1);
         }
 
-        public override void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Action<CatEnumValue, T0, T1, T2> catSwitch, Action<DogEnumValue, T0, T1, T2> dogSwitch, Action<ParrotEnumValue, T0, T1, T2> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2> crocodileSwitch)
         {
-            crocodileEnumValueSwitch(this, arg0, arg1, arg2);
+            crocodileSwitch(this, arg0, arg1, arg2);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2, Func<CatEnumValue, T0, T1, T2, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, TResult> crocodileSwitch)
         {
-            return crocodileEnumValueSwitch(this, arg0, arg1, arg2);
+            return crocodileSwitch(this, arg0, arg1, arg2);
         }
 
-        public override void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Action<CatEnumValue, T0, T1, T2, T3> catSwitch, Action<DogEnumValue, T0, T1, T2, T3> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3> crocodileSwitch)
         {
-            crocodileEnumValueSwitch(this, arg0, arg1, arg2, arg3);
+            crocodileSwitch(this, arg0, arg1, arg2, arg3);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, Func<CatEnumValue, T0, T1, T2, T3, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, TResult> crocodileSwitch)
         {
-            return crocodileEnumValueSwitch(this, arg0, arg1, arg2, arg3);
+            return crocodileSwitch(this, arg0, arg1, arg2, arg3);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Action<CatEnumValue, T0, T1, T2, T3, T4> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4> crocodileSwitch)
         {
-            crocodileEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4);
+            crocodileSwitch(this, arg0, arg1, arg2, arg3, arg4);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, Func<CatEnumValue, T0, T1, T2, T3, T4, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, TResult> crocodileSwitch)
         {
-            return crocodileEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4);
+            return crocodileSwitch(this, arg0, arg1, arg2, arg3, arg4);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Action<CatEnumValue, T0, T1, T2, T3, T4, T5> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5> crocodileSwitch)
         {
-            crocodileEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
+            crocodileSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, TResult> crocodileSwitch)
         {
-            return crocodileEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
+            return crocodileSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5);
         }
 
-        public override void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catEnumValueSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogEnumValueSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotEnumValueSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterEnumValueSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileEnumValueSwitch)
+        public override void Switch<T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Action<CatEnumValue, T0, T1, T2, T3, T4, T5, T6> catSwitch, Action<DogEnumValue, T0, T1, T2, T3, T4, T5, T6> dogSwitch, Action<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6> parrotSwitch, Action<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6> hamsterSwitch, Action<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6> crocodileSwitch)
         {
-            crocodileEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            crocodileSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         }
 
-        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catEnumValueSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogEnumValueSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotEnumValueSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterEnumValueSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileEnumValueSwitch)
+        public override TResult Switch<TResult, T0, T1, T2, T3, T4, T5, T6>(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, Func<CatEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> catSwitch, Func<DogEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> dogSwitch, Func<ParrotEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> parrotSwitch, Func<HamsterEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> hamsterSwitch, Func<CrocodileEnumValue, T0, T1, T2, T3, T4, T5, T6, TResult> crocodileSwitch)
         {
-            return crocodileEnumValueSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+            return crocodileSwitch(this, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
         }
 
     }
+}
 }
