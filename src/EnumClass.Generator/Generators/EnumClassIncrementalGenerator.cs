@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 
 namespace EnumClass.Generator.Generators;
@@ -91,29 +92,44 @@ namespace EnumClass.Attributes
             builder.AppendLine("    }");
             builder.AppendLine();
             
-            // Cast to integer
+            // Cast to integer 
             builder.AppendFormat("    public static explicit operator int({0} value)\n", enumInfo.ClassName);
             builder.AppendLine("    {");
             builder.AppendLine("        return (int) value._realEnumValue;");
             builder.AppendLine("    }");
             builder.AppendLine();
-
+            
             // IEquatable for enum class
-            builder.AppendFormat("    public bool Equals({0} other)\n", enumInfo.ClassName);
+            if (compilation.Options.NullableContextOptions is not NullableContextOptions.Disable)
+            {
+                builder.AppendFormat("    public bool Equals({0}? other)\n", enumInfo.ClassName);
+            }
+            else
+            {
+                builder.AppendFormat("    public bool Equals({0} other)\n", enumInfo.ClassName);
+            }
             builder.AppendLine("    {");
             builder.AppendLine("        return !ReferenceEquals(other, null) && other._realEnumValue == this._realEnumValue;");
             builder.AppendLine("    }");
             builder.AppendLine();
 
-            // IEquatable for enum class
+            // IEquatable for original enum
             builder.AppendFormat("    public bool Equals({0} other)\n", enumInfo.FullyQualifiedEnumName);
+            
             builder.AppendLine("    {");
             builder.AppendLine("        return other == this._realEnumValue;");
             builder.AppendLine("    }");
             builder.AppendLine();
             
             // Generic equals override using IEquatable<> interfaces
-            builder.AppendLine("    public override bool Equals(object other)");
+            if (compilation.Options.NullableContextOptions is not NullableContextOptions.Disable)
+            {
+                builder.AppendLine("    public override bool Equals(object? other)");
+            }
+            else
+            {
+                builder.AppendLine("    public override bool Equals(object other)");
+            }
             builder.AppendLine("    {");
             // First check it is null or self
             builder.AppendLine("        if (ReferenceEquals(other, null)) return false;");
@@ -160,11 +176,11 @@ namespace EnumClass.Attributes
             // Generate GetHashCode
             builder.AppendLine("    public override int GetHashCode()");
             builder.AppendLine("    {");
-            builder.AppendLine("        return (int) this._realEnumValue;");
+            builder.AppendLine("        return this._realEnumValue.GetHashCode();");
             builder.AppendLine("    }");
             builder.AppendLine();
             
-            // Generate switches definitions
+            // Generate Switch definitions
             var maxArgsCount = 8;
             for (var i = 0; i < maxArgsCount; i++)
             {
@@ -172,6 +188,7 @@ namespace EnumClass.Attributes
                 builder.AppendFormat("    public abstract {0};\n", enumInfo.GenerateSwitchFuncDefinition(i));
             }
             
+            // Generate subclasses for each member of enum
             foreach (var member in enumInfo.Members)
             {
                 builder.AppendLine();
@@ -182,7 +199,7 @@ namespace EnumClass.Attributes
                 builder.AppendFormat("    public partial class {0}: {1}\n", member.ClassName, enumInfo.ClassName);
                 builder.AppendLine("    {");
                 
-                // Override required abstract fields
+                // Generate constructor
                 builder.AppendFormat("        public {0}(): base({1}) {{ }}\n", member.ClassName, member.FullyQualifiedEnumValue);
                 
                 // Override default ToString() 
@@ -192,9 +209,10 @@ namespace EnumClass.Attributes
                 builder.AppendLine("        }");
                 builder.AppendLine();
                 
+                // Generate Switch'es 
                 for (var i = 0; i < maxArgsCount; i++)
                 {
-                    // Action
+                    // Action<>
                     builder.AppendFormat("        public override {0}\n", enumInfo.GenerateSwitchActionDefinition(i));
                     builder.AppendLine("        {");
                     
@@ -208,7 +226,7 @@ namespace EnumClass.Attributes
                     builder.AppendLine("        }");
                     builder.AppendLine();
                     
-                    // Func
+                    // Func<>
                     builder.AppendFormat("        public override {0}\n", enumInfo.GenerateSwitchFuncDefinition(i));
                     builder.AppendLine("        {");
                     builder.AppendFormat("            return {0}(this", member.GetSwitchArgName());
@@ -231,7 +249,9 @@ namespace EnumClass.Attributes
             
             // Namespace
             builder.AppendLine("}");
-            context.AddSource($"{enumInfo.ClassName}.g.cs", builder.ToString());
+            
+            // Create source file
+            context.AddSource($"{enumInfo.ClassName}.g.cs", SourceText.From(builder.ToString(), Encoding.UTF8));
         }
     }
     
