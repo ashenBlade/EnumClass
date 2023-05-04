@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -70,32 +69,46 @@ namespace EnumClass.Attributes
         {
             builder.Clear();
             builder.AppendLine("using System;");
+            builder.AppendLine("using System.Runtime.CompilerServices;");
             builder.AppendLine();
             builder.AppendFormat("namespace {0}.EnumClass\n{{\n", enumInfo.Namespace);
             builder.AppendLine();
             builder.AppendFormat("public abstract partial class {0}: IEquatable<{0}>, IEquatable<{1}>\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("{");
-            builder.AppendLine("    public abstract int Value { get; }");
-            builder.AppendFormat("    public abstract global::{0} Enum {{ get; }}\n", enumInfo.FullyQualifiedEnumName);
-            
-            // Cast to original enum
-            builder.AppendFormat("    public static implicit operator global::{0}({1} value)\n", enumInfo.FullyQualifiedEnumName, enumInfo.ClassName);
+            builder.AppendFormat("    protected readonly {0} _realEnumValue;\n", enumInfo.FullyQualifiedEnumName);
+            builder.AppendLine();
+
+            builder.AppendFormat("    protected {0}({1} enumValue)\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("    {");
-            builder.AppendLine("        return value.Enum;");
+            builder.AppendLine("        this._realEnumValue = enumValue;");
+            builder.AppendLine("    }");
+            builder.AppendLine();
+
+            // Cast to original enum
+            builder.AppendFormat("    public static implicit operator {0}({1} value)\n", enumInfo.FullyQualifiedEnumName, enumInfo.ClassName);
+            builder.AppendLine("    {");
+            builder.AppendLine("        return value._realEnumValue;");
             builder.AppendLine("    }");
             builder.AppendLine();
             
+            // Cast to integer
+            builder.AppendFormat("    public static explicit operator int({0} value)\n", enumInfo.ClassName);
+            builder.AppendLine("    {");
+            builder.AppendLine("        return (int) value._realEnumValue;");
+            builder.AppendLine("    }");
+            builder.AppendLine();
+
             // IEquatable for enum class
             builder.AppendFormat("    public bool Equals({0} other)\n", enumInfo.ClassName);
             builder.AppendLine("    {");
-            builder.AppendLine("        return !ReferenceEquals(other, null) && other.Enum == this.Enum;");
+            builder.AppendLine("        return !ReferenceEquals(other, null) && other._realEnumValue == this._realEnumValue;");
             builder.AppendLine("    }");
             builder.AppendLine();
 
             // IEquatable for enum class
             builder.AppendFormat("    public bool Equals({0} other)\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("    {");
-            builder.AppendLine("        return other == this.Enum;");
+            builder.AppendLine("        return other == this._realEnumValue;");
             builder.AppendLine("    }");
             builder.AppendLine();
             
@@ -111,7 +124,7 @@ namespace EnumClass.Attributes
             builder.AppendFormat("            return this.Equals(({0}) other);\n", enumInfo.ClassName);
             builder.AppendLine("        }");
             // Then check it is raw original enum
-            builder.AppendFormat("        if (other is global::{0})\n", enumInfo.FullyQualifiedEnumName);
+            builder.AppendFormat("        if (other is {0})\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("        {");
             builder.AppendFormat("            return this.Equals(({0}) other);\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("        }");
@@ -147,7 +160,7 @@ namespace EnumClass.Attributes
             // Generate GetHashCode
             builder.AppendLine("    public override int GetHashCode()");
             builder.AppendLine("    {");
-            builder.AppendLine("        return this.Value;");
+            builder.AppendLine("        return (int) this._realEnumValue;");
             builder.AppendLine("    }");
             builder.AppendLine();
             
@@ -159,24 +172,23 @@ namespace EnumClass.Attributes
                 builder.AppendFormat("    public abstract {0};\n", enumInfo.GenerateSwitchFuncDefinition(i));
             }
             
-            foreach (var enumValue in enumInfo.Values)
+            foreach (var member in enumInfo.Members)
             {
+                builder.AppendLine();
                 // Generate static field for required Enum
-                builder.AppendFormat("    public static readonly {0} {1} = new {0}();\n", enumValue.ClassName, enumValue.Name);
+                builder.AppendFormat("    public static readonly {0} {1} = new {0}();\n", member.ClassName, member.EnumMemberName);
             
                 // Generate enum class for enum
-                builder.AppendFormat("    public partial class {0}: {1}\n", enumValue.ClassName, enumInfo.ClassName);
+                builder.AppendFormat("    public partial class {0}: {1}\n", member.ClassName, enumInfo.ClassName);
                 builder.AppendLine("    {");
                 
                 // Override required abstract fields
-                builder.AppendFormat("        public override int Value => {0};\n", enumValue.IntValue);
-                builder.AppendFormat("        public override global::{0} Enum => global::{1};\n", enumInfo.FullyQualifiedEnumName, enumValue.FullyQualifiedName);
-                builder.AppendLine();
+                builder.AppendFormat("        public {0}(): base({1}) {{ }}\n", member.ClassName, member.FullyQualifiedEnumValue);
                 
                 // Override default ToString() 
                 builder.AppendLine("        public override string ToString()");
                 builder.AppendLine("        {");
-                builder.AppendFormat("            return {0};\n", enumValue.GetStringRepresentationQuoted());
+                builder.AppendFormat("            return {0};\n", member.GetStringRepresentationQuoted());
                 builder.AppendLine("        }");
                 builder.AppendLine();
                 
@@ -186,7 +198,7 @@ namespace EnumClass.Attributes
                     builder.AppendFormat("        public override {0}\n", enumInfo.GenerateSwitchActionDefinition(i));
                     builder.AppendLine("        {");
                     
-                    builder.AppendFormat("            {0}(this", enumValue.GetSwitchArgName());
+                    builder.AppendFormat("            {0}(this", member.GetSwitchArgName());
                     for (var j = 0; j < i; j++)
                     {
                         builder.AppendFormat(", arg{0}", j);
@@ -199,7 +211,7 @@ namespace EnumClass.Attributes
                     // Func
                     builder.AppendFormat("        public override {0}\n", enumInfo.GenerateSwitchFuncDefinition(i));
                     builder.AppendLine("        {");
-                    builder.AppendFormat("            return {0}(this", enumValue.GetSwitchArgName());
+                    builder.AppendFormat("            return {0}(this", member.GetSwitchArgName());
                     for (var j = 0; j < i; j++)
                     {
                         builder.AppendFormat(", arg{0}", j);
@@ -214,7 +226,7 @@ namespace EnumClass.Attributes
                 builder.AppendLine("    }");
             }
 
-            // Class
+            // Enum class
             builder.AppendLine("}");
             
             // Namespace
@@ -234,85 +246,23 @@ namespace EnumClass.Attributes
             return enumInfos;
         }
 
-        var stringRepresentationAttribute = compilation.GetTypeByMetadataName(Constants.StringRepresentationAttributeFullName);
+        var stringValueAttribute = compilation.GetTypeByMetadataName(Constants.StringRepresentationAttributeFullName);
 
         foreach (var syntax in enums)
         {
+            // Do check twice if we get cancel request in between creating EnumInfo
+            // Single check might fail if 'enums' contains single element and
+            // cancellation happened while creating EnumInfo
             ct.ThrowIfCancellationRequested();
-            var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
-            if (semanticModel.GetDeclaredSymbol(syntax) is not { } enumSymbol)
+            var enumInfo = EnumInfo.CreateFromDeclaration(syntax, compilation, stringValueAttribute);
+            ct.ThrowIfCancellationRequested();
+            if (enumInfo is not null)
             {
-                continue;
+                enumInfos.Add(enumInfo);
             }
-            
-            var @namespace           = enumSymbol.ContainingNamespace.Name;
-            var list                 = new List<EnumValueInfo>();
-            var currentOrdinalNumber = 0;
-            foreach (var symbol in enumSymbol.GetMembers()
-                                             .OfType<IFieldSymbol>()
-                                             .Where(m => m.ConstantValue is not null))
-            {
-                var name = GetToStringEnumFieldValue(stringRepresentationAttribute, symbol);
-                
-                
-                
-                var value = currentOrdinalNumber;
-                
-                // Try determine next ordinal value from assigning operators
-                if (symbol.HasConstantValue && 
-                    symbol.ConstantValue is {} constantValue && 
-                    int.TryParse(constantValue.ToString(), out var parsed))
-                {
-                    value = parsed;
-                }
-                
-                var valueInfo = new EnumValueInfo(symbol.Name, enumSymbol.ToDisplayString(), value, name);
-                currentOrdinalNumber = value + 1;
-                list.Add(valueInfo);
-            }
-
-            var memberNames = list
-               .ToArray();
-
-            enumInfos.Add(new EnumInfo(enumSymbol.Name, @namespace, memberNames));
         }
 
         return enumInfos;
-    }
-
-    private static string GetToStringEnumFieldValue(INamedTypeSymbol? stringRepresentationAttribute, IFieldSymbol symbol)
-    {
-        bool IsStringValueAttribute(AttributeData attributeData)
-        {
-            return SymbolEqualityComparer.Default.Equals(attributeData.AttributeClass, stringRepresentationAttribute);
-        }
-
-        if (stringRepresentationAttribute is not null && 
-            symbol.GetAttributes() is {Length: > 0} attributes)
-        {
-            foreach (var attributeData in attributes)
-            {
-                if (attributeData.ConstructorArguments is {Length:>0} constructorArguments && 
-                    IsStringValueAttribute(attributeData))
-                {
-                    // It has only one constructor argument
-                    if (constructorArguments.FirstOrDefault(arg => 
-                                arg is
-                                {
-                                    IsNull:false, 
-                                    Kind:TypedConstantKind.Primitive
-                                }) 
-                            is var constant
-                     && constant.Value?.ToString() is {Length: > 0} toStringValue)
-                    {
-                        return toStringValue;
-                    }
-                }
-            }
-        }
-
-        // Fallback value is it's name
-        return symbol.Name;
     }
 
     private static bool FilterEnumDeclarations(SyntaxNode node, CancellationToken token)

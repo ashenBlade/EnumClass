@@ -1,21 +1,35 @@
 using System.Text;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace EnumClass.Generator;
 
 internal class EnumInfo
 {
+    /// <summary>
+    /// Only class name without namespace
+    /// </summary>
     public string ClassName { get; }
+    /// <summary>
+    /// Fully qualified name of original enum
+    /// </summary>
     public string FullyQualifiedEnumName { get; }
+    /// <summary>
+    /// Namespace of original enum
+    /// </summary>
     public string Namespace { get; }
-    public EnumValueInfo[] Values { get; init; }
+    /// <summary>
+    /// Members of enum
+    /// </summary>
+    public EnumMemberInfo[] Members { get; }
     
-    public EnumInfo(string enumName, string @namespace, EnumValueInfo[] values)
+    private EnumInfo(string fullyQualifiedEnumName, string className, string ns, EnumMemberInfo[] members)
     {
-        FullyQualifiedEnumName = SymbolDisplay.FormatLiteral( $"{@namespace}.{enumName}", false );
-        Namespace = SymbolDisplay.FormatLiteral( @namespace, false );
-        Values = values;
-        ClassName = SymbolDisplay.FormatLiteral(enumName, false);
+        FullyQualifiedEnumName = fullyQualifiedEnumName;
+        Namespace = ns;
+        Members = members;
+        ClassName = className;
     }
     
     /// <summary>
@@ -64,10 +78,10 @@ internal class EnumInfo
         }
 
         // Generate switch arguments
-        foreach (var (value, i) in Values.Select((info, i) => (info, i)))
+        foreach (var (value, i) in Members.Select((info, i) => (info, i)))
         {
             builder.AppendFormat("{0} {1}", value.GetActionSwitchType(argsCount), value.GetSwitchArgName());
-            if (i < Values.Length - 1)
+            if (i < Members.Length - 1)
             {
                 builder.Append(", ");
             }
@@ -103,10 +117,10 @@ internal class EnumInfo
                 builder.AppendFormat("T{0} arg{0}, ", i);
             }
         }
-        foreach (var (value, i) in Values.Select((info, i) => (info, i)))
+        foreach (var (value, i) in Members.Select((info, i) => (info, i)))
         {
             builder.AppendFormat("{0} {1}", value.GetFuncSwitchType(argsCount, "TResult"), value.GetSwitchArgName());
-            if (i < Values.Length - 1)
+            if (i < Members.Length - 1)
             {
                 builder.Append(", ");
             }
@@ -145,34 +159,33 @@ internal class EnumInfo
     }
 
     private readonly List<string?> _actionSwitchesGeneratedCache = new List<string?>(); 
-
-    public override bool Equals(object? obj)
+    
+    public static EnumInfo? CreateFromDeclaration(EnumDeclarationSyntax syntax, Compilation compilation, INamedTypeSymbol? stringValueAttribute)
     {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals(( EnumInfo ) obj);
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
+        var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
+        if (semanticModel.GetDeclaredSymbol(syntax) is not { } enumSymbol)
         {
-            var hashCode = ClassName.GetHashCode();
-            hashCode = ( hashCode * 397 ) ^ FullyQualifiedEnumName.GetHashCode();
-            hashCode = ( hashCode * 397 ) ^ Namespace.GetHashCode();
-            hashCode = ( hashCode * 397 ) ^ Values.GetHashCode();
-            return hashCode;
+            return null;
         }
-    }
 
-    public bool Equals(EnumInfo? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return ClassName == other.ClassName
-            && FullyQualifiedEnumName == other.FullyQualifiedEnumName
-            && Namespace == other.Namespace
-            && Values.Equals(other.Values);
+        var members = enumSymbol.GetMembers();
+        
+        var memberInfos = members
+                          // Skip all non enum fields declarations
+                         .OfType<IFieldSymbol>()
+                          // Enum members are all const, according to docs
+                         .Where(m => m is {IsConst: true, HasConstantValue:true})
+                          // Try to convert them into EnumMemberInfo
+                         .Select(symbol => EnumMemberInfo.CreateFromFieldSymbol(symbol, stringValueAttribute)!)
+                          // And skip failed
+                         .Where(valueInfo => valueInfo is not null)
+                          // Finally, create array of members
+                         .ToArray();
+
+        var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
+        var className = SymbolDisplay.FormatLiteral(enumSymbol.Name, false);
+        var ns = enumSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+        
+        return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos);
     }
 }

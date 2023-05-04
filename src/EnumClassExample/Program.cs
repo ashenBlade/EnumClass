@@ -8,13 +8,12 @@ PrintEnumClassComparison("Hamster", PetKind.Hamster, EnumClassExample.PetKind.Ha
 
 void PrintEnumClassComparison(string representationName, PetKind enumClassKind, EnumClassExample.PetKind enumKind)
 {
-    
     Console.WriteLine($"Comparison for {representationName}");
     Console.WriteLine($"Enum class:");
-    Console.WriteLine($"    ToString: {enumClassKind.ToString()}");
-    Console.WriteLine($"    Integer value: {enumClassKind.Value}");
+    Console.WriteLine($"    ToString: {enumClassKind}");
+    Console.WriteLine($"    Integer value: {(int)enumClassKind}");
     Console.WriteLine($"Raw enum:");
-    Console.WriteLine($"    ToString: {enumKind.ToString()}");
+    Console.WriteLine($"    ToString: {enumKind}");
     Console.WriteLine($"    Integer value: {(int)enumKind}");
 
     Console.WriteLine($"Equals: {enumClassKind.Equals(enumKind)}");

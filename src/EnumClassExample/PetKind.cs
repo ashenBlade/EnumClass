@@ -1,4 +1,5 @@
 using System;
+using System.Security.AccessControl;
 using EnumClass.Attributes;
 
 namespace EnumClassExample
