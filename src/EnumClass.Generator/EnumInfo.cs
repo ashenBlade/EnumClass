@@ -184,7 +184,9 @@ internal class EnumInfo
 
         var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
         var className = SymbolDisplay.FormatLiteral(enumSymbol.Name, false);
-        var ns = enumSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+        var ns = enumSymbol.ContainingNamespace
+                           .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                           .Replace("global::", "");
         
         return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos);
     }

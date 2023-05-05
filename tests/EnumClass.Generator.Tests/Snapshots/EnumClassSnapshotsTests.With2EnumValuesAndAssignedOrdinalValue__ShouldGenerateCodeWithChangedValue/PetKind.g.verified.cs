@@ -71,7 +71,7 @@ public abstract partial class PetKind: IEquatable<PetKind>, IEquatable<global::S
 
     public override int GetHashCode()
     {
-        return (int) this._realEnumValue;
+        return this._realEnumValue.GetHashCode();
     }
 
     public abstract void Switch(Action<CatEnumValue> catSwitch, Action<DogEnumValue> dogSwitch);
