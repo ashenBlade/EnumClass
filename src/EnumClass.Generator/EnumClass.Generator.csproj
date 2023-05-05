@@ -6,8 +6,21 @@
         <Nullable>enable</Nullable>
         <LangVersion>10</LangVersion>
         <IsRoslynComponent>true</IsRoslynComponent>
-        <GeneratePackageOnBuild Condition="$(Configuration) == 'Release'">true</GeneratePackageOnBuild>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <PackageId>EnumClass</PackageId>
+        <Title>EnumClass</Title>
+        <Authors>AshBlade</Authors>
+        <PackageTags>generator source-generator smart-enum enum enum-class </PackageTags>
+        <Description>Inspired by kotlin's enum class, this package provides incremental generator that can create classes from enum declaration. 
+All you have to do is to add [EnumClass] attribute to your enum. 
+Features:
+- Override default ToString
+- Add specific behaviour (methods) to each member
+- Polymorphic Switch implementation </Description>
+        <PackageProjectUrl>https://github.com/ashenBlade/EnumClass</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/ashenBlade/EnumClass/blob/master/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/ashenBlade/EnumClass</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,4 +30,10 @@
         </PackageReference>
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" PrivateAssets="all" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+    
+    
 </Project>
