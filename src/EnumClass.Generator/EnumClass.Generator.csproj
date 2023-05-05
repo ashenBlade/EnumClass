@@ -8,7 +8,7 @@
         <IsRoslynComponent>true</IsRoslynComponent>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IncludeBuildOutput>false</IncludeBuildOutput>
-        <PackageId>EnumClass.IncrementalGenerator</PackageId>
+        <PackageId>EnumClass</PackageId>
         <Title>EnumClass</Title>
         <Authors>AshBlade</Authors>
         <PackageTags>generator source-generator smart-enum enum enum-class </PackageTags>
@@ -19,8 +19,9 @@ Features:
 - Add specific behaviour (methods) to each member
 - Polymorphic Switch implementation </Description>
         <PackageProjectUrl>https://github.com/ashenBlade/EnumClass</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/ashenBlade/EnumClass/blob/master/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/ashenBlade/EnumClass</RepositoryUrl>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -35,5 +36,8 @@ Features:
         <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
     
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
     
 </Project>
