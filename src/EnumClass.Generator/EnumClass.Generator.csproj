@@ -8,7 +8,7 @@
         <IsRoslynComponent>true</IsRoslynComponent>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IncludeBuildOutput>false</IncludeBuildOutput>
-        <PackageId>EnumClass</PackageId>
+        <PackageId>EnumClass.IncrementalGenerator</PackageId>
         <Title>EnumClass</Title>
         <Authors>AshBlade</Authors>
         <PackageTags>generator source-generator smart-enum enum enum-class </PackageTags>
