@@ -1,8 +1,7 @@
 using System;
-using System.Security.AccessControl;
 using EnumClass.Attributes;
 
-namespace EnumClassExample
+namespace EnumClass.Example
 {
     [EnumClass]
     public enum PetKind
@@ -15,7 +14,7 @@ namespace EnumClassExample
     }
 }
 
-namespace EnumClassExample.EnumClass
+namespace EnumClass.Example.EnumClass
 {
     public partial class PetKind
     {
