@@ -133,6 +133,22 @@ dog.Switch(
 // Output: Oh, it is puppy!
 ```
 
+### `TryParse`
+
+There is static function `bool EnumClass.TryParse(string value, out EnumClass enumClass)` for parsing values from raw enums.
+This function accepts strings with and without enum name: **PetKind.Cat** and **Cat** will be parsed into Cat value.
+
+```csharp
+if (EnumClass.PetKind.TryParse("Cat", out var cat)
+{
+    Console.WriteLine($"This is cat!! {cat}");
+}
+else
+{
+    Console.WriteLine("This is not cat");
+}
+```
+
 ### More
 
 For more examples checkout _samples_ folder
@@ -144,6 +160,28 @@ For more examples checkout _samples_ folder
 It uses incremental generator instead of source generator.
 This implies better performance in comparison
 
+
+### Custom target namespace
+
+By default generated class contained in the same namespace as original enum + ".EnumClass" suffix.
+You can manually set target namespace in `Namespace` property of `[EnumClass]` attribute.
+
+```csharp
+using EnumClass.Attributes;
+
+namespace Test;
+
+[EnumClass(Namespace = "Domain.Test")]
+public enum SampleEnum
+{
+    First,
+    Second
+}
+//------------------
+using Domain;
+
+Console.WriteLine(SampleEnum.First);
+```
 
 ## Known limitations
 
