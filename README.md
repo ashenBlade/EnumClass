@@ -1,2 +1,185 @@
 # EnumClass
-Souce Generator that will generate Kotlin like enum class but in C#
+
+## Summary
+
+Type safe source-generated alternative to C# `enum` inspired by Kotlin `enum class`
+
+## What is it
+
+This library contains source generator that creates `class` for specified `enum`. 
+Classes contains similar functionality as original enum.
+
+## Usage
+
+
+### Getting started
+Steps:
+1. Add reference to [EnumClass](https://www.nuget.org/packages/EnumClass/) to your project with enum
+2. Add `[EnumClass]` attribute to enum
+
+That is all! Corresponding classes will be generated in namespace as your enum, but prefixed with **EnumClass**
+
+Example
+```csharp
+using EnumClass.Attributes;
+
+namespace Domain
+{
+    [EnumClass]
+    public enum PetKind
+    {
+        Cat,
+        Dog
+    }
+    
+    namespace EnumClass
+    {
+        public partial abstract class PetKind
+        {
+            public partial class CatEnumValue
+            {
+                public void SayMeow()
+                {
+                    System.Console.WriteLine("Meow!");
+                }
+            }
+        }
+    }
+}
+```
+### ToString()
+
+All `ToString()` are generated at compile time.
+By default, they equal to name of corresponding member.
+```csharp
+Console.WriteLine(EnumClass.PetKind.Cat.ToString() == "Cat"); 
+// Output: true
+```
+
+If you want to override default value - use `[StringValue("")]` attribute
+```csharp
+namespace Domain;
+
+[EnumClass]
+public enum PetKind
+{
+    [StringValue("Kitten")]
+    Cat,
+    Dog
+}
+// -------------
+
+Console.WriteLine(EnumClass.PetKind.Cat.ToString());
+// Output: Kitten
+```
+
+### Cast to enum
+
+All classes have overriden cast operator to original enum value
+```csharp
+Console.WriteLine(((PetKind)EnumClass.PetKind.Cat) == PetKind.Cat); 
+// Output: true
+```
+
+### Cast to `int`
+
+All classes have overriden cast to `int`
+```csharp
+Console.WriteLine(((int)EnumClass.PetKind.Cat) == ((int)PetKind.Cat)); 
+// Output: true
+```
+
+### `Equals()`
+
+Generated classes implement `IEquatable<>` both for enum class and original enum.
+Thus, has methods `Equals(EnumClass)` and `Equals(OrignalEnum)`
+
+```csharp
+Console.WriteLine(EnumClass.PetKind.Cat.Equals(EnumClass.PetKind.Cat)); // Calls Equals(EnumClass.PetKind)
+Console.WriteLine(EnumClass.PetKind.Cat.Equals(EnumClass.PetKind.Dog)); // Calls Equals(EnumClass.PetKind)
+Console.WriteLine(EnumClass.PetKind.Cat.Equals(PetKind.Cat)); // Calls Equals(PetKind)
+Console.WriteLine(EnumClass.PetKind.Cat.Equals(PetKind.Dog)); // Calls Equals(PetKind)
+// Output: true
+//         false
+//         true
+//         false
+```
+
+P.S. and of course `Equals(object?)`
+
+### `Switch` function
+
+Instead of writing `switch` every time, a fimily
+of switch function is generated. 
+They accepts both `Action` and `Func` with enum class at first argument and optional additional arguments.
+
+E.g. 
+1. `Func<int>`
+```csharp
+var cat = EnumClass.PetKind.Cat;
+var value = cat.Switch(1,
+        (cat, i) => i + 1,
+        (dog, i) => i * 100);
+Console.WriteLine(value); 
+// Output: 2
+```
+
+2. `Action`
+```csharp
+var dog = EnumClass.PetKind.Dog;
+dog.Switch(
+    cat => cat.SayMeow(),
+    dog => Console.WriteLine("Oh, it is puppy!")); 
+// Output: Oh, it is puppy!
+```
+
+### More
+
+For more examples checkout _samples_ folder
+
+## Features
+
+### Incremental generator
+
+It uses incremental generator instead of source generator.
+This implies better performance in comparison
+
+
+## Known limitations
+
+### Same name of member and enum
+
+In current implementation static enum class field names has the same names as original enum class.
+It causes collisions on compilation.
+
+E.g.
+```csharp
+[EnumClass]
+public enum TokenType
+{
+    TokenType
+}
+```
+
+will generate approximately the following code
+
+```csharp
+public class TokenType
+{
+    public static TokenTypeEnumValue TokenType = new();
+}
+```
+
+### Half-baked
+
+The project at an early stage of life. 
+I'm sure there are lots of hidden bugs, so be cautious using it in production.
+In production may be better for now to use [SmartEnum](https://github.com/ardalis/SmartEnum)
+
+## Contributing
+
+If you have idea on how to improve project or found bug, create an issue on [GitHub](https://github.com/ashenBlade/EnumClass/issues)
+
+## Give a star
+
+If you want to see the continuation of the project, give it a star!
