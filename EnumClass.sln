@@ -7,13 +7,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EEBC4D9F-FCE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Generator", "src\EnumClass.Generator\EnumClass.Generator.csproj", "{2B03E852-A29E-4881-A013-BDC01C5021FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Example", "src\EnumClass.Example\EnumClass.Example.csproj", "{52224B76-4942-4D29-9915-187A889DD28C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{26FD7445-A8B3-45A5-85C1-FAAAF2C00335}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Generator.Tests", "tests\EnumClass.Generator.Tests\EnumClass.Generator.Tests.csproj", "{9B6470E5-038F-412A-B2E8-863C8B296182}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Generator.Tests.Integration", "tests\EnumClass.Generator.Tests.Integration\EnumClass.Generator.Tests.Integration.csproj", "{AF51E3DD-8168-4FAF-8511-E32AD3EA4517}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{06B1141F-5E62-4F18-9ADC-3D8205E1BA8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Example", "samples\EnumClass.Example\EnumClass.Example.csproj", "{281C37D9-4C44-435B-8509-DBAD10A7883D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +30,6 @@ Global
 		{2B03E852-A29E-4881-A013-BDC01C5021FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B03E852-A29E-4881-A013-BDC01C5021FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B03E852-A29E-4881-A013-BDC01C5021FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52224B76-4942-4D29-9915-187A889DD28C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52224B76-4942-4D29-9915-187A889DD28C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52224B76-4942-4D29-9915-187A889DD28C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52224B76-4942-4D29-9915-187A889DD28C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9B6470E5-038F-412A-B2E8-863C8B296182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B6470E5-038F-412A-B2E8-863C8B296182}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B6470E5-038F-412A-B2E8-863C8B296182}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,11 +38,15 @@ Global
 		{AF51E3DD-8168-4FAF-8511-E32AD3EA4517}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF51E3DD-8168-4FAF-8511-E32AD3EA4517}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF51E3DD-8168-4FAF-8511-E32AD3EA4517}.Release|Any CPU.Build.0 = Release|Any CPU
+		{281C37D9-4C44-435B-8509-DBAD10A7883D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{281C37D9-4C44-435B-8509-DBAD10A7883D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{281C37D9-4C44-435B-8509-DBAD10A7883D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{281C37D9-4C44-435B-8509-DBAD10A7883D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2B03E852-A29E-4881-A013-BDC01C5021FF} = {EEBC4D9F-FCE9-4F37-8C48-7D9512302129}
-		{52224B76-4942-4D29-9915-187A889DD28C} = {EEBC4D9F-FCE9-4F37-8C48-7D9512302129}
 		{9B6470E5-038F-412A-B2E8-863C8B296182} = {26FD7445-A8B3-45A5-85C1-FAAAF2C00335}
 		{AF51E3DD-8168-4FAF-8511-E32AD3EA4517} = {26FD7445-A8B3-45A5-85C1-FAAAF2C00335}
+		{281C37D9-4C44-435B-8509-DBAD10A7883D} = {06B1141F-5E62-4F18-9ADC-3D8205E1BA8A}
 	EndGlobalSection
 EndGlobal

@@ -3,7 +3,6 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 
 namespace EnumClass.Generator.Generators;
@@ -66,9 +65,14 @@ namespace EnumClass.Attributes
 
         var enumInfos = GetTypesToGenerate(compilation, enums, context.CancellationToken);
         var builder   = new StringBuilder();
+        var nullableEnabled = compilation.Options.NullableContextOptions is not NullableContextOptions.Disable;
         foreach (var enumInfo in enumInfos)
         {
             builder.Clear();
+            if (nullableEnabled)
+            {
+                builder.Append("#nullable enable\n\n");
+            }
             builder.AppendLine("using System;");
             builder.AppendLine("using System.Runtime.CompilerServices;");
             builder.AppendLine();
@@ -100,7 +104,7 @@ namespace EnumClass.Attributes
             builder.AppendLine();
             
             // IEquatable for enum class
-            if (compilation.Options.NullableContextOptions is not NullableContextOptions.Disable)
+            if (nullableEnabled)
             {
                 builder.AppendFormat("    public bool Equals({0}? other)\n", enumInfo.ClassName);
             }
@@ -122,7 +126,7 @@ namespace EnumClass.Attributes
             builder.AppendLine();
             
             // Generic equals override using IEquatable<> interfaces
-            if (compilation.Options.NullableContextOptions is not NullableContextOptions.Disable)
+            if (nullableEnabled)
             {
                 builder.AppendLine("    public override bool Equals(object? other)");
             }
