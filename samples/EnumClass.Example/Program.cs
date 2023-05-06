@@ -1,12 +1,11 @@
 using System;
-using EnumClass.Example.EnumClass;
 
-PrintEnumClassComparison("Dog", PetKind.Dog, EnumClass.Example.PetKind.Dog);
-PrintEnumClassComparison("Cat", PetKind.Cat, EnumClass.Example.PetKind.Cat);
-PrintEnumClassComparison("Parrot", PetKind.Parrot, EnumClass.Example.PetKind.Parrot);
-PrintEnumClassComparison("Hamster", PetKind.Hamster, EnumClass.Example.PetKind.Hamster);
+PrintEnumClassComparison("Dog", Domain.PetKind.Cat, EnumClass.Example.PetKind.Dog);
+PrintEnumClassComparison("Cat", Domain.PetKind.Cat, EnumClass.Example.PetKind.Cat);
+PrintEnumClassComparison("Parrot", Domain.PetKind.Parrot, EnumClass.Example.PetKind.Parrot);
+PrintEnumClassComparison("Hamster", Domain.PetKind.Hamster, EnumClass.Example.PetKind.Hamster);
 
-void PrintEnumClassComparison(string representationName, PetKind enumClassKind, EnumClass.Example.PetKind enumKind)
+void PrintEnumClassComparison(string representationName, Domain.PetKind enumClassKind, EnumClass.Example.PetKind enumKind)
 {
     Console.WriteLine($"Comparison for {representationName}");
     Console.WriteLine($"Enum class:");

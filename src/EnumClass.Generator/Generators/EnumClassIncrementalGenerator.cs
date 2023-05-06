@@ -35,7 +35,21 @@ namespace EnumClass.Attributes
 {
     [AttributeUsage(AttributeTargets.Enum, AllowMultiple = false)]
     internal class EnumClassAttribute: Attribute
-    { }
+    {
+        /// <summary>
+        /// Namespace where generated class will be contained.
+        /// Defaults to namespace of original enum + "".EnumClass""
+        /// </summary>
+        public string Namespace 
+        { 
+            get 
+            { 
+                // dummy
+                return """"; 
+            } 
+            init { } 
+        }
+    }
 }";
             context.AddSource("EnumClassAttribute.g.cs", SourceText.From(enumClassAttributeCode, Encoding.UTF8));
 
@@ -76,7 +90,7 @@ namespace EnumClass.Attributes
             builder.AppendLine("using System;");
             builder.AppendLine("using System.Runtime.CompilerServices;");
             builder.AppendLine();
-            builder.AppendFormat("namespace {0}.EnumClass\n{{\n", enumInfo.Namespace);
+            builder.AppendFormat("namespace {0}\n{{\n", enumInfo.Namespace);
             builder.AppendLine();
             builder.AppendFormat("public abstract partial class {0}: IEquatable<{0}>, IEquatable<{1}>\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("{");
@@ -313,7 +327,7 @@ namespace EnumClass.Attributes
             // Single check might fail if 'enums' contains single element and
             // cancellation happened while creating EnumInfo
             ct.ThrowIfCancellationRequested();
-            var enumInfo = EnumInfo.CreateFromDeclaration(syntax, compilation, stringValueAttribute);
+            var enumInfo = EnumInfo.CreateFromDeclaration(syntax, compilation, stringValueAttribute, enumClassAttributeSymbol);
             ct.ThrowIfCancellationRequested();
             if (enumInfo is not null)
             {

@@ -158,9 +158,12 @@ internal class EnumInfo
         _actionSwitchesGeneratedCache[argsCount] = definition;
     }
 
-    private readonly List<string?> _actionSwitchesGeneratedCache = new List<string?>(); 
+    private readonly List<string?> _actionSwitchesGeneratedCache = new(); 
     
-    public static EnumInfo? CreateFromDeclaration(EnumDeclarationSyntax syntax, Compilation compilation, INamedTypeSymbol? stringValueAttribute)
+    public static EnumInfo? CreateFromDeclaration(EnumDeclarationSyntax syntax, 
+                                                  Compilation compilation, 
+                                                  INamedTypeSymbol? stringValueAttribute,
+                                                  INamedTypeSymbol enumClassAttribute)
     {
         var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
         if (semanticModel.GetDeclaredSymbol(syntax) is not { } enumSymbol)
@@ -184,11 +187,46 @@ internal class EnumInfo
 
         var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
         var className = SymbolDisplay.FormatLiteral(enumSymbol.Name, false);
-        var ns = enumSymbol.ContainingNamespace
-                           .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                           .Replace("global::", "");
+        var ns = GetResultNamespace(enumSymbol, enumClassAttribute);
         
         return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos);
+    }
+
+    private static string GetResultNamespace(INamedTypeSymbol enumSymbol, INamedTypeSymbol enumClassAttribute)
+    {
+        if (enumSymbol.GetAttributes() is { Length: >0 } attributes &&
+            // Find first [EnumClass] attribute with non-zero named args count
+            attributes.FirstOrDefault(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, enumClassAttribute)) is
+                {
+                    NamedArguments.Length: >0
+                } 
+                attrInstance &&
+            // Get first "Namespace" not null string named argument
+            attrInstance.NamedArguments.FirstOrDefault(arg => arg is 
+                                                              {
+                                                                  Key: "Namespace", 
+                                                                  Value: 
+                                                                  {
+                                                                      IsNull: false,
+                                                                      Kind: TypedConstantKind.Primitive,
+                                                                      Value: not null
+                                                                  }}) is var namespaceArg)
+        {
+            // Assume user entered valid namespace 
+            // and we don't want to check it
+            var ns = namespaceArg.Value.Value!.ToString();
+            if (!string.IsNullOrWhiteSpace(ns))
+            {
+                return ns;
+            }
+        }
+        // Fallback to original enum namespace
+        // but add "EnumClass" suffix to avoid conflicts
+        var suffixed = enumSymbol.ContainingNamespace
+                                 .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                                 .Replace("global::", "");
+        
+        return suffixed + ".EnumClass";
     }
 
     private string? _cachedVariableNameNoSuffix;
