@@ -190,4 +190,18 @@ internal class EnumInfo
         
         return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos);
     }
+
+    private string? _cachedVariableNameNoSuffix;
+    
+    public string GetVariableName(string? suffix = null)
+    {
+        return suffix is null
+                   ? GetCachedVarName()
+                   : GetCachedVarName() + suffix;
+        
+        string GetCachedVarName()
+        {
+            return _cachedVariableNameNoSuffix ??= char.ToLower(ClassName[0]) + ClassName.Substring(1);
+        }
+    }
 }

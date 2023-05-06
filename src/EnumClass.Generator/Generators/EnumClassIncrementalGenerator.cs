@@ -184,6 +184,41 @@ namespace EnumClass.Attributes
             builder.AppendLine("    }");
             builder.AppendLine();
             
+            // Generate TryParse
+            {
+                var enumVariableName = enumInfo.GetVariableName();
+                builder.AppendLine(nullableEnabled
+                                       ? $"    public static bool TryParse(string value, out {enumInfo.ClassName}? {enumVariableName})"
+                                       : $"    public static bool TryParse(string value, out {enumInfo.ClassName} {enumVariableName})");
+                builder.AppendLine("    {");
+                builder.AppendLine("        switch (value)");
+                builder.AppendLine("        {");
+
+                // First, check for only enum member name. 
+                // Then when enum name added.
+                // We do it in that way (not merging with enum name together),
+                // because usually we have only enum member name in string (my subjective opinion)
+                foreach (var member in enumInfo.Members)
+                {
+                    builder.Append($"            case \"{member.EnumMemberNameOnly}\":\n");
+                    builder.Append($"                {enumVariableName} = {member.EnumMemberNameOnly};\n");
+                    builder.Append($"                return true;\n");
+                }
+                foreach (var member in enumInfo.Members)
+                {
+                    builder.Append($"            case \"{member.EnumMemberNameWithEnumName}\":\n");
+                    builder.Append($"                {enumVariableName} = {member.EnumMemberNameOnly};\n");
+                    builder.Append($"                return true;\n");
+                }
+                
+                builder.AppendLine("        }");
+                builder.AppendLine(nullableEnabled
+                                       ? $"        {enumVariableName} = null!;"
+                                       : $"        {enumVariableName} = null;");
+                builder.AppendLine("        return false;");
+                builder.AppendLine("    }\n");
+            }
+
             // Generate Switch definitions
             var maxArgsCount = 8;
             for (var i = 0; i < maxArgsCount; i++)
@@ -197,7 +232,7 @@ namespace EnumClass.Attributes
             {
                 builder.AppendLine();
                 // Generate static field for required Enum
-                builder.AppendFormat("    public static readonly {0} {1} = new {0}();\n", member.ClassName, member.EnumMemberName);
+                builder.AppendFormat("    public static readonly {0} {1} = new {0}();\n", member.ClassName, member.EnumMemberNameOnly);
             
                 // Generate enum class for enum
                 builder.AppendFormat("    public partial class {0}: {1}\n", member.ClassName, enumInfo.ClassName);

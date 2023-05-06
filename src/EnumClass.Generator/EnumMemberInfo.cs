@@ -30,20 +30,30 @@ public class EnumMemberInfo
 
     /// <summary>
     /// Name of enum member we constructing.
-    /// This is without 'global::' prefix
+    /// This is without 'global::' prefix and enum name
     /// </summary>
-    public string EnumMemberName { get; }
+    /// <example>Cat</example>
+    public string EnumMemberNameOnly { get; }
+
+    /// <summary>
+    /// Name of enum member with original enum name prefix.
+    /// </summary>
+    /// <example>PetKind.Cat</example>
+    public string EnumMemberNameWithEnumName { get; }
+    
     private EnumMemberInfo(string className,
                            string fullyQualifiedClassName,
                            string fullyQualifiedEnumValue,
-                           string enumMemberName,
-                           string stringRepresentation)
+                           string enumMemberNameOnly,
+                           string stringRepresentation,
+                           string enumMemberNameWithEnumName)
     {
         ClassName = className;
         FullyQualifiedClassName = fullyQualifiedClassName; 
         FullyQualifiedEnumValue = fullyQualifiedEnumValue;
-        EnumMemberName = enumMemberName;
+        EnumMemberNameOnly = enumMemberNameOnly;
         _stringRepresentation = stringRepresentation;
+        EnumMemberNameWithEnumName = enumMemberNameWithEnumName;
     }
 
     /// <summary>
@@ -65,8 +75,9 @@ public class EnumMemberInfo
         var fullyQualifiedEnumValue = $"{fieldSymbol.ContainingType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.{fieldSymbol.Name}";
         var enumMemberName = fieldSymbol.Name;
         var stringRepresentation = GetToStringFromValue();
+        var enumMemberNameWithPrefix = $"{fieldSymbol.ContainingType.Name}.{fieldSymbol.Name}";
                 
-        return new EnumMemberInfo(className, fullyQualifiedClassName, fullyQualifiedEnumValue, enumMemberName, stringRepresentation);
+        return new EnumMemberInfo(className, fullyQualifiedClassName, fullyQualifiedEnumValue, enumMemberName, stringRepresentation, enumMemberNameWithPrefix);
 
         string GetToStringFromValue()
         {
@@ -113,8 +124,8 @@ public class EnumMemberInfo
         {
             return _switchArgName;
         }
-        var firstLetter = char.ToLowerInvariant(EnumMemberName[0]);
-        var switchArgName = $"{firstLetter}{EnumMemberName.Substring(1)}Switch";
+        var firstLetter = char.ToLowerInvariant(EnumMemberNameOnly[0]);
+        var switchArgName = $"{firstLetter}{EnumMemberNameOnly.Substring(1)}Switch";
         _switchArgName = switchArgName;
         return switchArgName;
     }
