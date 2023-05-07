@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -38,12 +39,20 @@ public class EnumMemberInfo
     /// <example>PetKind.Cat</example>
     public string EnumMemberNameWithEnumName { get; }
     
+    /// <summary>
+    /// Integer value of enum.
+    /// It can be int, byte, ulong etc.
+    /// Thus named integral
+    /// </summary>
+    public string IntegralValue { get; }
+
     private EnumMemberInfo(string className,
                            string fullyQualifiedClassName,
                            string fullyQualifiedEnumValue,
                            string enumMemberNameOnly,
                            string stringRepresentation,
-                           string enumMemberNameWithEnumName)
+                           string enumMemberNameWithEnumName,
+                           string integralValue)
     {
         ClassName = className;
         FullyQualifiedClassName = fullyQualifiedClassName; 
@@ -51,6 +60,7 @@ public class EnumMemberInfo
         EnumMemberNameOnly = enumMemberNameOnly;
         _stringRepresentation = stringRepresentation;
         EnumMemberNameWithEnumName = enumMemberNameWithEnumName;
+        IntegralValue = integralValue;
     }
 
     /// <summary>
@@ -74,14 +84,16 @@ public class EnumMemberInfo
         var enumMemberName = fieldSymbol.Name;
         var stringRepresentation = GetToStringFromValue();
         var enumMemberNameWithPrefix = $"{fieldSymbol.ContainingType.Name}.{fieldSymbol.Name}";
-                
+        var integralValue = fieldSymbol.ConstantValue?.ToString() ?? throw new ArgumentNullException();
+        
         return new EnumMemberInfo(className, 
             fullyQualifiedClassName, 
             fullyQualifiedEnumValue,
             enumMemberName,
             stringRepresentation,
-            enumMemberNameWithPrefix);
- 
+            enumMemberNameWithPrefix, 
+            integralValue);
+        
         string GetToStringFromValue()
         {
             // If no attributes specified, fallback to name of member

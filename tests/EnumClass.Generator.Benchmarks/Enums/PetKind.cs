@@ -5,7 +5,7 @@ namespace EnumClass.Generator.Benchmarks.Enums;
 [EnumClass(Namespace = "EnumClassPetKind")]
 public enum PetKind
 {
-    [StringValue("Kitten")]
+    [EnumMemberInfo(StringValue = "Kitten")]
     Cat,
     Dog,
     Hamster,

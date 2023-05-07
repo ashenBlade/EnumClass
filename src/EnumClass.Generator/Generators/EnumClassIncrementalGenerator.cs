@@ -135,6 +135,7 @@ namespace EnumClass.Attributes
             builder.AppendLine();
 
             // Cast to original enum
+            builder.AppendLine("    [MethodImpl(MethodImplOptions.AggressiveInlining)]");
             builder.AppendFormat("    public static implicit operator {0}({1} value)\n", enumInfo.FullyQualifiedEnumName, enumInfo.ClassName);
             builder.AppendLine("    {");
             builder.AppendLine("        return value._realEnumValue;");
@@ -142,6 +143,7 @@ namespace EnumClass.Attributes
             builder.AppendLine();
             
             // Cast to integer 
+            builder.AppendLine("    [MethodImpl(MethodImplOptions.AggressiveInlining)]");
             builder.AppendFormat("    public static explicit operator int({0} value)\n", enumInfo.ClassName);
             builder.AppendLine("    {");
             builder.AppendLine("        return (int) value._realEnumValue;");
@@ -158,6 +160,7 @@ namespace EnumClass.Attributes
             builder.AppendLine();
 
             // IEquatable for original enum
+            builder.AppendLine("    [MethodImpl(MethodImplOptions.AggressiveInlining)]");
             builder.AppendFormat("    public bool Equals({0} other)\n", enumInfo.FullyQualifiedEnumName);
             
             builder.AppendLine("    {");
@@ -213,6 +216,7 @@ namespace EnumClass.Attributes
             builder.AppendLine();
             
             // Generate GetHashCode
+            builder.AppendLine("    [MethodImpl(MethodImplOptions.AggressiveInlining)]");
             builder.AppendLine("    public override int GetHashCode()");
             builder.AppendLine("    {");
             builder.AppendLine("        return this._realEnumValue.GetHashCode();");
@@ -247,9 +251,7 @@ namespace EnumClass.Attributes
                 }
                 
                 builder.AppendLine("        }");
-                builder.AppendLine(nullableEnabled
-                                       ? $"        {enumVariableName} = null!;"
-                                       : $"        {enumVariableName} = null;");
+                builder.AppendLine($"        {enumVariableName} = null;");
                 builder.AppendLine("        return false;");
                 builder.AppendLine("    }\n");
             }
@@ -313,8 +315,14 @@ namespace EnumClass.Attributes
                     builder.AppendLine("        }");
                     builder.AppendLine();
                 }
-                
 
+
+                builder.AppendLine("    [MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                builder.AppendLine("        public override int GetHashCode()");
+                builder.AppendLine("        {");
+                builder.AppendFormat("            return {0};\n", member.IntegralValue);
+                builder.AppendLine("        }");
+                
                 builder.AppendLine("    }");
             }
 
