@@ -17,7 +17,9 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
         IncrementalValuesProvider<EnumDeclarationSyntax> enums = 
             generatorContext
                .SyntaxProvider
-               .CreateSyntaxProvider(FilterEnumDeclarations, GetSemanticModelForEnumClass)
+               .CreateSyntaxProvider(
+                    predicate: (node, _) => node is EnumDeclarationSyntax {AttributeLists.Count: > 0}, 
+                    transform: GetSemanticModelForEnumClass)
                .Where(x => x is not null)!;
 
         var provider = generatorContext.CompilationProvider.Combine(enums.Collect());
@@ -29,7 +31,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
         generatorContext.RegisterPostInitializationOutput(context =>
         {
             // Attribute made internal to not conflict with another existing attributes
-            var enumClassAttributeCode = @"using System;
+            var ec = @"using System;
 
 namespace EnumClass.Attributes
 {
@@ -51,7 +53,7 @@ namespace EnumClass.Attributes
         }
     }
 }";
-            context.AddSource("EnumClassAttribute.g.cs", SourceText.From(enumClassAttributeCode, Encoding.UTF8));
+            context.AddSource("EnumClassAttribute.g.cs", SourceText.From(ec, Encoding.UTF8));
 
             var stringRepresentationAttributeCode = @"using System;
 
@@ -66,7 +68,8 @@ namespace EnumClass.Attributes
 }";
             context.AddSource("StringValueAttribute.g.cs", SourceText.From(stringRepresentationAttributeCode, Encoding.UTF8));
             
-            var enumMemberInfoAttributeSourceCode = SourceText.From( @"using System;
+            // Attribute for info about enum member
+            var emi = SourceText.From( @"using System;
 
 namespace EnumClass.Attributes
 {
@@ -92,7 +95,7 @@ namespace EnumClass.Attributes
 
     }
 }", Encoding.UTF8 );
-            context.AddSource("EnumMemberInfoAttribute.g.cs", enumMemberInfoAttributeSourceCode);
+            context.AddSource("EnumMemberInfoAttribute.g.cs", emi);
         });
 
     }
@@ -101,19 +104,29 @@ namespace EnumClass.Attributes
                                                ImmutableArray<EnumDeclarationSyntax> enums,
                                                SourceProductionContext               context)
     {
+        // Why do i need to compile? Skip!
         if (enums.IsDefaultOrEmpty)
         {
             return;
         }
 
-        var enumInfos = GetTypesToGenerate(compilation, enums, context.CancellationToken);
-        var builder   = new StringBuilder();
+        // Extract all EnumInfo from found syntax list
+        var enumInfos = Helpers.GetAllEnumsToGenerate(compilation, enums, context.CancellationToken);
+        
+        // Return if EnumInfos not found
+        if (enumInfos is null or {Count: 0})
+        {
+            return;
+        }
+        
         var nullableEnabled = compilation.Options.NullableContextOptions is not NullableContextOptions.Disable;
+        var builder   = new StringBuilder();
         foreach (var enumInfo in enumInfos)
         {
             builder.Clear();
             if (nullableEnabled)
             {
+                // Source generated files should contain directive
                 builder.Append("#nullable enable\n\n");
             }
             builder.AppendLine("using System;");
@@ -123,9 +136,11 @@ namespace EnumClass.Attributes
             builder.AppendLine();
             builder.AppendFormat("public abstract partial class {0}: IEquatable<{0}>, IEquatable<{1}>\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("{");
+            // Field of original enum we are wrapping
             builder.AppendFormat("    protected readonly {0} _realEnumValue;\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine();
 
+            // Constructor to initialize wrapped enum
             builder.AppendFormat("    protected {0}({1} enumValue)\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("    {");
             builder.AppendLine("        this._realEnumValue = enumValue;");
@@ -147,14 +162,9 @@ namespace EnumClass.Attributes
             builder.AppendLine();
             
             // IEquatable for enum class
-            if (nullableEnabled)
-            {
-                builder.AppendFormat("    public bool Equals({0}? other)\n", enumInfo.ClassName);
-            }
-            else
-            {
-                builder.AppendFormat("    public bool Equals({0} other)\n", enumInfo.ClassName);
-            }
+            builder.AppendFormat(nullableEnabled
+                                     ? "    public bool Equals({0}? other)\n"
+                                     : "    public bool Equals({0} other)\n", enumInfo.ClassName);
             builder.AppendLine("    {");
             builder.AppendLine("        return !ReferenceEquals(other, null) && other._realEnumValue == this._realEnumValue;");
             builder.AppendLine("    }");
@@ -169,14 +179,9 @@ namespace EnumClass.Attributes
             builder.AppendLine();
             
             // Generic equals override using IEquatable<> interfaces
-            if (nullableEnabled)
-            {
-                builder.AppendLine("    public override bool Equals(object? other)");
-            }
-            else
-            {
-                builder.AppendLine("    public override bool Equals(object other)");
-            }
+            builder.AppendLine(nullableEnabled
+                                   ? "    public override bool Equals(object? other)"
+                                   : "    public override bool Equals(object other)");
             builder.AppendLine("    {");
             // First check it is null or self
             builder.AppendLine("        if (ReferenceEquals(other, null)) return false;");
@@ -291,7 +296,7 @@ namespace EnumClass.Attributes
                 builder.AppendLine("        }");
                 builder.AppendLine();
                 
-                // Generate Switch'es 
+                // Generate Switches 
                 for (var i = 0; i < maxArgsCount; i++)
                 {
                     // Action<>
@@ -335,41 +340,6 @@ namespace EnumClass.Attributes
             // Create source file
             context.AddSource($"{enumInfo.ClassName}.g.cs", SourceText.From(builder.ToString(), Encoding.UTF8));
         }
-    }
-    
-    private static List<EnumInfo> GetTypesToGenerate(Compilation                           compilation,
-                                                     ImmutableArray<EnumDeclarationSyntax> enums,
-                                                     CancellationToken                     ct)
-    {
-        var enumClassAttributeSymbol = compilation.GetTypeByMetadataName(Constants.EnumClassAttributeFullName);
-        var enumInfos                = new List<EnumInfo>(enums.Length);
-        if (enumClassAttributeSymbol is null)
-        {
-            return enumInfos;
-        }
-
-        var stringValueAttribute = compilation.GetTypeByMetadataName(Constants.StringRepresentationAttributeFullName);
-
-        foreach (var syntax in enums)
-        {
-            // Do check twice if we get cancel request in between creating EnumInfo
-            // Single check might fail if 'enums' contains single element and
-            // cancellation happened while creating EnumInfo
-            ct.ThrowIfCancellationRequested();
-            var enumInfo = EnumInfo.CreateFromDeclaration(syntax, compilation, stringValueAttribute, enumClassAttributeSymbol);
-            ct.ThrowIfCancellationRequested();
-            if (enumInfo is not null)
-            {
-                enumInfos.Add(enumInfo);
-            }
-        }
-
-        return enumInfos;
-    }
-
-    private static bool FilterEnumDeclarations(SyntaxNode node, CancellationToken token)
-    {
-        return node is EnumDeclarationSyntax {AttributeLists.Count: > 0};
     }
 
     private static EnumDeclarationSyntax? GetSemanticModelForEnumClass(GeneratorSyntaxContext context, CancellationToken token)
