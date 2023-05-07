@@ -65,7 +65,36 @@ namespace EnumClass.Attributes
     }
 }";
             context.AddSource("StringValueAttribute.g.cs", SourceText.From(stringRepresentationAttributeCode, Encoding.UTF8));
+            
+            var enumMemberInfoAttributeSourceCode = SourceText.From( @"using System;
+
+namespace EnumClass.Attributes
+{
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    internal class EnumMemberInfoAttribute: Attribute
+    {
+        /// <summary>
+        /// String representation of enum (returned by <c>ToString()</c>).
+        /// By defaults to enum member name without enum class name
+        /// </summary>
+        /// <remarks>
+        /// <c>null</c> and empty strings are discarded  
+        /// </remarks>
+        public string StringValue 
+        { 
+            get 
+            {
+                // dummy 
+                return """"; 
+            } 
+            set { } 
+        }
+
+    }
+}", Encoding.UTF8 );
+            context.AddSource("EnumMemberInfoAttribute.g.cs", enumMemberInfoAttributeSourceCode);
         });
+
     }
 
     private static void GenerateAllEnumClasses(Compilation                           compilation,

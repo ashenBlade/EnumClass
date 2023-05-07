@@ -1,5 +1,6 @@
 using System;
 using EnumClass.SimpleEnum.EnumClass;
+// ReSharper disable UnusedParameter.Local
 
 PrintEnumClassComparison("Dog", PetKind.Cat, EnumClass.SimpleEnum.PetKind.Dog);
 PrintEnumClassComparison("Cat", PetKind.Cat, EnumClass.SimpleEnum.PetKind.Cat);
