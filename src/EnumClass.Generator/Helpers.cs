@@ -25,7 +25,8 @@ internal static class Helpers
         var enumInfos = new List<EnumInfo>(enums.Length);
 
         var stringValueAttribute = compilation.GetTypeByMetadataName(Constants.StringRepresentationAttributeFullName);
-
+        var enumMemberInfoAttribute = compilation.GetTypeByMetadataName(Constants.EnumMemberInfoAttributeFullName);
+        
         foreach (var syntax in enums)
         {
             // Do check twice if we get cancel request in between creating EnumInfo
@@ -35,7 +36,8 @@ internal static class Helpers
             var enumInfo = EnumInfo.CreateFromDeclaration(syntax, 
                 compilation, 
                 stringValueAttribute,
-                enumClassAttributeSymbol);
+                enumClassAttributeSymbol,
+                enumMemberInfoAttribute);
             ct.ThrowIfCancellationRequested();
             if (enumInfo is not null)
             {

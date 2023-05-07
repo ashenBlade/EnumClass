@@ -344,6 +344,7 @@ namespace EnumClass.Attributes
 
     private static EnumDeclarationSyntax? GetSemanticModelForEnumClass(GeneratorSyntaxContext context, CancellationToken token)
     {
+        
         var syntax         = ( EnumDeclarationSyntax ) context.Node;
         var attributeLists = syntax.AttributeLists;
         
@@ -355,12 +356,17 @@ namespace EnumClass.Attributes
             {
                 var attributeSyntax = attributes[j];
 
+                // Constructor is the method
                 if (context.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
                 {
                     continue;
                 }
-
-                var containingTypeSymbol = attributeSymbol.ContainingType?.ToDisplayString();
+                
+                // Check attribute name with plain text,
+                // because now we do not have access to ISymbol of Attribute
+                var containingTypeSymbol = attributeSymbol.ContainingType?
+                                                          .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                                                          .Replace("global::", "");
                 if (containingTypeSymbol is not Constants.EnumClassAttributeFullName)
                 {
                     continue;
