@@ -7,6 +7,7 @@ namespace EnumClass.SimpleEnum
     public enum PetKind
     {
         Dog,
+        [EnumMemberInfo(StringValue = "Kitten")]
         Cat,
         Parrot = 50,
         Hamster,
