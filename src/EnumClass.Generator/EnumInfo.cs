@@ -162,7 +162,6 @@ internal class EnumInfo
     
     public static EnumInfo? CreateFromDeclaration(EnumDeclarationSyntax syntax, 
                                                   Compilation compilation, 
-                                                  INamedTypeSymbol? stringValueAttribute,
                                                   INamedTypeSymbol enumClassAttribute,
                                                   INamedTypeSymbol? enumMemberInfoAttribute)
     {
@@ -180,7 +179,7 @@ internal class EnumInfo
                           // Enum members are all const, according to docs
                          .Where(m => m is {IsConst: true, HasConstantValue:true})
                           // Try to convert them into EnumMemberInfo
-                         .Select(symbol => EnumMemberInfo.CreateFromFieldSymbol(symbol, stringValueAttribute, enumMemberInfoAttribute)!)
+                         .Select(symbol => EnumMemberInfo.CreateFromFieldSymbol(symbol, enumMemberInfoAttribute)!)
                           // And skip failed
                          .Where(i => i is not null)
                           // Finally, create array of members

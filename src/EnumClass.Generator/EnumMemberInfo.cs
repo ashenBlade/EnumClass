@@ -1,7 +1,4 @@
-using System.Diagnostics.SymbolStore;
-using System.Reflection.Metadata;
 using System.Text;
-using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -61,7 +58,6 @@ public class EnumMemberInfo
     /// </summary>
     /// <returns>Instance of created enum value info</returns>
     public static EnumMemberInfo? CreateFromFieldSymbol(IFieldSymbol fieldSymbol, 
-                                                        INamedTypeSymbol? stringRepresentationAttribute,
                                                         INamedTypeSymbol? enumMemberInfoAttribute)
     {
         // For enum member this must be true
@@ -79,7 +75,12 @@ public class EnumMemberInfo
         var stringRepresentation = GetToStringFromValue();
         var enumMemberNameWithPrefix = $"{fieldSymbol.ContainingType.Name}.{fieldSymbol.Name}";
                 
-        return new EnumMemberInfo(className, fullyQualifiedClassName, fullyQualifiedEnumValue, enumMemberName, stringRepresentation, enumMemberNameWithPrefix);
+        return new EnumMemberInfo(className, 
+            fullyQualifiedClassName, 
+            fullyQualifiedEnumValue,
+            enumMemberName,
+            stringRepresentation,
+            enumMemberNameWithPrefix);
  
         string GetToStringFromValue()
         {
@@ -87,52 +88,30 @@ public class EnumMemberInfo
             if (fieldSymbol.GetAttributes() is {Length: 0} attributes) 
                 return fieldSymbol.Name;
             
-            // First try search in [StringRepresentation]
-            if (stringRepresentationAttribute is not null)
-            {
-                if (attributes
-                        // Filter only [StringValue("EnumValueString")] attribute
-                        // with single primitive (string) argument
-                       .FirstOrDefault(data => data.ConstructorArguments is {Length: 1}
-                                            && IsStringValueAttribute(data)
-                                            && data.ConstructorArguments[0] is
-                                               {
-                                                   IsNull: false,
-                                                   Kind: TypedConstantKind.Primitive
-                                               } constant
-                                            && constant.Value?.ToString() is
-                                               {
-                                                   Length: > 0
-                                               } stringValue
-                                            && !string.IsNullOrWhiteSpace(stringValue)) is { } x)
-                    return x.ConstructorArguments[0].Value!.ToString().Trim();
-            }
-
-            // Then search in [EnumMemberInfo] 
-            if (enumMemberInfoAttribute is not null)
-            {
+            // Search string info in [EnumMemberInfo] 
+            if (enumMemberInfoAttribute is not null
                 // Find [EnumMemberInfo] attribute
-                if (attributes.FirstOrDefault(attr => attr.NamedArguments.Length > 0 && IsEnumMemberInfoAttribute(attr)) is {  } enumMemberAttr 
-                    // Check "StringValue" is set and it is correct
-                 && enumMemberAttr.NamedArguments
-                                  .FirstOrDefault(a => 
-                                       a is
+             && attributes.FirstOrDefault(attr => attr.NamedArguments.Length > 0 && IsEnumMemberInfoAttribute(attr)) is {  } enumMemberAttr 
+                // Check "StringValue" is set and it is correct
+             && enumMemberAttr.NamedArguments
+                              .FirstOrDefault(a => 
+                                   a is
+                                   {
+                                       Key: "StringValue",
+                                       Value:
                                        {
-                                           Key: "StringValue",
-                                           Value:
-                                           {
-                                               IsNull: false,
-                                               Kind: TypedConstantKind.Primitive,
-                                               Value: not null
-                                           }
-                                       }) is var value
-                    // Sanity checks
-                 && value.Value.Value!.ToString() is {Length:>0} notNullString 
-                 && !string.IsNullOrWhiteSpace(notNullString))
-                {
-                    return notNullString;
-                }
+                                           IsNull: false,
+                                           Kind: TypedConstantKind.Primitive,
+                                           Value: not null
+                                       }
+                                   }) is var value
+                // Sanity checks
+             && value.Value.Value!.ToString() is {Length:>0} notNullString 
+             && !string.IsNullOrWhiteSpace(notNullString))
+            {
+                return notNullString;
             }
+        
 
             // Fallback to member name
             return fieldSymbol.Name;
@@ -140,11 +119,6 @@ public class EnumMemberInfo
             bool IsEnumMemberInfoAttribute(AttributeData data)
             {
                 return SymbolEqualityComparer.Default.Equals(data.AttributeClass, enumMemberInfoAttribute); 
-            }
-            
-            bool IsStringValueAttribute(AttributeData attributeData)
-            {
-                return SymbolEqualityComparer.Default.Equals(attributeData.AttributeClass, stringRepresentationAttribute);
             }
         }
     }
