@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Generator.Tests.I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{06B1141F-5E62-4F18-9ADC-3D8205E1BA8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Example", "samples\EnumClass.Example\EnumClass.Example.csproj", "{281C37D9-4C44-435B-8509-DBAD10A7883D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Console", "samples\EnumClass.Console\EnumClass.Console.csproj", "{281C37D9-4C44-435B-8509-DBAD10A7883D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Generator.Benchmarks", "tests\EnumClass.Generator.Benchmarks\EnumClass.Generator.Benchmarks.csproj", "{39FA96D2-2ED8-472A-9B5A-E65E4FA1B928}"
 EndProject

@@ -1,12 +1,11 @@
 using System;
 using EnumClass.Attributes;
 
-namespace EnumClass.Example
+namespace EnumClass.SimpleEnum
 {
-    [EnumClass(Namespace = nameof(Domain))]
+    [EnumClass]
     public enum PetKind
     {
-        [StringValue("Sample dog")]
         Dog,
         Cat,
         Parrot = 50,
@@ -14,7 +13,7 @@ namespace EnumClass.Example
     }
 }
 
-namespace Domain
+namespace EnumClass.SimpleEnum.EnumClass
 {
     public partial class PetKind
     {
