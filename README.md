@@ -56,14 +56,14 @@ Console.WriteLine(EnumClass.PetKind.Cat.ToString() == "Cat");
 // Output: true
 ```
 
-If you want to override default value - use `[StringValue("")]` attribute
+If you want to override default value - use `[EnumMemberInfo(StringValue = "")]` attribute
 ```csharp
 namespace Domain;
 
 [EnumClass]
 public enum PetKind
 {
-    [StringValue("Kitten")]
+    [EnumMemberInfo(StringValue = "Kitten")]
     Cat,
     Dog
 }
