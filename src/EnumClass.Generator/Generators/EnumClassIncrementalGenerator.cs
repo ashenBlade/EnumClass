@@ -54,19 +54,6 @@ namespace EnumClass.Attributes
     }
 }";
             context.AddSource("EnumClassAttribute.g.cs", SourceText.From(ec, Encoding.UTF8));
-
-            var stringRepresentationAttributeCode = @"using System;
-
-namespace EnumClass.Attributes
-{
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    internal class StringValueAttribute: Attribute
-    {
-        internal StringValueAttribute(string value)
-        { }
-    }
-}";
-            context.AddSource("StringValueAttribute.g.cs", SourceText.From(stringRepresentationAttributeCode, Encoding.UTF8));
             
             // Attribute for info about enum member
             var emi = SourceText.From( @"using System;
