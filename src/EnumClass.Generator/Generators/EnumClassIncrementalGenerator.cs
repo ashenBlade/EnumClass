@@ -134,7 +134,9 @@ namespace EnumClass.Attributes
             builder.AppendLine();
             builder.AppendFormat("namespace {0}\n{{\n", enumInfo.Namespace);
             builder.AppendLine();
-            builder.AppendFormat("public abstract partial class {0}: IEquatable<{0}>, IEquatable<{1}>\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
+            builder.AppendFormat("public abstract partial class {0}: "
+                               + "IEquatable<{0}>, IEquatable<{1}>, "
+                               + "IComparable<{0}>, IComparable<{1}>, IComparable\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("{");
             // Field of original enum we are wrapping
             builder.AppendFormat("    protected readonly {0} _realEnumValue;\n", enumInfo.FullyQualifiedEnumName);
@@ -268,7 +270,45 @@ namespace EnumClass.Attributes
                 builder.AppendLine("        return false;");
                 builder.AppendLine("    }\n");
             }
+            builder.AppendLine();
+            
+            // Implementations for IComparable interfaces
+            // IComparable<object>
+            builder.AppendLine(nullableEnabled 
+                                   ? "    public int CompareTo(object? other)" 
+                                   : "    public int CompareTo(object other)");
+            builder.AppendLine("    {");
+            builder.AppendLine("        if (ReferenceEquals(this, other)) return 0;");
+            builder.AppendLine("        if (ReferenceEquals(null, other)) return 1;");
+            builder.AppendFormat("        if (other is {0})\n", enumInfo.ClassName);
+            builder.AppendLine("        {");
+            builder.AppendFormat("            {0} temp = ({0}) other;\n", enumInfo.ClassName);
+            builder.AppendLine("            return this._realEnumValue.CompareTo(temp._realEnumValue);");
+            builder.AppendLine("        }");
+            builder.AppendFormat("        if (other is {0}) return this._realEnumValue.CompareTo(({0}) other);\n", enumInfo.FullyQualifiedEnumName);
+            builder.AppendLine("        return 1;");
+            builder.AppendLine("    }");
+            builder.AppendLine();
+            
+            // IComparable<EnumClass>
+            builder.AppendFormat(nullableEnabled 
+                                   ? "    public int CompareTo({0}? other)\n" 
+                                   : "    public int CompareTo({0} other)\n", enumInfo.ClassName);
+            builder.AppendLine("    {");
+            builder.AppendLine("        if (ReferenceEquals(this, other)) return 0;");
+            builder.AppendLine("        if (ReferenceEquals(null, other)) return 1;");
+            builder.AppendFormat("        return this._realEnumValue.CompareTo(other._realEnumValue);\n");
+            builder.AppendLine("    }");
+            builder.AppendLine();
+            
+            // IComparable<Enum>
+            builder.AppendFormat("    public int CompareTo({0} other)\n", enumInfo.FullyQualifiedEnumName);
+            builder.AppendLine("    {");
+            builder.AppendLine("        return this._realEnumValue.CompareTo(other);");
+            builder.AppendLine("    }");
+            builder.AppendLine();
 
+            
             // Generate Switch definitions
             var maxArgsCount = 8;
             for (var i = 0; i < maxArgsCount; i++)
