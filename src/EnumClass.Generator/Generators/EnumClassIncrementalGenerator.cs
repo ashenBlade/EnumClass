@@ -273,6 +273,10 @@ namespace EnumClass.Attributes
             builder.AppendLine();
             
             // Implementations for IComparable interfaces
+            
+            // Enums implement IComparable.Compare(object) so there is allocation of value type (enum).
+            // Comparison by subtracting integral values has same semantics while remaining a faster option
+            
             // IComparable<object>
             builder.AppendLine(nullableEnabled 
                                    ? "    public int CompareTo(object? other)" 
@@ -283,10 +287,11 @@ namespace EnumClass.Attributes
             builder.AppendFormat("        if (other is {0})\n", enumInfo.ClassName);
             builder.AppendLine("        {");
             builder.AppendFormat("            {0} temp = ({0}) other;\n", enumInfo.ClassName);
-            builder.AppendLine("            return this._realEnumValue.CompareTo(temp._realEnumValue);");
+            builder.AppendLine("            return ((int)this._realEnumValue) - ((int) temp._realEnumValue);");
             builder.AppendLine("        }");
-            builder.AppendFormat("        if (other is {0}) return this._realEnumValue.CompareTo(({0}) other);\n", enumInfo.FullyQualifiedEnumName);
-            builder.AppendLine("        return 1;");
+            // Cast passed object directly to int bypassing casting to original enum
+            builder.AppendFormat("        if (other is {0}) return ((int)this._realEnumValue) - ((int) other);\n", enumInfo.FullyQualifiedEnumName);
+            builder.AppendLine($"        throw new ArgumentException($\"Object to compare must be either {{typeof({enumInfo.ClassName})}} or {{typeof({enumInfo.FullyQualifiedEnumName})}}. Given type: {{other.GetType()}}\", \"other\");");
             builder.AppendLine("    }");
             builder.AppendLine();
             
@@ -297,14 +302,14 @@ namespace EnumClass.Attributes
             builder.AppendLine("    {");
             builder.AppendLine("        if (ReferenceEquals(this, other)) return 0;");
             builder.AppendLine("        if (ReferenceEquals(null, other)) return 1;");
-            builder.AppendFormat("        return this._realEnumValue.CompareTo(other._realEnumValue);\n");
+            builder.AppendFormat("        return ((int)this._realEnumValue) - ((int) other._realEnumValue);\n");
             builder.AppendLine("    }");
             builder.AppendLine();
             
             // IComparable<Enum>
             builder.AppendFormat("    public int CompareTo({0} other)\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("    {");
-            builder.AppendLine("        return this._realEnumValue.CompareTo(other);");
+            builder.AppendLine("        return ((int)this._realEnumValue) - ((int) other);");
             builder.AppendLine("    }");
             builder.AppendLine();
 

@@ -11,6 +11,6 @@ while (Console.ReadLine() is var name)
         staff!.Speak();
         break;
     }
-
+    
     Console.WriteLine("Could not recognize staff type. \nEnter again: ");
 }
