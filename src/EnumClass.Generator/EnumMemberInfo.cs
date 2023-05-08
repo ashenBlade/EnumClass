@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -109,7 +108,7 @@ public class EnumMemberInfo
                               .FirstOrDefault(a => 
                                    a is
                                    {
-                                       Key: "StringValue",
+                                       Key: Constants.EnumMemberInfoAttributeInfo.NamedArguments.StringValue,
                                        Value:
                                        {
                                            IsNull: false,

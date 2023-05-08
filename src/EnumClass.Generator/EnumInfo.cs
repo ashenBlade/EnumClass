@@ -96,7 +96,7 @@ internal class EnumInfo
 
     /// <summary>
     /// Generate code for Switch method accepting Func.
-    ///  This generates return type, method name, and parameters (with names)
+    /// This generates return type, method name, and parameters (with names)
     /// </summary>
     /// <param name="argsCount">Number of arguments Func accepts as parameters. Amount without return arg</param>
     /// <returns>Formatted method signature</returns>
@@ -204,43 +204,6 @@ internal class EnumInfo
                                                     .Replace("global::", "") + ".EnumClass";
     }
     
-    // private static string GetResultNamespace(INamedTypeSymbol enumSymbol, INamedTypeSymbol enumClassAttribute)
-    // {
-    //     if (enumSymbol.GetAttributes() is { Length: >0 } attributes &&
-    //         // Find first [EnumClass] attribute with non-zero named args count
-    //         attributes.FirstOrDefault(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, enumClassAttribute)) is
-    //             {
-    //                 NamedArguments.Length: >0
-    //             } 
-    //             attrInstance &&
-    //         // Get first "Namespace" not null string named argument
-    //         attrInstance.NamedArguments.FirstOrDefault(arg => arg is 
-    //                                                           {
-    //                                                               Key: "Namespace", 
-    //                                                               Value: 
-    //                                                               {
-    //                                                                   IsNull: false,
-    //                                                                   Kind: TypedConstantKind.Primitive,
-    //                                                                   Value: not null
-    //                                                               }}) is var namespaceArg)
-    //     {
-    //         // Assume user entered valid namespace 
-    //         // and we don't want to check it
-    //         var ns = namespaceArg.Value.Value!.ToString();
-    //         if (!string.IsNullOrWhiteSpace(ns))
-    //         {
-    //             return ns;
-    //         }
-    //     }
-    //     // Fallback to original enum namespace
-    //     // but add "EnumClass" suffix to avoid conflicts
-    //     var suffixed = enumSymbol.ContainingNamespace
-    //                              .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-    //                              .Replace("global::", "");
-    //     
-    //     return suffixed + ".EnumClass";
-    // }
-
     private string? _cachedVariableNameNoSuffix;
     
     public string GetVariableName(string? suffix = null)

@@ -16,5 +16,10 @@ public static class Constants
     internal static class EnumMemberInfoAttributeInfo
     {
         internal const string AttributeFullName = "EnumClass.Attributes.EnumMemberInfoAttribute";
+
+        internal static class NamedArguments
+        {
+            internal const string StringValue = "StringValue";
+        }
     }
 }

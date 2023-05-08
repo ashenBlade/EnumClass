@@ -70,13 +70,13 @@ namespace EnumClass.Attributes
             context.AddSource("EnumClassAttribute.g.cs", SourceText.From(ec, Encoding.UTF8));
             
             // Attribute for info about enum member
-            var emi = SourceText.From( @"using System;
+            var emi = SourceText.From( $@"using System;
 
 namespace EnumClass.Attributes
-{
+{{
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     internal class EnumMemberInfoAttribute: Attribute
-    {
+    {{
         /// <summary>
         /// String representation of enum (returned by <c>ToString()</c>).
         /// By defaults to enum member name without enum class name
@@ -84,18 +84,18 @@ namespace EnumClass.Attributes
         /// <remarks>
         /// <c>null</c> and empty strings are discarded  
         /// </remarks>
-        public string StringValue 
-        { 
+        public string {Constants.EnumMemberInfoAttributeInfo.NamedArguments.StringValue} 
+        {{ 
             get 
-            {
+            {{
                 // dummy 
                 return """"; 
-            } 
-            set { } 
-        }
+            }} 
+            set {{ }} 
+        }}
 
-    }
-}", Encoding.UTF8 );
+    }}
+}}", Encoding.UTF8 );
             context.AddSource("EnumMemberInfoAttribute.g.cs", emi);
         });
 
