@@ -184,50 +184,62 @@ internal class EnumInfo
                          .Where(i => i is not null)
                           // Finally, create array of members
                          .ToArray();
-
+        var attributeInfo = ExtractEnumClassAttributeCtorInfo(enumSymbol, enumClassAttribute);
         var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
-        var className = SymbolDisplay.FormatLiteral(enumSymbol.Name, false);
-        var ns = GetResultNamespace(enumSymbol, enumClassAttribute);
+        var className = GetClassName(enumSymbol, attributeInfo);
+        var ns = GetResultNamespace(enumSymbol, attributeInfo);
         
         return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos);
     }
 
-    private static string GetResultNamespace(INamedTypeSymbol enumSymbol, INamedTypeSymbol enumClassAttribute)
+    private static string GetClassName(INamedTypeSymbol enumSymbol, EnumClassAttributeInfo info)
     {
-        if (enumSymbol.GetAttributes() is { Length: >0 } attributes &&
-            // Find first [EnumClass] attribute with non-zero named args count
-            attributes.FirstOrDefault(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, enumClassAttribute)) is
-                {
-                    NamedArguments.Length: >0
-                } 
-                attrInstance &&
-            // Get first "Namespace" not null string named argument
-            attrInstance.NamedArguments.FirstOrDefault(arg => arg is 
-                                                              {
-                                                                  Key: "Namespace", 
-                                                                  Value: 
-                                                                  {
-                                                                      IsNull: false,
-                                                                      Kind: TypedConstantKind.Primitive,
-                                                                      Value: not null
-                                                                  }}) is var namespaceArg)
-        {
-            // Assume user entered valid namespace 
-            // and we don't want to check it
-            var ns = namespaceArg.Value.Value!.ToString();
-            if (!string.IsNullOrWhiteSpace(ns))
-            {
-                return ns;
-            }
-        }
-        // Fallback to original enum namespace
-        // but add "EnumClass" suffix to avoid conflicts
-        var suffixed = enumSymbol.ContainingNamespace
-                                 .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                                 .Replace("global::", "");
-        
-        return suffixed + ".EnumClass";
+        return SymbolDisplay.FormatLiteral( info.TargetClassName ?? enumSymbol.Name, false );
     }
+
+    private static string GetResultNamespace(INamedTypeSymbol enumSymbol, EnumClassAttributeInfo attributeInfo)
+    {
+        return attributeInfo.Namespace ?? enumSymbol.ContainingNamespace
+                                                    .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                                                    .Replace("global::", "") + ".EnumClass";
+    }
+    
+    // private static string GetResultNamespace(INamedTypeSymbol enumSymbol, INamedTypeSymbol enumClassAttribute)
+    // {
+    //     if (enumSymbol.GetAttributes() is { Length: >0 } attributes &&
+    //         // Find first [EnumClass] attribute with non-zero named args count
+    //         attributes.FirstOrDefault(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, enumClassAttribute)) is
+    //             {
+    //                 NamedArguments.Length: >0
+    //             } 
+    //             attrInstance &&
+    //         // Get first "Namespace" not null string named argument
+    //         attrInstance.NamedArguments.FirstOrDefault(arg => arg is 
+    //                                                           {
+    //                                                               Key: "Namespace", 
+    //                                                               Value: 
+    //                                                               {
+    //                                                                   IsNull: false,
+    //                                                                   Kind: TypedConstantKind.Primitive,
+    //                                                                   Value: not null
+    //                                                               }}) is var namespaceArg)
+    //     {
+    //         // Assume user entered valid namespace 
+    //         // and we don't want to check it
+    //         var ns = namespaceArg.Value.Value!.ToString();
+    //         if (!string.IsNullOrWhiteSpace(ns))
+    //         {
+    //             return ns;
+    //         }
+    //     }
+    //     // Fallback to original enum namespace
+    //     // but add "EnumClass" suffix to avoid conflicts
+    //     var suffixed = enumSymbol.ContainingNamespace
+    //                              .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+    //                              .Replace("global::", "");
+    //     
+    //     return suffixed + ".EnumClass";
+    // }
 
     private string? _cachedVariableNameNoSuffix;
     
@@ -242,4 +254,63 @@ internal class EnumInfo
             return _cachedVariableNameNoSuffix ??= char.ToLower(ClassName[0]) + ClassName.Substring(1);
         }
     }
+
+    /// <summary>
+    /// Method to extract information from [EnumClass] attribute: properties, arguments etc...
+    /// </summary>
+    private static EnumClassAttributeInfo ExtractEnumClassAttributeCtorInfo(INamedTypeSymbol enumSymbol,
+                                                                            INamedTypeSymbol enumClassAttribute)
+    {
+        var info = new EnumClassAttributeInfo();
+        
+        // Search for [EnumClass] with at least 1 set property
+        if (enumSymbol.GetAttributes() is {Length:>0} attributes && 
+            attributes.FirstOrDefault(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, enumClassAttribute)) is
+                {
+                    NamedArguments.Length: >0
+                } 
+                attrInstance)
+        {
+            foreach (var namedArgument in attrInstance.NamedArguments)
+            {
+                // Prevent nulls
+                if (namedArgument.Value is not
+                    {
+                        IsNull: false,
+                        Kind: TypedConstantKind.Primitive,
+                        Value: not null
+                    } value)
+                {
+                    continue;
+                }
+
+                // For now we only have string primitives, so common function can be used.
+                // May this will be changed in future
+                switch (namedArgument.Key)
+                {
+                    case Constants.EnumClassAttributeInfo.NamedArguments.Namespace:
+                        info = info with {Namespace = GetConstantStringValue(value)};
+                        break;
+                    case Constants.EnumClassAttributeInfo.NamedArguments.TargetClassName:
+                        info = info with {TargetClassName = GetConstantStringValue(value)};
+                        break;
+                }
+            }
+        }
+        
+        return info;
+
+        string? GetConstantStringValue(TypedConstant constant)
+        {
+            return constant.Value?.ToString() is {Length: > 0} notEmptyString 
+                && !string.IsNullOrWhiteSpace(notEmptyString)
+                       ? notEmptyString
+                       : null;
+        }
+    }
+
+    /// <summary>
+    /// Record that represents named arguments of [EnumClass] attribute
+    /// </summary>
+    private readonly record struct EnumClassAttributeInfo(string? Namespace, string? TargetClassName);
 }

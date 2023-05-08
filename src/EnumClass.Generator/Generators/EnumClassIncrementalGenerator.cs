@@ -31,28 +31,42 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
         generatorContext.RegisterPostInitializationOutput(context =>
         {
             // Attribute made internal to not conflict with another existing attributes
-            var ec = @"using System;
+            var ec = $@"using System;
 
 namespace EnumClass.Attributes
-{
+{{
     [AttributeUsage(AttributeTargets.Enum, AllowMultiple = false)]
     internal class EnumClassAttribute: Attribute
-    {
+    {{
         /// <summary>
         /// Namespace where generated class will be contained.
         /// Defaults to namespace of original enum + "".EnumClass""
         /// </summary>
-        public string Namespace 
-        { 
+        public string {Constants.EnumClassAttributeInfo.NamedArguments.Namespace} 
+        {{ 
             get 
-            { 
+            {{ 
                 // dummy
                 return """"; 
-            } 
-            init { } 
-        }
-    }
-}";
+            }} 
+            init {{ }} 
+        }}
+
+        /// <summary>
+        /// Name of class that will be generated.
+        /// Defaults to the same name of enum
+        /// </summary>
+        public string {Constants.EnumClassAttributeInfo.NamedArguments.TargetClassName}
+        {{ 
+            get 
+            {{ 
+                // dummy
+                return """"; 
+            }} 
+            init {{ }} 
+        }}
+    }}
+}}";
             context.AddSource("EnumClassAttribute.g.cs", SourceText.From(ec, Encoding.UTF8));
             
             // Attribute for info about enum member
@@ -362,7 +376,7 @@ namespace EnumClass.Attributes
                 var containingTypeSymbol = attributeSymbol.ContainingType?
                                                           .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                                                           .Replace("global::", "");
-                if (containingTypeSymbol is not Constants.EnumClassAttributeFullName)
+                if (containingTypeSymbol is not Constants.EnumClassAttributeInfo.AttributeFullName)
                 {
                     continue;
                 }

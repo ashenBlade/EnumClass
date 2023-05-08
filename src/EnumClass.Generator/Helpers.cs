@@ -17,7 +17,7 @@ internal static class Helpers
                                                         ImmutableArray<EnumDeclarationSyntax> enums,
                                                         CancellationToken                     ct)
     {
-        var enumClassAttributeSymbol = compilation.GetTypeByMetadataName(Constants.EnumClassAttributeFullName);
+        var enumClassAttributeSymbol = compilation.GetTypeByMetadataName(Constants.EnumClassAttributeInfo.AttributeFullName);
         if (enumClassAttributeSymbol is null)
         {
             return null;
