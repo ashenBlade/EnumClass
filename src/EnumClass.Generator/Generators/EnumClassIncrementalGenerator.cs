@@ -93,7 +93,6 @@ namespace EnumClass.Attributes
             }} 
             set {{ }} 
         }}
-
     }}
 }}", Encoding.UTF8 );
             context.AddSource("EnumMemberInfoAttribute.g.cs", emi);
