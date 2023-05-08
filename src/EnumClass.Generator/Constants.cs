@@ -2,7 +2,6 @@ namespace EnumClass.Generator;
 
 public static class Constants
 {
-
     internal static class EnumClassAttributeInfo
     {
         internal const string AttributeFullName = "EnumClass.Attributes.EnumClassAttribute";
@@ -14,5 +13,8 @@ public static class Constants
         }
     }
     
-    internal const string EnumMemberInfoAttributeFullName = "EnumClass.Attributes.EnumMemberInfoAttribute";
+    internal static class EnumMemberInfoAttributeInfo
+    {
+        internal const string AttributeFullName = "EnumClass.Attributes.EnumMemberInfoAttribute";
+    }
 }

@@ -24,7 +24,7 @@ internal static class Helpers
         }
         var enumInfos = new List<EnumInfo>(enums.Length);
 
-        var enumMemberInfoAttribute = compilation.GetTypeByMetadataName(Constants.EnumMemberInfoAttributeFullName);
+        var enumMemberInfoAttribute = compilation.GetTypeByMetadataName(Constants.EnumMemberInfoAttributeInfo.AttributeFullName);
         
         foreach (var syntax in enums)
         {
