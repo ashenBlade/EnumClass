@@ -200,8 +200,9 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             // Implementations for IComparable interfaces
             
             // Enums implement IComparable.Compare(object) so there is allocation of value type (enum).
-            // Comparison by subtracting integral values has same semantics while remaining a faster option
-            
+            // Comparison by integral values has same semantics while remaining a faster option.
+            // Do not use subtraction as it may lead to overflow
+
             // IComparable<object>
             builder.AppendLine(nullableEnabled 
                                    ? "    public int CompareTo(object? other)" 
@@ -212,16 +213,18 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             builder.AppendFormat("        if (other is {0})\n", enumInfo.ClassName);
             builder.AppendLine("        {");
             builder.AppendFormat("            {0} temp = ({0}) other;\n", enumInfo.ClassName);
-            builder.AppendFormat("            {0} result = (({0})this._realEnumValue) - (({0}) temp._realEnumValue);\n",
+            builder.AppendFormat("            {0} left = (({0})this._realEnumValue);\n",
                 enumInfo.UnderlyingType.CSharpKeyword);
-            builder.AppendLine("            return result < 0 ? -1 : result == 0 ? 0 : 1;");
+            builder.AppendFormat("            {0} right = (({0})other._realEnumValue);\n",
+                enumInfo.UnderlyingType.CSharpKeyword);
+            builder.AppendLine("            return left < right ? -1 : left == right ? 0 : 1;");
             builder.AppendLine("        }");
             // Cast passed object directly to int bypassing casting to original enum
             builder.AppendFormat("        if (other is {0})\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("        {");
-            builder.AppendFormat("            {0} result = (({0})this._realEnumValue) - (({0}) other);\n",
-                enumInfo.UnderlyingType.CSharpKeyword);
-            builder.AppendLine("            return result < 0 ? -1 : result == 0 ? 0 : 1;");
+            builder.AppendFormat("            {0} left = (({0})this._realEnumValue);\n", enumInfo.UnderlyingType.CSharpKeyword);
+            builder.AppendFormat("            {0} right = (({0})other);\n", enumInfo.UnderlyingType.CSharpKeyword);
+            builder.AppendLine("            return left < right ? -1 : left == right ? 0 : 1;");
             builder.AppendLine("        }");
             builder.AppendLine($"        throw new ArgumentException($\"Object to compare must be either {{typeof({enumInfo.ClassName})}} or {{typeof({enumInfo.FullyQualifiedEnumName})}}. Given type: {{other.GetType()}}\", \"other\");");
             builder.AppendLine("    }");
@@ -234,20 +237,20 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             builder.AppendLine("    {");
             builder.AppendLine("        if (ReferenceEquals(this, other)) return 0;");
             builder.AppendLine("        if (ReferenceEquals(null, other)) return 1;");
-            builder.AppendFormat("            {0} result = (({0})this._realEnumValue) - (({0}) other._realEnumValue);\n",
+            builder.AppendFormat("            {0} left = (({0})this._realEnumValue);\n",
                 enumInfo.UnderlyingType.CSharpKeyword);
-            builder.AppendLine("            return result < 0 ? -1 : result == 0 ? 0 : 1;");
-            // builder.AppendFormat("        return (({0})this._realEnumValue) - (({0}) other._realEnumValue);\n", enumInfo.UnderlyingType);
+            builder.AppendFormat("            {0} right = (({0})other._realEnumValue);\n",
+                enumInfo.UnderlyingType.CSharpKeyword);
+            builder.AppendLine("            return left < right ? -1 : left == right ? 0 : 1;");
             builder.AppendLine("    }");
             builder.AppendLine();
             
             // IComparable<Enum>
             builder.AppendFormat("    public int CompareTo({0} other)\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("    {");
-            // builder.AppendFormat("        return (({0})this._realEnumValue) - (({0}) other);", enumInfo.UnderlyingType);
-            builder.AppendFormat("            {0} result = (({0})this._realEnumValue) - (({0}) other);\n",
-                enumInfo.UnderlyingType.CSharpKeyword);
-            builder.AppendLine("            return result < 0 ? -1 : result == 0 ? 0 : 1;");
+            builder.AppendFormat("            {0} left = (({0})this._realEnumValue);\n", enumInfo.UnderlyingType.CSharpKeyword);
+            builder.AppendFormat("            {0} right = (({0})other);\n", enumInfo.UnderlyingType.CSharpKeyword);
+            builder.AppendLine("            return left < right ? -1 : left == right ? 0 : 1;");
             builder.AppendLine("    }");
             builder.AppendLine();
 

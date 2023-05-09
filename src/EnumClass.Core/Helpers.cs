@@ -45,6 +45,8 @@ public static class Helpers
             }
         }
 
-        return enumInfos.Count > 0 ? enumInfos : null;
+        return enumInfos.Count > 0 
+                   ? enumInfos 
+                   : null;
     }
 }
