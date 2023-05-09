@@ -205,7 +205,7 @@ public class EnumInfo
 
     private static string GetUnderlyingType(SemanticModel semanticModel)
     {
-        return "";
+        return "int";
     }
 
     private static string GetClassName(INamedTypeSymbol enumSymbol, EnumClassAttributeInfo info)

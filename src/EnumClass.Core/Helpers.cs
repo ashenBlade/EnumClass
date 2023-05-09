@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
-using EnumClass.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace EnumClass.Generator;
+namespace EnumClass.Core;
 
 public static class Helpers
 {

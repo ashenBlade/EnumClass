@@ -6,9 +6,9 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-namespace EnumClass.Generator.Generators;
+namespace EnumClass.Generator;
 
-[Generator]
+[Generator(LanguageNames.CSharp)]
 public class EnumClassIncrementalGenerator: IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext generatorContext)
@@ -66,7 +66,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             // Field of original enum we are wrapping
             builder.AppendFormat("    protected readonly {0} _realEnumValue;\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine();
-
+// Use for generating record init properties
             // Constructor to initialize wrapped enum
             builder.AppendFormat("    protected {0}({1} enumValue)\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("    {");
