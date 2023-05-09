@@ -1,5 +1,8 @@
 namespace EnumClass.Core.UnderlyingType;
 
+/// <summary>
+/// List of predefined types that can be used as underlying of enum
+/// </summary>
 public static class UnderlyingTypes
 {
     public static readonly IUnderlyingType Int = new GeneralUnderlyingType("int", s => int.Parse(s).GetHashCode());

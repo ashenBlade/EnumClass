@@ -1,7 +1,10 @@
 using System;
 
-namespace EnumClass.Core;
+namespace EnumClass.Core.UnderlyingType;
 
+/// <summary>
+/// Generic implementation for IUnderlying type
+/// </summary>
 public class GeneralUnderlyingType: IUnderlyingType
 {
     private readonly Func<string, int> _hashCodeComputer;
@@ -9,9 +12,9 @@ public class GeneralUnderlyingType: IUnderlyingType
     public GeneralUnderlyingType(string name, Func<string, int> hashCodeComputer)
     {
         _hashCodeComputer = hashCodeComputer;
-        Name = name;
+        CSharpKeyword = name;
     }
 
-    public string Name { get; }
+    public string CSharpKeyword { get; }
     public int ComputeHashCode(string integralValue) => _hashCodeComputer(integralValue);
 }
