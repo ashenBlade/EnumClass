@@ -1,11 +1,13 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace EnumClass.Generator;
+namespace EnumClass.Core;
 
-internal class EnumInfo
+public class EnumInfo
 {
     /// <summary>
     /// Only class name without namespace
@@ -173,10 +175,11 @@ internal class EnumInfo
                                                   INamedTypeSymbol? enumMemberInfoAttribute)
     {
         var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
-        if (semanticModel.GetDeclaredSymbol(syntax) is not { } enumSymbol)
+        if (ModelExtensions.GetDeclaredSymbol(semanticModel, syntax) is not INamedTypeSymbol enumSymbol)
         {
             return null;
         }
+        
 
         var members = enumSymbol.GetMembers();
         

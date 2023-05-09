@@ -1,10 +1,13 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Threading;
+using EnumClass.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace EnumClass.Generator;
 
-internal static class Helpers
+public static class Helpers
 {
     /// <summary>
     /// Create EnumInfo domain object representing enum class with dependencies (names,  members etc)

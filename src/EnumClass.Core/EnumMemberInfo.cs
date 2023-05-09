@@ -1,8 +1,10 @@
+using System;
+using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace EnumClass.Generator;
+namespace EnumClass.Core;
 
 public class EnumMemberInfo
 {

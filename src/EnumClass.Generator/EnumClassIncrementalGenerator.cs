@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
+using EnumClass.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
