@@ -1,64 +1,64 @@
 using EnumClass.Attributes;
 
-namespace EnumClass.NestedEnum;
-
-public partial class Staff
+namespace EnumClass.NestedEnum
 {
     [EnumClass(
         TargetClassName = nameof(Staff), 
         Namespace = "EnumClass.NestedEnum")]
-    public enum StaffType
+    public enum StaffType: long
     {
-        Manager,
+        Manager = long.MaxValue - 4,
         Programmer,
         Tester,
         CTO,
         CEO,
     }
 
-
-    public abstract void Speak();
-
-    public partial class ProgrammerEnumValue
+    public partial class Staff
     {
-        public override void Speak()
+        public abstract void Speak();
+
+        public partial class ProgrammerEnumValue
         {
-            Console.WriteLine("0110011011");
+            public override void Speak()
+            {
+                Console.WriteLine("0110011011");
+            }
         }
-    }
 
-    public partial class ManagerEnumValue
-    {
-        public override void Speak()
+        public partial class ManagerEnumValue
         {
-            Console.WriteLine("Deadline was yesterday!");
+            public override void Speak()
+            {
+                Console.WriteLine("Deadline was yesterday!");
+            }
         }
-    }
 
-    public partial class CTOEnumValue
-    {
-        public override void Speak()
+        public partial class CTOEnumValue
         {
-            Console.WriteLine("We need microservices!");
+            public override void Speak()
+            {
+                Console.WriteLine("We need microservices!");
+            }
         }
-    }
 
-    public partial class CEOEnumValue
-    {
-        public override void Speak()
+        public partial class CEOEnumValue
         {
-            var old = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("EnumClass is the best product!!!");
-            Console.ForegroundColor = old;
+            public override void Speak()
+            {
+                var old = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine("EnumClass is the best product!!!");
+                Console.ForegroundColor = old;
+            }
         }
-    }
 
-    public partial class TesterEnumValue
-    {
-        public override void Speak()
+        public partial class TesterEnumValue
         {
-            Console.WriteLine(string.Join(',', Enumerable.Range(0, 100).Select(_ => Random.Shared.Next().ToString())));
+            public override void Speak()
+            {
+                Console.WriteLine(string.Join(',', Enumerable.Range(0, 100).Select(_ => Random.Shared.Next().ToString())));
+            }
         }
     }
 }

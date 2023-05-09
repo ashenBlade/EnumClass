@@ -84,9 +84,9 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             
             // Cast to integer 
             builder.AppendLine("    [MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            builder.AppendFormat("    public static explicit operator int({0} value)\n", enumInfo.ClassName);
+            builder.AppendFormat("    public static explicit operator {0}({1} value)\n", enumInfo.UnderlyingType.Name, enumInfo.ClassName);
             builder.AppendLine("    {");
-            builder.AppendLine("        return (int) value._realEnumValue;");
+            builder.AppendFormat("        return ({0}) value._realEnumValue;\n", enumInfo.UnderlyingType.Name);
             builder.AppendLine("    }");
             builder.AppendLine();
             
@@ -212,10 +212,17 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             builder.AppendFormat("        if (other is {0})\n", enumInfo.ClassName);
             builder.AppendLine("        {");
             builder.AppendFormat("            {0} temp = ({0}) other;\n", enumInfo.ClassName);
-            builder.AppendLine("            return ((int)this._realEnumValue) - ((int) temp._realEnumValue);");
+            builder.AppendFormat("            {0} result = (({0})this._realEnumValue) - (({0}) temp._realEnumValue);\n",
+                enumInfo.UnderlyingType.Name);
+            builder.AppendLine("            return result < 0 ? -1 : result == 0 ? 0 : 1;");
             builder.AppendLine("        }");
             // Cast passed object directly to int bypassing casting to original enum
-            builder.AppendFormat("        if (other is {0}) return ((int)this._realEnumValue) - ((int) other);\n", enumInfo.FullyQualifiedEnumName);
+            builder.AppendFormat("        if (other is {0})\n", enumInfo.FullyQualifiedEnumName);
+            builder.AppendLine("        {");
+            builder.AppendFormat("            {0} result = (({0})this._realEnumValue) - (({0}) other);\n",
+                enumInfo.UnderlyingType.Name);
+            builder.AppendLine("            return result < 0 ? -1 : result == 0 ? 0 : 1;");
+            builder.AppendLine("        }");
             builder.AppendLine($"        throw new ArgumentException($\"Object to compare must be either {{typeof({enumInfo.ClassName})}} or {{typeof({enumInfo.FullyQualifiedEnumName})}}. Given type: {{other.GetType()}}\", \"other\");");
             builder.AppendLine("    }");
             builder.AppendLine();
@@ -227,14 +234,20 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             builder.AppendLine("    {");
             builder.AppendLine("        if (ReferenceEquals(this, other)) return 0;");
             builder.AppendLine("        if (ReferenceEquals(null, other)) return 1;");
-            builder.AppendFormat("        return ((int)this._realEnumValue) - ((int) other._realEnumValue);\n");
+            builder.AppendFormat("            {0} result = (({0})this._realEnumValue) - (({0}) other._realEnumValue);\n",
+                enumInfo.UnderlyingType.Name);
+            builder.AppendLine("            return result < 0 ? -1 : result == 0 ? 0 : 1;");
+            // builder.AppendFormat("        return (({0})this._realEnumValue) - (({0}) other._realEnumValue);\n", enumInfo.UnderlyingType);
             builder.AppendLine("    }");
             builder.AppendLine();
             
             // IComparable<Enum>
             builder.AppendFormat("    public int CompareTo({0} other)\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("    {");
-            builder.AppendLine("        return ((int)this._realEnumValue) - ((int) other);");
+            // builder.AppendFormat("        return (({0})this._realEnumValue) - (({0}) other);", enumInfo.UnderlyingType);
+            builder.AppendFormat("            {0} result = (({0})this._realEnumValue) - (({0}) other);\n",
+                enumInfo.UnderlyingType.Name);
+            builder.AppendLine("            return result < 0 ? -1 : result == 0 ? 0 : 1;");
             builder.AppendLine("    }");
             builder.AppendLine();
 
@@ -300,10 +313,10 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 }
 
 
-                builder.AppendLine("    [MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                builder.AppendLine("        [MethodImpl(MethodImplOptions.AggressiveInlining)]");
                 builder.AppendLine("        public override int GetHashCode()");
                 builder.AppendLine("        {");
-                builder.AppendFormat("            return {0};\n", member.IntegralValue);
+                builder.AppendFormat("            return {0};\n", enumInfo.UnderlyingType.ComputeHashCode(member.IntegralValue));
                 builder.AppendLine("        }");
                 
                 builder.AppendLine("    }");

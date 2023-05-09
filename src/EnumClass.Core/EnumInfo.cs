@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EnumClass.Core.UnderlyingType;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -29,10 +30,10 @@ public class EnumInfo
     /// <summary>
     /// Underlying type of enum - type enum inherits from
     /// </summary>
-    /// <example>int, byte, ushort</example>
-    public string UnderlyingType { get; }
+    /// <example>byte, sbyte, short, ushort, int, uint, long, ulong</example>
+    public IUnderlyingType UnderlyingType { get; }
     
-    private EnumInfo(string fullyQualifiedEnumName, string className, string ns, EnumMemberInfo[] members, string underlyingType)
+    private EnumInfo(string fullyQualifiedEnumName, string className, string ns, EnumMemberInfo[] members, IUnderlyingType underlyingType)
     {
         FullyQualifiedEnumName = fullyQualifiedEnumName;
         Namespace = ns;
@@ -198,14 +199,44 @@ public class EnumInfo
         var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
         var className = GetClassName(enumSymbol, attributeInfo);
         var ns = GetResultNamespace(enumSymbol, attributeInfo);
-        var underlyingType = GetUnderlyingType(semanticModel);
+        var underlyingType = GetUnderlyingType(syntax);
         
         return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos, underlyingType);
     }
 
-    private static string GetUnderlyingType(SemanticModel semanticModel)
+    /// <summary>
+    /// Extract name of base integral type of enum
+    /// </summary>
+    /// <returns>Predefined C# name for integral type</returns>
+    private static IUnderlyingType GetUnderlyingType(EnumDeclarationSyntax syntax)
     {
-        return "int";
+        var baseList = syntax.BaseList;
+        
+        // If there is no specifying of underlying type or there are more than one (which is not valid in C#)
+        // fallback to common base type - int
+        if (baseList is null or not {Types: {Count:1}})
+        {
+            return UnderlyingTypes.Int;
+        }
+        
+        // Now we have single underlying type
+        // In syntax tree it is represented by PredefinedTypeSyntax
+        var typeSyntax = ( PredefinedTypeSyntax ) baseList.Types[0].Type;
+        return typeSyntax.Keyword.Text switch
+               {
+                   "byte"  => UnderlyingTypes.Byte,
+                   "ulong" => UnderlyingTypes.Ulong,
+                   "int" => UnderlyingTypes.Int,
+                   "long"  => UnderlyingTypes.Long,
+                   "sbyte" => UnderlyingTypes.Sbyte, 
+                   "short" => UnderlyingTypes.Short, 
+                   "ushort" => UnderlyingTypes.Ushort,
+                   "uint" => UnderlyingTypes.Uint,
+
+                   // Fallback.
+                   // Maybe better to throw exception?
+                   _       => UnderlyingTypes.Int
+               };
     }
 
     private static string GetClassName(INamedTypeSymbol enumSymbol, EnumClassAttributeInfo info)
