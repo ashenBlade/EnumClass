@@ -12,8 +12,6 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext generatorContext)
     {
-        RegisterAttributesOutput(generatorContext);
-        
         IncrementalValuesProvider<EnumDeclarationSyntax> enums = 
             generatorContext
                .SyntaxProvider
@@ -24,80 +22,6 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
 
         var provider = generatorContext.CompilationProvider.Combine(enums.Collect());
         generatorContext.RegisterSourceOutput(provider, (context, tuple) => GenerateAllEnumClasses(tuple.Left, tuple.Right, context));
-    }
-
-    private static void RegisterAttributesOutput(IncrementalGeneratorInitializationContext generatorContext)
-    {
-        generatorContext.RegisterPostInitializationOutput(context =>
-        {
-            // Attribute made internal to not conflict with another existing attributes
-            var ec = $@"using System;
-
-namespace EnumClass.Attributes
-{{
-    [AttributeUsage(AttributeTargets.Enum, AllowMultiple = false)]
-    internal class EnumClassAttribute: Attribute
-    {{
-        /// <summary>
-        /// Namespace where generated class will be contained.
-        /// Defaults to namespace of original enum + "".EnumClass""
-        /// </summary>
-        public string {Constants.EnumClassAttributeInfo.NamedArguments.Namespace} 
-        {{ 
-            get 
-            {{ 
-                // dummy
-                return """"; 
-            }} 
-            init {{ }} 
-        }}
-
-        /// <summary>
-        /// Name of class that will be generated.
-        /// Defaults to the same name of enum
-        /// </summary>
-        public string {Constants.EnumClassAttributeInfo.NamedArguments.TargetClassName}
-        {{ 
-            get 
-            {{ 
-                // dummy
-                return """"; 
-            }} 
-            init {{ }} 
-        }}
-    }}
-}}";
-            context.AddSource("EnumClassAttribute.g.cs", SourceText.From(ec, Encoding.UTF8));
-            
-            // Attribute for info about enum member
-            var emi = SourceText.From( $@"using System;
-
-namespace EnumClass.Attributes
-{{
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    internal class EnumMemberInfoAttribute: Attribute
-    {{
-        /// <summary>
-        /// String representation of enum (returned by <c>ToString()</c>).
-        /// By defaults to enum member name without enum class name
-        /// </summary>
-        /// <remarks>
-        /// <c>null</c> and empty strings are discarded  
-        /// </remarks>
-        public string {Constants.EnumMemberInfoAttributeInfo.NamedArguments.StringValue} 
-        {{ 
-            get 
-            {{
-                // dummy 
-                return """"; 
-            }} 
-            set {{ }} 
-        }}
-    }}
-}}", Encoding.UTF8 );
-            context.AddSource("EnumMemberInfoAttribute.g.cs", emi);
-        });
-
     }
 
     private static void GenerateAllEnumClasses(Compilation                           compilation,

@@ -23,12 +23,19 @@ internal class EnumInfo
     /// Members of enum
     /// </summary>
     public EnumMemberInfo[] Members { get; }
+
+    /// <summary>
+    /// Underlying type of enum - type enum inherits from
+    /// </summary>
+    /// <example>int, byte, ushort</example>
+    public string UnderlyingType { get; }
     
-    private EnumInfo(string fullyQualifiedEnumName, string className, string ns, EnumMemberInfo[] members)
+    private EnumInfo(string fullyQualifiedEnumName, string className, string ns, EnumMemberInfo[] members, string underlyingType)
     {
         FullyQualifiedEnumName = fullyQualifiedEnumName;
         Namespace = ns;
         Members = members;
+        UnderlyingType = underlyingType;
         ClassName = className;
     }
     
@@ -188,8 +195,14 @@ internal class EnumInfo
         var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
         var className = GetClassName(enumSymbol, attributeInfo);
         var ns = GetResultNamespace(enumSymbol, attributeInfo);
+        var underlyingType = GetUnderlyingType(semanticModel);
         
-        return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos);
+        return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos, underlyingType);
+    }
+
+    private static string GetUnderlyingType(SemanticModel semanticModel)
+    {
+        return "";
     }
 
     private static string GetClassName(INamedTypeSymbol enumSymbol, EnumClassAttributeInfo info)

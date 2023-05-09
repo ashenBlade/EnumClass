@@ -4,7 +4,7 @@ using EnumClass.NestedEnum;
 
 Console.WriteLine("Enter staff name: ");
 
-while (Console.ReadLine() is var name)
+while (Console.ReadLine() is {} name)
 {
     if (Staff.TryParse(name, out var staff))
     {
