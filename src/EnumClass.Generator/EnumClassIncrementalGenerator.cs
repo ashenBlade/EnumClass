@@ -59,14 +59,15 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             builder.AppendLine();
             builder.AppendFormat("namespace {0}\n{{\n", enumInfo.Namespace);
             builder.AppendLine();
-            builder.AppendFormat("public abstract partial class {0}: "
+            builder.AppendFormat("{2} abstract partial class {0}: "
                                + "IEquatable<{0}>, IEquatable<{1}>, "
-                               + "IComparable<{0}>, IComparable<{1}>, IComparable\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
+                               + "IComparable<{0}>, IComparable<{1}>, IComparable\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName, enumInfo.Accessibility.Keyword);
             builder.AppendLine("{");
             // Field of original enum we are wrapping
             builder.AppendFormat("    protected readonly {0} _realEnumValue;\n", enumInfo.FullyQualifiedEnumName);
             builder.AppendLine();
-// Use for generating record init properties
+            
+            // Use for generating record init properties
             // Constructor to initialize wrapped enum
             builder.AppendFormat("    protected {0}({1} enumValue)\n", enumInfo.ClassName, enumInfo.FullyQualifiedEnumName);
             builder.AppendLine("    {");
@@ -215,7 +216,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             builder.AppendFormat("            {0} temp = ({0}) other;\n", enumInfo.ClassName);
             builder.AppendFormat("            {0} left = (({0})this._realEnumValue);\n",
                 enumInfo.UnderlyingType.CSharpKeyword);
-            builder.AppendFormat("            {0} right = (({0})other._realEnumValue);\n",
+            builder.AppendFormat("            {0} right = (({0})temp._realEnumValue);\n",
                 enumInfo.UnderlyingType.CSharpKeyword);
             builder.AppendLine("            return left < right ? -1 : left == right ? 0 : 1;");
             builder.AppendLine("        }");
@@ -232,8 +233,8 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             
             // IComparable<EnumClass>
             builder.AppendFormat(nullableEnabled 
-                                   ? "    public int CompareTo({0}? other)\n" 
-                                   : "    public int CompareTo({0} other)\n", enumInfo.ClassName);
+                                     ? "    public int CompareTo({0}? other)\n" 
+                                     : "    public int CompareTo({0} other)\n", enumInfo.ClassName);
             builder.AppendLine("    {");
             builder.AppendLine("        if (ReferenceEquals(this, other)) return 0;");
             builder.AppendLine("        if (ReferenceEquals(null, other)) return 1;");

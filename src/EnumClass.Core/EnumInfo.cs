@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EnumClass.Core.Accessibility;
 using EnumClass.Core.UnderlyingType;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace EnumClass.Core;
 
@@ -32,13 +32,19 @@ public class EnumInfo
     /// </summary>
     /// <example>byte, sbyte, short, ushort, int, uint, long, ulong</example>
     public IUnderlyingType UnderlyingType { get; }
+
+    /// <summary>
+    /// Accessibility of original enum
+    /// </summary>
+    public IAccessibility Accessibility { get; }
     
-    private EnumInfo(string fullyQualifiedEnumName, string className, string ns, EnumMemberInfo[] members, IUnderlyingType underlyingType)
+    private EnumInfo(string fullyQualifiedEnumName, string className, string ns, EnumMemberInfo[] members, IUnderlyingType underlyingType, IAccessibility accessibility)
     {
         FullyQualifiedEnumName = fullyQualifiedEnumName;
         Namespace = ns;
         Members = members;
         UnderlyingType = underlyingType;
+        Accessibility = accessibility;
         ClassName = className;
     }
     
@@ -168,74 +174,62 @@ public class EnumInfo
         _actionSwitchesGeneratedCache[argsCount] = definition;
     }
 
-    private readonly List<string?> _actionSwitchesGeneratedCache = new(); 
-    
-    public static EnumInfo? CreateFromDeclaration(EnumDeclarationSyntax syntax, 
-                                                  Compilation compilation, 
-                                                  INamedTypeSymbol enumClassAttribute,
-                                                  INamedTypeSymbol? enumMemberInfoAttribute)
-    {
-        var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
-        if (ModelExtensions.GetDeclaredSymbol(semanticModel, syntax) is not INamedTypeSymbol enumSymbol)
-        {
-            return null;
-        }
-        
+    private readonly List<string?> _actionSwitchesGeneratedCache = new();
 
+    public static EnumInfo CreateFromNamedTypeSymbol(INamedTypeSymbol enumSymbol, 
+                                                     INamedTypeSymbol enumClassAttribute, 
+                                                     INamedTypeSymbol? enumMemberInfoAttribute)
+    {
         var members = enumSymbol.GetMembers();
         
         var memberInfos = members
                           // Skip all non enum fields declarations
                          .OfType<IFieldSymbol>()
                           // Enum members are all const, according to docs
-                         .Where(m => m is {IsConst: true, HasConstantValue:true})
+                         .Where(static m => m is {IsConst: true, HasConstantValue:true})
                           // Try to convert them into EnumMemberInfo
                          .Select(symbol => EnumMemberInfo.CreateFromFieldSymbol(symbol, enumMemberInfoAttribute)!)
                           // And skip failed
-                         .Where(i => i is not null)
+                         .Where(static i => i is not null)
                           // Finally, create array of members
                          .ToArray();
         var attributeInfo = ExtractEnumClassAttributeCtorInfo(enumSymbol, enumClassAttribute);
         var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
         var className = GetClassName(enumSymbol, attributeInfo);
         var ns = GetResultNamespace(enumSymbol, attributeInfo);
-        var underlyingType = GetUnderlyingType(syntax);
-        
-        return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos, underlyingType);
+        var underlyingType = GetUnderlyingType(enumSymbol);
+        var accessibility = GetAccessibility(enumSymbol);
+        return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos, underlyingType, accessibility);
+    }
+
+    private static IAccessibility GetAccessibility(INamedTypeSymbol enumSymbol)
+    {
+        return GeneralAccessibility.FromAccessibility(enumSymbol.DeclaredAccessibility);
     }
 
     /// <summary>
-    /// Extract name of base integral type of enum
+    /// Get integral underlying type of enum
     /// </summary>
-    /// <returns>Predefined C# name for integral type</returns>
-    private static IUnderlyingType GetUnderlyingType(EnumDeclarationSyntax syntax)
+    /// <param name="enumSymbol">Symbol of original enum</param>
+    /// <returns>Interface of underlying type</returns>
+    private static IUnderlyingType GetUnderlyingType(INamedTypeSymbol enumSymbol)
     {
-        var baseList = syntax.BaseList;
-        
-        // If there is no specifying of underlying type or there are more than one (which is not valid in C#)
-        // fallback to common base type - int
-        if (baseList is null or not {Types: {Count:1}})
-        {
-            return UnderlyingTypes.Int;
-        }
-        
-        // Now we have single underlying type
-        // In syntax tree it is represented by PredefinedTypeSyntax
-        var typeSyntax = ( PredefinedTypeSyntax ) baseList.Types[0].Type;
-        return typeSyntax.Keyword.Text switch
+        // This can not be null because enumSymbol is enum
+        // and for enum property EnumUnderlyingType must not be null
+        return enumSymbol.EnumUnderlyingType!.Name switch
                {
-                   "byte"  => UnderlyingTypes.Byte,
-                   "ulong" => UnderlyingTypes.Ulong,
-                   "int" => UnderlyingTypes.Int,
-                   "long"  => UnderlyingTypes.Long,
-                   "sbyte" => UnderlyingTypes.Sbyte, 
-                   "short" => UnderlyingTypes.Short, 
+                   "int"    => UnderlyingTypes.Int,
+                   "byte"   => UnderlyingTypes.Byte,
+                   "short"  => UnderlyingTypes.Short, 
+                   "long"   => UnderlyingTypes.Long,
+                   "ulong"  => UnderlyingTypes.Ulong,
+                   "sbyte"  => UnderlyingTypes.Sbyte, 
                    "ushort" => UnderlyingTypes.Ushort,
-                   "uint" => UnderlyingTypes.Uint,
+                   "uint"   => UnderlyingTypes.Uint,
 
                    // Fallback.
                    // Maybe better to throw exception?
-                   _       => UnderlyingTypes.Int
+                   _ => UnderlyingTypes.Int
                };
     }
 

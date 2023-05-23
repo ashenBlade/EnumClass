@@ -12,7 +12,7 @@ public static class Helpers
     /// Create EnumInfo domain object representing enum class with dependencies (names,  members etc)
     /// </summary>
     /// <param name="compilation">Compilation context, where <paramref name="enums"/> were found</param>
-    /// <param name="enums">Enum declarations with [EnumClass] attribute on them</param>
+    /// <param name="enums">All <c>enum</c> declarations. They will be filtered to be annotated with [EnumClass]</param>
     /// <param name="ct">Cancellation token from user compilation</param>
     /// <returns>List of <see cref="EnumInfo"/> with length > 0 if successfully parsed, or null otherwise</returns>
     public static List<EnumInfo>? GetAllEnumsToGenerate(Compilation                           compilation,
@@ -24,6 +24,7 @@ public static class Helpers
         {
             return null;
         }
+        
         var enumInfos = new List<EnumInfo>(enums.Length);
 
         var enumMemberInfoAttribute = compilation.GetTypeByMetadataName(Constants.EnumMemberInfoAttributeInfo.AttributeFullName);
@@ -34,15 +35,20 @@ public static class Helpers
             // Single check might fail if 'enums' contains single element and
             // cancellation happened while creating EnumInfo
             ct.ThrowIfCancellationRequested();
-            var enumInfo = EnumInfo.CreateFromDeclaration(syntax, 
-                compilation, 
-                enumClassAttributeSymbol,
-                enumMemberInfoAttribute);
-            ct.ThrowIfCancellationRequested();
-            if (enumInfo is not null)
+            var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
+            
+            // Sanity check
+            if (semanticModel.GetDeclaredSymbol(syntax) is not INamedTypeSymbol
+                                                               {
+                                                                   EnumUnderlyingType: not null
+                                                               } enumSymbol)
             {
-                enumInfos.Add(enumInfo);
+                continue;
             }
+            
+            var enumInfo = EnumInfo.CreateFromNamedTypeSymbol(enumSymbol, enumClassAttributeSymbol, enumMemberInfoAttribute);
+            ct.ThrowIfCancellationRequested();
+            enumInfos.Add(enumInfo);
         }
 
         return enumInfos.Count > 0 
