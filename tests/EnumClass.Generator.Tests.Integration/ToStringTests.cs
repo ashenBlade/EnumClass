@@ -7,13 +7,13 @@ public class ToStringTests
     [EnumClass]
     public enum PunctuationMark
     {
-        [StringValue(".")]
+        [EnumMemberInfo(StringValue = ".")]
         Dot,
-        [StringValue(",")]
+        [EnumMemberInfo(StringValue = ",")]
         Comma,
-        [StringValue("!")]
+        [EnumMemberInfo(StringValue = "!")]
         Exclamation,
-        [StringValue("?")]
+        [EnumMemberInfo(StringValue = "?")]
         Question,
     }
     public static IEnumerable<object> PunctuationMarkWithString => new[]

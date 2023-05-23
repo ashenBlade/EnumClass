@@ -1,11 +1,13 @@
 using System;
+using EnumClass.SimpleEnum.EnumClass;
+// ReSharper disable UnusedParameter.Local
 
-PrintEnumClassComparison("Dog", Domain.PetKind.Cat, EnumClass.Example.PetKind.Dog);
-PrintEnumClassComparison("Cat", Domain.PetKind.Cat, EnumClass.Example.PetKind.Cat);
-PrintEnumClassComparison("Parrot", Domain.PetKind.Parrot, EnumClass.Example.PetKind.Parrot);
-PrintEnumClassComparison("Hamster", Domain.PetKind.Hamster, EnumClass.Example.PetKind.Hamster);
+PrintEnumClassComparison("Dog", PetKind.Dog, EnumClass.SimpleEnum.PetKind.Dog);
+PrintEnumClassComparison("Cat", PetKind.Cat, EnumClass.SimpleEnum.PetKind.Cat);
+PrintEnumClassComparison("Parrot", PetKind.Parrot, EnumClass.SimpleEnum.PetKind.Parrot);
+PrintEnumClassComparison("Hamster", PetKind.Hamster, EnumClass.SimpleEnum.PetKind.Hamster);
 
-void PrintEnumClassComparison(string representationName, Domain.PetKind enumClassKind, EnumClass.Example.PetKind enumKind)
+void PrintEnumClassComparison(string representationName, PetKind enumClassKind, EnumClass.SimpleEnum.PetKind enumKind)
 {
     Console.WriteLine($"Comparison for {representationName}");
     Console.WriteLine($"Enum class:");
@@ -21,7 +23,8 @@ void PrintEnumClassComparison(string representationName, Domain.PetKind enumClas
     
     var result = enumClassKind.Switch(2, 2,
         static (dog,     i, j) => i + j * 2,
-        static (cat,     i, j) => cat.CalculateValue(i, j),
+        // static (cat,     i, j) => cat.CalculateValue(i, j),
+        static (cat,     i, j) => 0,
         static (parrot,  i, j) => i * j + 1,
         static (hamster, i, j) => i + j);
     Console.WriteLine($"It says that 2+2 is {result}");
@@ -32,7 +35,7 @@ void PrintEnumClassComparison(string representationName, Domain.PetKind enumClas
         parrot => 56,
         hamster => 78);
     Console.WriteLine($"It's value is \"{sampleValue}\"");
-
+    
     Console.WriteLine($"It's average weight is {enumClassKind.AverageWeight}");
     Console.WriteLine("-----------------------------------");
 }

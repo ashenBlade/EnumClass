@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\EnumClass.Attributes\EnumClass.Attributes.csproj" />
       <ProjectReference Include="..\..\src\EnumClass.Generator\EnumClass.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 

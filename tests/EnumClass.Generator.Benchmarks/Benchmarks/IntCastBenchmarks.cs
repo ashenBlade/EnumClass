@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
 
 namespace EnumClass.Generator.Benchmarks.Benchmarks;

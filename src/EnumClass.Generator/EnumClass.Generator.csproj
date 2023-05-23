@@ -8,8 +8,8 @@
         <IsRoslynComponent>true</IsRoslynComponent>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IncludeBuildOutput>false</IncludeBuildOutput>
-        <PackageId>EnumClass</PackageId>
-        <Title>EnumClass</Title>
+        <PackageId>EnumClass.Test</PackageId>
+        <Title>EnumClass.Test</Title>
         <Authors>AshBlade</Authors>
         <PackageTags>generator source-generator smart-enum enum enum-class </PackageTags>
         <Description>Inspired by kotlin's enum class, this package provides incremental generator that can create classes from enum declaration. 
@@ -23,7 +23,7 @@ Features:
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
           <PrivateAssets>all</PrivateAssets>
@@ -33,11 +33,18 @@ Features:
     </ItemGroup>
     
     <ItemGroup>
+        <!-- Include analyzer project itself -->
         <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+        
+        <!-- Reference Core project with business logic -->
+        <ProjectReference Include="..\EnumClass.Core\EnumClass.Core.csproj" OutputItemType="Analyzer" PrivateAssets="All"/>
+        
+        <!-- Include it into analyzer project only -->
+        <None Include="..\EnumClass.Core\EnumClass.Core.csproj" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
     </ItemGroup>
     
     <ItemGroup>
-        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
     
 </Project>

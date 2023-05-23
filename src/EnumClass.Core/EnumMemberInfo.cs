@@ -1,11 +1,10 @@
-using System.Diagnostics.SymbolStore;
-using System.Reflection.Metadata;
+using System;
+using System.Linq;
 using System.Text;
-using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace EnumClass.Generator;
+namespace EnumClass.Core;
 
 public class EnumMemberInfo
 {
@@ -41,12 +40,20 @@ public class EnumMemberInfo
     /// <example>PetKind.Cat</example>
     public string EnumMemberNameWithEnumName { get; }
     
+    /// <summary>
+    /// Integer value of enum.
+    /// It can be int, byte, ulong etc.
+    /// Thus named integral
+    /// </summary>
+    public string IntegralValue { get; }
+
     private EnumMemberInfo(string className,
                            string fullyQualifiedClassName,
                            string fullyQualifiedEnumValue,
                            string enumMemberNameOnly,
                            string stringRepresentation,
-                           string enumMemberNameWithEnumName)
+                           string enumMemberNameWithEnumName,
+                           string integralValue)
     {
         ClassName = className;
         FullyQualifiedClassName = fullyQualifiedClassName; 
@@ -54,13 +61,15 @@ public class EnumMemberInfo
         EnumMemberNameOnly = enumMemberNameOnly;
         _stringRepresentation = stringRepresentation;
         EnumMemberNameWithEnumName = enumMemberNameWithEnumName;
+        IntegralValue = integralValue;
     }
 
     /// <summary>
     /// Create enum value info with passed 'raw' values
     /// </summary>
     /// <returns>Instance of created enum value info</returns>
-    public static EnumMemberInfo? CreateFromFieldSymbol(IFieldSymbol fieldSymbol, INamedTypeSymbol? stringRepresentationAttribute)
+    public static EnumMemberInfo? CreateFromFieldSymbol(IFieldSymbol fieldSymbol, 
+                                                        INamedTypeSymbol? enumMemberInfoAttribute)
     {
         // For enum member this must be true
         if (!fieldSymbol.IsConst)
@@ -76,39 +85,53 @@ public class EnumMemberInfo
         var enumMemberName = fieldSymbol.Name;
         var stringRepresentation = GetToStringFromValue();
         var enumMemberNameWithPrefix = $"{fieldSymbol.ContainingType.Name}.{fieldSymbol.Name}";
-                
-        return new EnumMemberInfo(className, fullyQualifiedClassName, fullyQualifiedEnumValue, enumMemberName, stringRepresentation, enumMemberNameWithPrefix);
-
+        var integralValue = fieldSymbol.ConstantValue?.ToString() ?? throw new ArgumentNullException();
+        
+        return new EnumMemberInfo(className, 
+            fullyQualifiedClassName, 
+            fullyQualifiedEnumValue,
+            enumMemberName,
+            stringRepresentation,
+            enumMemberNameWithPrefix, 
+            integralValue);
+        
         string GetToStringFromValue()
         {
-            // Do not search if no attributes found
-            if (stringRepresentationAttribute is not null && 
-                fieldSymbol.GetAttributes() is {Length: >0} attributes)
-            {
-                return attributes
-                           // Filter only [StringValue("EnumValueString")] attribute
-                           // with single primitive (string) argument
-                          .FirstOrDefault(data => data.ConstructorArguments is {Length: 1}
-                                               && IsStringValueAttribute(data)
-                                               && data.ConstructorArguments[0] is
-                                                  {
-                                                      IsNull: false,
-                                                      Kind: TypedConstantKind.Primitive
-                                                  } constant
-                                               && constant.Value?.ToString() is
-                                                  {
-                                                      Length: >0
-                                                  } stringValue
-                                               && !string.IsNullOrWhiteSpace(stringValue)) is {} x 
-                           ? x.ConstructorArguments[0].Value!.ToString().Trim() 
-                           : fieldSymbol.Name;
-            }
-
-            return fieldSymbol.Name;
+            // If no attributes specified, fallback to name of member
+            if (fieldSymbol.GetAttributes() is {Length: 0} attributes) 
+                return fieldSymbol.Name;
             
-            bool IsStringValueAttribute(AttributeData attributeData)
+            // Search string info in [EnumMemberInfo] 
+            if (enumMemberInfoAttribute is not null
+                // Find [EnumMemberInfo] attribute
+             && attributes.FirstOrDefault(attr => attr.NamedArguments.Length > 0 && IsEnumMemberInfoAttribute(attr)) is {  } enumMemberAttr 
+                // Check "StringValue" is set and it is correct
+             && enumMemberAttr.NamedArguments
+                              .FirstOrDefault(a => 
+                                   a is
+                                   {
+                                       Key: Constants.EnumMemberInfoAttributeInfo.NamedArguments.StringValue,
+                                       Value:
+                                       {
+                                           IsNull: false,
+                                           Kind: TypedConstantKind.Primitive,
+                                           Value: not null
+                                       }
+                                   }) is var value
+                // Sanity checks
+             && value.Value.Value!.ToString() is {Length:>0} notNullString 
+             && !string.IsNullOrWhiteSpace(notNullString))
             {
-                return SymbolEqualityComparer.Default.Equals(attributeData.AttributeClass, stringRepresentationAttribute);
+                return notNullString;
+            }
+        
+
+            // Fallback to member name
+            return fieldSymbol.Name;
+
+            bool IsEnumMemberInfoAttribute(AttributeData data)
+            {
+                return SymbolEqualityComparer.Default.Equals(data.AttributeClass, enumMemberInfoAttribute); 
             }
         }
     }
