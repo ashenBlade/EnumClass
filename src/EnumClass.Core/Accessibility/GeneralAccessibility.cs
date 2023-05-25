@@ -1,5 +1,3 @@
-using System;
-
 namespace EnumClass.Core.Accessibility;
 
 public class GeneralAccessibility: IAccessibility

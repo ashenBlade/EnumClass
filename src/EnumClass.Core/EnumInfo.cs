@@ -174,7 +174,7 @@ public class EnumInfo
         _actionSwitchesGeneratedCache[argsCount] = definition;
     }
 
-    private readonly List<string?> _actionSwitchesGeneratedCache = new();
+    private readonly List<string> _actionSwitchesGeneratedCache = new();
 
     public static EnumInfo CreateFromNamedTypeSymbol(INamedTypeSymbol enumSymbol, 
                                                      INamedTypeSymbol enumClassAttribute, 

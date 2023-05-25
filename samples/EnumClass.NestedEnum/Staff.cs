@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using EnumClass.Attributes;
 
 namespace EnumClass.NestedEnum
@@ -7,7 +9,7 @@ namespace EnumClass.NestedEnum
         Namespace = "EnumClass.NestedEnum")]
     public enum StaffType: long
     {
-        Manager = long.MaxValue - 4,
+        Manager,
         Programmer,
         Tester,
         CTO,

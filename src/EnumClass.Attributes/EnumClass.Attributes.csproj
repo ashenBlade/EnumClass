@@ -5,5 +5,4 @@
         <LangVersion>10</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
 </Project>

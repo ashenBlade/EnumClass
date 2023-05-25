@@ -6,8 +6,9 @@
         <Nullable>enable</Nullable>
         <LangVersion>10</LangVersion>
         <IsRoslynComponent>true</IsRoslynComponent>
-        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <IncludeBuildOutput>false</IncludeBuildOutput>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        
         <PackageId>EnumClass.Test</PackageId>
         <Title>EnumClass.Test</Title>
         <Authors>AshBlade</Authors>
@@ -23,24 +24,27 @@ Features:
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
-    
+
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
     </ItemGroup>
     
     <ItemGroup>
-        <!-- Include analyzer project itself -->
-        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+        <ProjectReference Include="..\EnumClass.Attributes\EnumClass.Attributes.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\EnumClass.Core\EnumClass.Core.csproj" PrivateAssets="all" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" PackagePath="analyzers/dotnet/cs" Visible="false" Pack="true" />
+        <None Include="$(OutputPath)\EnumClass.Core.dll" PackagePath="analyzers/dotnet/cs" Visible="false" Pack="true" />
+        <None Include="$(OutputPath)\EnumClass.Attributes.dll" PackagePath="analyzers/dotnet/cs" Visible="false" Pack="true" />
         
-        <!-- Reference Core project with business logic -->
-        <ProjectReference Include="..\EnumClass.Core\EnumClass.Core.csproj" OutputItemType="Analyzer" PrivateAssets="All"/>
-        
-        <!-- Include it into analyzer project only -->
-        <None Include="..\EnumClass.Core\EnumClass.Core.csproj" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+<!--        <None Include="$(OutputPath)\EnumClass.Core.dll" PackagePath="lib/netstandard2.0" Visible="true" Pack="true" />-->
+        <None Include="$(OutputPath)\EnumClass.Attributes.dll" PackagePath="lib/netstandard2.0" Visible="true" Pack="true" />
+<!--        <None Include="$(OutputPath)\EnumClass.Core.dll" PackagePath="lib/netstandard2.0" Visible="false" Pack="true" />-->
+<!--        <None Include="../EnumClass.Attributes/bin/$(Configuration)/netstandard2.0/EnumClass.Attributes.dll" PackagePath="lib/netstandard2.0" Visible="false" Pack="true" />-->
+<!--        <None Include="../EnumClass.Core/bin/$(Configuration)/netstandard2.0/EnumClass.Core.dll" PackagePath="lib/netstandard2.0" Visible="false" Pack="true" />-->
     </ItemGroup>
     
     <ItemGroup>

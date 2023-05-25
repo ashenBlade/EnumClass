@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System;
 using EnumClass.NestedEnum;
 
 Console.WriteLine("Enter staff name: ");
