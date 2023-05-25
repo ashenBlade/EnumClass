@@ -2,22 +2,52 @@
 
 ## Summary
 
-Type safe source-generated alternative to C# `enum` inspired by Kotlin `enum class`
+Type-safe source-generated alternative to C# `enum` inspired by Kotlin `enum class`
 
-## What is it
+## What is it?
 
 This library contains source generator that creates `class` for specified `enum`. 
-Classes contains similar functionality as original enum.
+These classes contain similar functionality as original enum, but behave as ordinal `class`
+
+## Getting started
+
+### Installation
+
+1. Add reference to Nuget package
+
+- .NET CLI
+
+```bash
+dotnet add package EnumClass --version 1.0.0
+```
+
+- Package Manager
+
+```
+Install-Package EnumClass -Version 1.0.0
+```
+
+- PackageReference
+
+```
+<PackageReference Include="EnumClass" Version="1.0.0" />
+```
+
+2. Specify _Analyzer_ property in `.csproj`
+
+```
+<PackageReference Include="EnumClass" Version="1.0.0" OutputItemType="Analyzer"/>
+```
+
 
 ## Usage
 
+### Example usage
 
-### Getting started
-Steps:
-1. Add reference to [EnumClass](https://www.nuget.org/packages/EnumClass/) to your project with enum
-2. Add `[EnumClass]` attribute to enum
+Add `[EnumClass]` attribute to enum
 
-That is all! Corresponding classes will be generated in namespace as your enum, but prefixed with **EnumClass**
+That is all! 
+Corresponding class will be generated in namespace as your enum, but prefixed with **EnumClass**
 
 Example
 ```csharp
@@ -171,7 +201,7 @@ using EnumClass.Attributes;
 
 namespace Test;
 
-[EnumClass(Namespace = "Domain.Test")]
+[EnumClass(Namespace = "Domain")]
 public enum SampleEnum
 {
     First,
@@ -187,8 +217,7 @@ Console.WriteLine(SampleEnum.First);
 
 ### Same name of member and enum
 
-In current implementation static enum class field names has the same names as original enum class.
-It causes collisions on compilation.
+In the current implementation, static enum class field names have the same names as members of the original enum.
 
 E.g.
 ```csharp
@@ -216,7 +245,8 @@ In production may be better for now to use [SmartEnum](https://github.com/ardali
 
 ## Contributing
 
-If you have idea on how to improve project or found bug, create an issue on [GitHub](https://github.com/ashenBlade/EnumClass/issues)
+If you have an idea on how to improve the project or have found a bug, 
+create an issue on [GitHub](https://github.com/ashenBlade/EnumClass/issues)
 
 ## Give a star
 
