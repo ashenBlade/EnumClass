@@ -1,3 +1,5 @@
+#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -174,7 +176,7 @@ public class EnumInfo
         _actionSwitchesGeneratedCache[argsCount] = definition;
     }
 
-    private readonly List<string> _actionSwitchesGeneratedCache = new();
+    private readonly List<string?> _actionSwitchesGeneratedCache = new();
 
     public static EnumInfo CreateFromNamedTypeSymbol(INamedTypeSymbol enumSymbol, 
                                                      INamedTypeSymbol enumClassAttribute, 
@@ -218,17 +220,18 @@ public class EnumInfo
         // and for enum property EnumUnderlyingType must not be null
         return enumSymbol.EnumUnderlyingType!.Name switch
                {
-                   "int"    => UnderlyingTypes.Int,
-                   "byte"   => UnderlyingTypes.Byte,
-                   "short"  => UnderlyingTypes.Short, 
-                   "long"   => UnderlyingTypes.Long,
-                   "ulong"  => UnderlyingTypes.Ulong,
-                   "sbyte"  => UnderlyingTypes.Sbyte, 
-                   "ushort" => UnderlyingTypes.Ushort,
-                   "uint"   => UnderlyingTypes.Uint,
+                   
+                   "Int32"  => UnderlyingTypes.Int,
+                   "Byte"   => UnderlyingTypes.Byte,
+                   "Int16"  => UnderlyingTypes.Short, 
+                   "Int64"  => UnderlyingTypes.Long,
+                   "UInt64" => UnderlyingTypes.Ulong,
+                   "SByte"  => UnderlyingTypes.Sbyte, 
+                   "UInt16" => UnderlyingTypes.Ushort,
+                   "UInt32" => UnderlyingTypes.Uint,
 
                    // Fallback.
-                   // Maybe better to throw exception?
+                   // Maybe better to throw exception or display diagnostic?
                    _ => UnderlyingTypes.Int
                };
     }

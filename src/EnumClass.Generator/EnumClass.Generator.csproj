@@ -32,19 +32,15 @@ Features:
     
     <ItemGroup>
         <ProjectReference Include="..\EnumClass.Attributes\EnumClass.Attributes.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\EnumClass.Core\EnumClass.Core.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\EnumClass.Core\EnumClass.Core.csproj" OutputItemType="Analyzer" PrivateAssets="all" />
     </ItemGroup>
     
     <ItemGroup>
         <None Include="$(OutputPath)\$(AssemblyName).dll" PackagePath="analyzers/dotnet/cs" Visible="false" Pack="true" />
         <None Include="$(OutputPath)\EnumClass.Core.dll" PackagePath="analyzers/dotnet/cs" Visible="false" Pack="true" />
-        <None Include="$(OutputPath)\EnumClass.Attributes.dll" PackagePath="analyzers/dotnet/cs" Visible="false" Pack="true" />
         
-<!--        <None Include="$(OutputPath)\EnumClass.Core.dll" PackagePath="lib/netstandard2.0" Visible="true" Pack="true" />-->
+        <None Include="$(OutputPath)\EnumClass.Attributes.dll" PackagePath="analyzers/dotnet/cs" Visible="false" Pack="true" />
         <None Include="$(OutputPath)\EnumClass.Attributes.dll" PackagePath="lib/netstandard2.0" Visible="true" Pack="true" />
-<!--        <None Include="$(OutputPath)\EnumClass.Core.dll" PackagePath="lib/netstandard2.0" Visible="false" Pack="true" />-->
-<!--        <None Include="../EnumClass.Attributes/bin/$(Configuration)/netstandard2.0/EnumClass.Attributes.dll" PackagePath="lib/netstandard2.0" Visible="false" Pack="true" />-->
-<!--        <None Include="../EnumClass.Core/bin/$(Configuration)/netstandard2.0/EnumClass.Core.dll" PackagePath="lib/netstandard2.0" Visible="false" Pack="true" />-->
     </ItemGroup>
     
     <ItemGroup>
