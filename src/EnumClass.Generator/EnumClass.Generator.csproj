@@ -9,10 +9,10 @@
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         
-        <PackageId>EnumClass.Test</PackageId>
-        <Title>EnumClass.Test</Title>
+        <PackageId>EnumClass.Generator</PackageId>
+        <Title>EnumClass</Title>
         <Authors>AshBlade</Authors>
-        <PackageTags>generator source-generator smart-enum enum enum-class </PackageTags>
+        <PackageTags>generator;source generator;smart enum;enum;enum class;type safety;kotlin;enumclass;</PackageTags>
         <Description>Inspired by kotlin's enum class, this package provides incremental generator that can create classes from enum declaration. 
 All you have to do is to add [EnumClass] attribute to your enum. 
 Features:
@@ -23,6 +23,7 @@ Features:
         <RepositoryUrl>https://github.com/ashenBlade/EnumClass</RepositoryUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Version>1.1.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
