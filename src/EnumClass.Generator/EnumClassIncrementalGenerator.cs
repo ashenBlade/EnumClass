@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using System.Threading;
 using EnumClass.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -339,6 +338,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
         }
     }
 
+    [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
     private static EnumDeclarationSyntax? GetSemanticModelForEnumClass(GeneratorSyntaxContext context, CancellationToken token)
     {
         
@@ -383,9 +383,9 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
     /// <param name="enums">All <c>enum</c> declarations. They will be filtered to be annotated with [EnumClass]</param>
     /// <param name="ct">Cancellation token from user compilation</param>
     /// <returns>List of <see cref="EnumInfo"/> with length > 0 if successfully parsed, or null otherwise</returns>
-    public static List<EnumInfo>? GetAllEnumsToGenerate(Compilation                           compilation,
-                                                        ImmutableArray<EnumDeclarationSyntax> enums,
-                                                        CancellationToken                     ct)
+    private static List<EnumInfo>? GetAllEnumsToGenerate(Compilation                           compilation,
+                                                         ImmutableArray<EnumDeclarationSyntax> enums,
+                                                         CancellationToken                     ct)
     {
         var enumClassAttributeSymbol = compilation.GetTypeByMetadataName(Constants.EnumClassAttributeInfo.AttributeFullName);
         if (enumClassAttributeSymbol is null)
@@ -406,15 +406,12 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
             
             // Sanity check
-            if (semanticModel.GetDeclaredSymbol(syntax) is not INamedTypeSymbol
-                                                               {
-                                                                   EnumUnderlyingType: not null
-                                                               } enumSymbol)
+            if (semanticModel.GetDeclaredSymbol(syntax) is not { EnumUnderlyingType: not null } enumSymbol)
             {
                 continue;
             }
             
-            var enumInfo = EnumInfo.CreateFromNamedTypeSymbol(enumSymbol, enumClassAttributeSymbol, enumMemberInfoAttribute);
+            var enumInfo = EnumInfoFactory.CreateFromNamedTypeSymbol(enumSymbol, enumClassAttributeSymbol, enumMemberInfoAttribute);
             ct.ThrowIfCancellationRequested();
             enumInfos.Add(enumInfo);
         }

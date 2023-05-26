@@ -21,9 +21,9 @@ public abstract partial class SampleEnum: IEquatable<SampleEnum>, IEquatable<glo
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator int(SampleEnum value)
+    public static explicit operator byte(SampleEnum value)
     {
-        return (int) value._realEnumValue;
+        return (byte) value._realEnumValue;
     }
 
     public bool Equals(SampleEnum other)
@@ -101,14 +101,14 @@ public abstract partial class SampleEnum: IEquatable<SampleEnum>, IEquatable<glo
         if (other is SampleEnum)
         {
             SampleEnum temp = (SampleEnum) other;
-            int left = ((int)this._realEnumValue);
-            int right = ((int)temp._realEnumValue);
+            byte left = ((byte)this._realEnumValue);
+            byte right = ((byte)temp._realEnumValue);
             return left < right ? -1 : left == right ? 0 : 1;
         }
         if (other is global::Test.SampleEnum)
         {
-            int left = ((int)this._realEnumValue);
-            int right = ((int)other);
+            byte left = ((byte)this._realEnumValue);
+            byte right = ((byte)other);
             return left < right ? -1 : left == right ? 0 : 1;
         }
         throw new ArgumentException($"Object to compare must be either {typeof(SampleEnum)} or {typeof(global::Test.SampleEnum)}. Given type: {other.GetType()}", "other");
@@ -118,15 +118,15 @@ public abstract partial class SampleEnum: IEquatable<SampleEnum>, IEquatable<glo
     {
         if (ReferenceEquals(this, other)) return 0;
         if (ReferenceEquals(null, other)) return 1;
-            int left = ((int)this._realEnumValue);
-            int right = ((int)other._realEnumValue);
+            byte left = ((byte)this._realEnumValue);
+            byte right = ((byte)other._realEnumValue);
             return left < right ? -1 : left == right ? 0 : 1;
     }
 
     public int CompareTo(global::Test.SampleEnum other)
     {
-            int left = ((int)this._realEnumValue);
-            int right = ((int)other);
+            byte left = ((byte)this._realEnumValue);
+            byte right = ((byte)other);
             return left < right ? -1 : left == right ? 0 : 1;
     }
 

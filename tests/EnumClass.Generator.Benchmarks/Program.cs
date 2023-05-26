@@ -6,9 +6,9 @@ using EnumClass.Generator.Benchmarks.Benchmarks;
 BenchmarkRunner.Run(new[]
 {
     typeof(ToStringBenchmarks),
-    // typeof(EqualsBenchmarks),
-    // typeof(IntCastBenchmarks),
-    // typeof(GetHashCodeBenchmarks),
-    // typeof(TryParseBenchmarks.InvalidValues),
-    // typeof(TryParseBenchmarks.ValidValues),
+    typeof(EqualsBenchmarks),
+    typeof(IntCastBenchmarks),
+    typeof(GetHashCodeBenchmarks),
+    typeof(TryParseBenchmarks.InvalidValues),
+    typeof(TryParseBenchmarks.ValidValues),
 });
