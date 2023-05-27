@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using EnumClass.Core.Accessibility;
 using EnumClass.Core.UnderlyingType;
 using Microsoft.CodeAnalysis;
@@ -156,21 +155,35 @@ public static class EnumInfoFactory
     /// Find ALL enums marked with [EnumClassAttribute] from all assemblies accessible in compilation
     /// </summary>
     /// <param name="compilation">The compilation object is an immutable representation of a single invocation of the compiler</param>
-    /// <param name="token">Cancellation token</param>
-    /// <param name="enumMemberInfoAttribute">[EnumMemberInfo]</param>
-    /// <param name="enumClassAttribute">[EnumMemberInfo]</param>
-    /// <returns>All EnumInfo that were found and successfully extracted</returns>
+    /// <param name="context">Context </param>
+    /// <returns>All EnumInfo that were found and successfully extracted or <c>null</c> if error occured</returns>
     /// <remarks>
     /// Main consumers of this function are extension packages that create helper classes, such as JsonConverter
+    /// </remarks>
+    /// <remarks>
+    /// If null returned, required diagnostics are already reported
     /// </remarks>
     [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
     [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
     [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
-    public static List<EnumInfo> GetAllEnumInfosFromCompilation(Compilation compilation, 
-                                                                INamedTypeSymbol enumClassAttribute, 
-                                                                INamedTypeSymbol enumMemberInfoAttribute,
-                                                                CancellationToken token)
+    public static List<EnumInfo>? GetAllEnumInfosFromCompilation(Compilation compilation, 
+                                                                 SourceProductionContext context)
     {
+        var enumClassAttribute = compilation.GetTypeByMetadataName(Constants.EnumClassAttributeInfo.AttributeFullName);
+        var enumMemberInfoAttribute = compilation.GetTypeByMetadataName(Constants.EnumMemberInfoAttributeInfo.AttributeFullName);
+        
+        if (enumClassAttribute is null)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(Diagnostics.NoEnumClassAttributeFound, Location.None));
+            return null;
+        }
+
+        if (enumMemberInfoAttribute is null)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(Diagnostics.NoEnumMemberInfoAttributeFound, Location.None));
+            return null;
+        }
+
         var parsed = new List<EnumInfo>();
         
         foreach (var namedTypeSymbol in FactoryHelpers.ExtractAllEnumsFromCompilation(compilation))

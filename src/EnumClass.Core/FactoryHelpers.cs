@@ -6,8 +6,7 @@ namespace EnumClass.Core;
 
 internal static class FactoryHelpers
 {
-    public static IEnumerable<INamedTypeSymbol> ExtractAllEnumsFromCompilation(
-        Compilation compilation)
+    public static IEnumerable<INamedTypeSymbol> ExtractAllEnumsFromCompilation(Compilation compilation)
     {
         // https://stackoverflow.com/a/74163439/14109140
         
@@ -36,17 +35,15 @@ internal static class FactoryHelpers
     
     private static IEnumerable<INamedTypeSymbol> ExtractEnumsFromAssembly(IAssemblySymbol assemblySymbol)
     {
-        var namespaces = GetAllNamespaces(assemblySymbol.GlobalNamespace);
-        
-        foreach (var @namespace in namespaces)
+        foreach (var @namespace in GetAllNamespaces(assemblySymbol.GlobalNamespace))
         {
-            foreach (var typeMember in @namespace.GetTypeMembers())
+            foreach (var member in @namespace.GetTypeMembers())
             {
-                foreach (var childTypeOrSelf in GetAllNestedTypesAndSelf(typeMember))
+                foreach (var childOrSelf in GetAllNestedTypesAndSelf(member))
                 {
-                    if (IsRequiredEnum(childTypeOrSelf))
+                    if (IsRequiredEnum(childOrSelf))
                     {
-                        yield return childTypeOrSelf;
+                        yield return childOrSelf;
                     }            
                 }
             }
@@ -66,7 +63,7 @@ internal static class FactoryHelpers
         yield return root;
         foreach (var child in root.GetNamespaceMembers())
         {
-            foreach (var next in child.GetNamespaceMembers())
+            foreach (var next in GetAllNamespaces(child))
             {
                 yield return next;
             }
@@ -77,12 +74,14 @@ internal static class FactoryHelpers
     {
         yield return namedTypeSymbol;
         
-        // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
-        foreach (var member in namedTypeSymbol.GetTypeMembers())
+        if (namedTypeSymbol.GetTypeMembers() is {Length:>0} namedTypeSymbols)
         {
-            foreach (var type in GetAllNestedTypesAndSelf(member))
+            foreach (var member in namedTypeSymbols)
             {
-                yield return type;
+                foreach (var type in GetAllNestedTypesAndSelf(member))
+                {
+                    yield return type;
+                }
             }
         }
     }
