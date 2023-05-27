@@ -165,7 +165,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             builder.AppendLine("    }");
             builder.AppendLine();
             
-            // Generate TryParse
+            // Generate TryParse for string representation
             {
                 var enumVariableName = enumInfo.GetVariableName();
                 builder.AppendLine(nullableEnabled
@@ -199,6 +199,36 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             }
             builder.AppendLine();
             
+            // Generate TryParse for integral value
+            // Generate TryParse for string representation
+            {
+                var enumVariableName = enumInfo.GetVariableName();
+                builder.AppendLine(nullableEnabled
+                                       ? $"    public static bool TryParse({enumInfo.UnderlyingType.CSharpKeyword} value, out {enumInfo.ClassName}? {enumVariableName})"
+                                       : $"    public static bool TryParse({enumInfo.UnderlyingType.CSharpKeyword} value, out {enumInfo.ClassName} {enumVariableName})");
+                builder.AppendLine("    {");
+                builder.AppendLine("        switch (value)");
+                builder.AppendLine("        {");
+
+                // First, check for only enum member name. 
+                // Then when enum name added.
+                // We do it in that way (not merging with enum name together),
+                // because usually we have only enum member name in string (my subjective opinion)
+                foreach (var member in enumInfo.Members)
+                {
+                    builder.Append($"            case {member.IntegralValue}:\n");
+                    builder.Append($"                {enumVariableName} = {member.EnumMemberNameOnly};\n");
+                    builder.Append($"                return true;\n");
+                }
+                
+                builder.AppendLine("        }");
+                builder.AppendLine($"        {enumVariableName} = null;");
+                builder.AppendLine("        return false;");
+                builder.AppendLine("    }\n");
+            }
+            builder.AppendLine();
+
+
             // Implementations for IComparable interfaces
             
             // Enums implement IComparable.Compare(object) so there is allocation of value type (enum).
