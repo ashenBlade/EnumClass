@@ -34,8 +34,7 @@ public class JsonConverterIncrementalGenerator: IIncrementalGenerator
 using System.Text.Json.Serialization;
 using System;");
 
-        // builder.AppendFormat("namespace {0}\n{{\n", enumInfo.Namespace);
-        builder.AppendLine("namespace Custom\n{");
+        builder.AppendFormat("namespace {0}\n{{\n", enumInfo.Namespace);
         
         // Class definition
         builder.AppendFormat("public class {0}JsonConverter : JsonConverter<{1}>\n{{\n", enumInfo.ClassName, enumInfo.FullyQualifiedClassName);

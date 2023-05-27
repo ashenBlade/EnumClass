@@ -29,8 +29,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\EnumClass.Attributes\EnumClass.Attributes.csproj" />
-      <ProjectReference Include="..\..\src\EnumClass.Generator\EnumClass.Generator.csproj" />
+      <ProjectReference Include="..\..\..\src\EnumClass.Attributes\EnumClass.Attributes.csproj" />
+      <ProjectReference Include="..\..\..\src\EnumClass.Generator\EnumClass.Generator.csproj" />
     </ItemGroup>
 
     <ItemGroup>

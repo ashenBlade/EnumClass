@@ -441,7 +441,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 continue;
             }
             
-            var enumInfo = EnumInfoFactory.CreateFromNamedTypeSymbol(enumSymbol, enumClassAttributeSymbol, enumMemberInfoAttribute);
+            var enumInfo = EnumInfoFactory.CreateFromNamedTypeSymbol(enumSymbol, enumClassAttributeSymbol, enumMemberInfoAttribute!);
             ct.ThrowIfCancellationRequested();
             enumInfos.Add(enumInfo);
         }

@@ -22,9 +22,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\EnumClass.Attributes\EnumClass.Attributes.csproj" />
-        <ProjectReference Include="..\..\src\EnumClass.Core\EnumClass.Core.csproj" OutputItemType="Analyzer" />
-        <ProjectReference Include="..\..\src\EnumClass.Generator\EnumClass.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\..\..\src\EnumClass.Attributes\EnumClass.Attributes.csproj" />
+        <ProjectReference Include="..\..\..\src\EnumClass.Core\EnumClass.Core.csproj" OutputItemType="Analyzer" />
+        <ProjectReference Include="..\..\..\src\EnumClass.Generator\EnumClass.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
     
 </Project>
