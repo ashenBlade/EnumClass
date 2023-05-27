@@ -357,6 +357,25 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 builder.AppendLine("    }");
             }
 
+            // Generate method for iterating over all instances
+            builder.AppendFormat("    public static IEnumerable<{0}> GetAllMembers()\n", enumInfo.ClassName);
+            builder.AppendLine("    {");
+            {
+                // Otherwise - won't compile
+                if (enumInfo.Members.Length == 0)
+                {
+                    builder.AppendLine("        yield break;");
+                }
+                else
+                {
+                    foreach (var member in enumInfo.Members)
+                    {
+                        builder.AppendFormat("        yield return {0};\n", member.EnumMemberNameOnly);
+                    }
+                }
+            }
+            builder.AppendLine("    }");
+            
             // Enum class
             builder.AppendLine("}");
             
