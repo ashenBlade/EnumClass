@@ -52,5 +52,47 @@ public class SampleEnumJsonConverterTests
         var actual = Deserialize(json);
         Assert.Null(actual);
     }
+
+    [Fact]
+    public void Serialize_WithFirst_ShouldSerializeAs0()
+    {
+        var expectedJson = @"{""Value"":0}";
+        var actual = JsonSerializer.Serialize(new GenericJsonConverterClass<EnumClass.SampleEnum>()
+        {
+            Value = EnumClass.SampleEnum.First
+        }, SerializerOptions);
+        Assert.Equal(expectedJson, actual);
+    }
+    [Fact]
+    public void Serialize_WithSecond_ShouldSerializeAs1()
+    {
+        var expectedJson = @"{""Value"":1}";
+        var actual = JsonSerializer.Serialize(new GenericJsonConverterClass<EnumClass.SampleEnum>()
+        {
+            Value = EnumClass.SampleEnum.Second
+        }, SerializerOptions);
+        Assert.Equal(expectedJson, actual);
+    }
     
+    [Fact]
+    public void Serialize_WithThird_ShouldSerializeAs2()
+    {
+        var expectedJson = @"{""Value"":2}";
+        var actual = JsonSerializer.Serialize(new GenericJsonConverterClass<EnumClass.SampleEnum>()
+        {
+            Value = EnumClass.SampleEnum.Third
+        }, SerializerOptions);
+        Assert.Equal(expectedJson, actual);
+    }
+    
+    [Fact]
+    public void Serialize_WithNull_ShouldSerializeAsNull()
+    {
+        var expectedJson = @"{""Value"":null}";
+        var actual = JsonSerializer.Serialize(new GenericJsonConverterClass<EnumClass.SampleEnum>()
+        {
+            Value = null
+        }, SerializerOptions);
+        Assert.Equal(expectedJson, actual);
+    }
 }

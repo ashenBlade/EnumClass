@@ -1,6 +1,6 @@
 namespace EnumClass.JsonConverter.Generator.Tests.Integration;
 
-public class GenericDeserializationClass<TEnumClass>
+public class GenericJsonConverterClass<TEnumClass>
 {
     public TEnumClass? Value { get; set; }
 }
