@@ -8,13 +8,15 @@ namespace EnumClass.Core.UnderlyingType;
 public class GeneralUnderlyingType: IUnderlyingType
 {
     private readonly Func<string, int> _hashCodeComputer;
-
-    public GeneralUnderlyingType(string name, Func<string, int> hashCodeComputer)
+    
+    public GeneralUnderlyingType(string keyword, string clrName, Func<string, int> hashCodeComputer)
     {
         _hashCodeComputer = hashCodeComputer;
-        CSharpKeyword = name;
+        CSharpKeyword = keyword;
+        ClrTypeName = clrName;
     }
 
+    public string ClrTypeName { get; }
     public string CSharpKeyword { get; }
     public int ComputeHashCode(string integralValue) => _hashCodeComputer(integralValue);
 }

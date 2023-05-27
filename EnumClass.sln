@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Attributes", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.Core", "src\EnumClass.Core\EnumClass.Core.csproj", "{C3774EC8-9D58-4C27-B971-382F1F284EBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumClass.JsonConverter.Generator", "src\EnumClass.JsonConverter.Generator\EnumClass.JsonConverter.Generator.csproj", "{1EDCDB85-0B20-40DB-A504-7D10B3AEEA55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{C3774EC8-9D58-4C27-B971-382F1F284EBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3774EC8-9D58-4C27-B971-382F1F284EBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3774EC8-9D58-4C27-B971-382F1F284EBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EDCDB85-0B20-40DB-A504-7D10B3AEEA55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EDCDB85-0B20-40DB-A504-7D10B3AEEA55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EDCDB85-0B20-40DB-A504-7D10B3AEEA55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EDCDB85-0B20-40DB-A504-7D10B3AEEA55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2B03E852-A29E-4881-A013-BDC01C5021FF} = {EEBC4D9F-FCE9-4F37-8C48-7D9512302129}
@@ -76,5 +82,6 @@ Global
 		{0C47515F-9B91-42C3-9F13-D28489DEF351} = {26FD7445-A8B3-45A5-85C1-FAAAF2C00335}
 		{9FCCD3C3-F6C0-419E-9234-EE5864845510} = {EEBC4D9F-FCE9-4F37-8C48-7D9512302129}
 		{C3774EC8-9D58-4C27-B971-382F1F284EBB} = {EEBC4D9F-FCE9-4F37-8C48-7D9512302129}
+		{1EDCDB85-0B20-40DB-A504-7D10B3AEEA55} = {EEBC4D9F-FCE9-4F37-8C48-7D9512302129}
 	EndGlobalSection
 EndGlobal

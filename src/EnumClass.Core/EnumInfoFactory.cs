@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using EnumClass.Core.Accessibility;
 using EnumClass.Core.UnderlyingType;
 using Microsoft.CodeAnalysis;
@@ -8,9 +12,19 @@ namespace EnumClass.Core;
 
 public static class EnumInfoFactory
 {
+    /// <summary>
+    /// Extract EnumInfo from given <paramref name="enumSymbol"/>
+    /// </summary>
+    /// <param name="enumSymbol">Symbol represents enum</param>
+    /// <param name="enumClassAttribute">EnumClassAttribute type symbol</param>
+    /// <param name="enumMemberInfoAttribute">EnumMemberInfoAttribute type symbol</param>
+    /// <returns>Extracted info from enum</returns>
+    /// <remarks>
+    /// Given <paramref name="enumSymbol"/> MUST be marked with [EnumInfo]
+    /// </remarks>
     public static EnumInfo CreateFromNamedTypeSymbol(INamedTypeSymbol enumSymbol, 
                                                      INamedTypeSymbol enumClassAttribute, 
-                                                     INamedTypeSymbol? enumMemberInfoAttribute)
+                                                     INamedTypeSymbol enumMemberInfoAttribute)
     {
         var members = enumSymbol.GetMembers();
         
@@ -31,7 +45,8 @@ public static class EnumInfoFactory
         var ns = GetResultNamespace(enumSymbol, attributeInfo);
         var underlyingType = GetUnderlyingType(enumSymbol);
         var accessibility = GetAccessibility(enumSymbol);
-        return new EnumInfo(fullyQualifiedEnumName, className, ns, memberInfos, underlyingType, accessibility);
+        var fullyQualifiedClassName = $"global::{ns}.{className}";
+        return new EnumInfo(fullyQualifiedEnumName, className, fullyQualifiedClassName, ns, memberInfos, underlyingType, accessibility);
     }
 
     private static IAccessibility GetAccessibility(INamedTypeSymbol enumSymbol)
@@ -137,4 +152,48 @@ public static class EnumInfoFactory
     /// </summary>
     private readonly record struct EnumClassAttributeInfo(string? Namespace, string? TargetClassName);
 
+    /// <summary>
+    /// Find ALL enums marked with [EnumClassAttribute] from all assemblies accessible in compilation
+    /// </summary>
+    /// <param name="compilation">The compilation object is an immutable representation of a single invocation of the compiler</param>
+    /// <param name="token">Cancellation token</param>
+    /// <param name="enumMemberInfoAttribute">[EnumMemberInfo]</param>
+    /// <param name="enumClassAttribute">[EnumMemberInfo]</param>
+    /// <returns>All EnumInfo that were found and successfully extracted</returns>
+    /// <remarks>
+    /// Main consumers of this function are extension packages that create helper classes, such as JsonConverter
+    /// </remarks>
+    [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
+    [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
+    [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
+    public static List<EnumInfo> GetAllEnumInfosFromCompilation(Compilation compilation, 
+                                                                INamedTypeSymbol enumClassAttribute, 
+                                                                INamedTypeSymbol enumMemberInfoAttribute,
+                                                                CancellationToken token)
+    {
+        var parsed = new List<EnumInfo>();
+        
+        foreach (var namedTypeSymbol in FactoryHelpers.ExtractAllEnumsFromCompilation(compilation))
+        {
+            if (IsMarkedWithEnumClassAttribute(namedTypeSymbol))
+            {
+                parsed.Add(CreateFromNamedTypeSymbol(namedTypeSymbol, enumClassAttribute, enumMemberInfoAttribute));
+            }
+        }
+
+        return parsed;
+
+        bool IsMarkedWithEnumClassAttribute(INamedTypeSymbol enumTypeSymbol)
+        {
+            foreach (var attribute in enumTypeSymbol.GetAttributes())
+            {
+                if (SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, enumClassAttribute))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
 }
