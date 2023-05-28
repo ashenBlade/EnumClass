@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using EnumClass.Core.Accessibility;
+using EnumClass.Core.Infrastructure;
+using EnumClass.Core.Models;
+using EnumClass.Core.SymbolName;
 using EnumClass.Core.UnderlyingType;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -27,25 +30,41 @@ public static class EnumInfoFactory
     {
         var members = enumSymbol.GetMembers();
         
+        var attributeInfo = ExtractEnumClassAttributeCtorInfo(enumSymbol, enumClassAttribute);
+        var underlyingType = GetUnderlyingType(enumSymbol);
+        var accessibility = GetAccessibility(enumSymbol);
+        
+        var resultNamespace = GetResultNamespace(enumSymbol, attributeInfo);
+        var @namespace = new ManuallySpecifiedSymbolName($"global::{resultNamespace}", resultNamespace);
+        
+        var generatedClassName = GetClassName(enumSymbol, attributeInfo);
+        var fullyQualifiedClassName = $"global::{resultNamespace}.{generatedClassName}";
+        var className = new ManuallySpecifiedSymbolName(fullyQualifiedClassName, generatedClassName);
+        
+        var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
+        var enumName = new ManuallySpecifiedSymbolName(fullyQualifiedEnumName, enumSymbol.Name);
+
         var memberInfos = members
-                          // Skip all non enum fields declarations
                          .OfType<IFieldSymbol>()
+                         .Combine(new EnumMemberInfoCreationContext(className, @namespace, enumName))                 
+                          // Skip all non enum fields declarations
                           // Enum members are all const, according to docs
-                         .Where(static m => m is {IsConst: true, HasConstantValue:true})
+                         .Where(static m => m.Left is {IsConst: true, HasConstantValue:true})
                           // Try to convert them into EnumMemberInfo
-                         .Select(symbol => EnumMemberInfoFactory.CreateFromFieldSymbol(symbol, enumMemberInfoAttribute)!)
+                         .Select(p => EnumMemberInfoFactory.CreateFromFieldSymbol(p.Left, p.Right, enumMemberInfoAttribute)!)
                           // And skip failed
                          .Where(static i => i is not null)
                           // Finally, create array of members
                          .ToArray();
-        var attributeInfo = ExtractEnumClassAttributeCtorInfo(enumSymbol, enumClassAttribute);
-        var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
-        var className = GetClassName(enumSymbol, attributeInfo);
-        var ns = GetResultNamespace(enumSymbol, attributeInfo);
-        var underlyingType = GetUnderlyingType(enumSymbol);
-        var accessibility = GetAccessibility(enumSymbol);
-        var fullyQualifiedClassName = $"global::{ns}.{className}";
-        return new EnumInfo(fullyQualifiedEnumName, className, fullyQualifiedClassName, ns, memberInfos, underlyingType, accessibility);
+
+
+        return new EnumInfo(
+            className,
+            enumName,
+            memberInfos,
+            underlyingType,
+            accessibility,
+            @namespace);
     }
 
     private static IAccessibility GetAccessibility(INamedTypeSymbol enumSymbol)

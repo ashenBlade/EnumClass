@@ -1,5 +1,6 @@
 using System.Text;
 using EnumClass.Core;
+using EnumClass.Core.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
@@ -43,6 +44,7 @@ using System;");
         builder.AppendFormat(
             "    public override {0} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)\n", enumInfo.FullyQualifiedClassName);
         builder.AppendLine("    {");
+        
         // We are deserializing using integral representation of enum
         // For this purpose, Utf8JsonSerializer has TryGet* methods in which second parts are clr name of integral type
         // ClrTypeName was added to IUnderlyingType primarily for such cases

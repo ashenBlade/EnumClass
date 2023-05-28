@@ -1,36 +1,38 @@
 #nullable enable
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EnumClass.Core.Accessibility;
+using EnumClass.Core.SymbolName;
 using EnumClass.Core.UnderlyingType;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 
-namespace EnumClass.Core;
+namespace EnumClass.Core.Models;
 
 public class EnumInfo
 {
+    private readonly ISymbolName _className;
+    private readonly ISymbolName _enumName;
+    private readonly ISymbolName _namespace;
+
     /// <summary>
     /// Only class name without namespace
     /// </summary>
-    public string ClassName { get; }
-    
+    public string ClassName => _className.Plain;
+
     /// <summary>
     /// Fully qualified name of generated class
     /// </summary>
-    public string FullyQualifiedClassName { get; }
+    public string FullyQualifiedClassName => _className.FullyQualified;
     
     /// <summary>
     /// Fully qualified name of original enum
     /// </summary>
-    public string FullyQualifiedEnumName { get; }
-    
+    public string FullyQualifiedEnumName => _enumName.FullyQualified;
+
     /// <summary>
-    /// Namespace of original enum
+    /// Namespace of generated class
     /// </summary>
-    public string Namespace { get; }
+    public string Namespace => _namespace.Plain;
     
     /// <summary>
     /// Members of enum
@@ -48,21 +50,19 @@ public class EnumInfo
     /// </summary>
     public IAccessibility Accessibility { get; }
     
-    internal EnumInfo(string fullyQualifiedEnumName,
-                      string className,
-                      string fullyQualifiedClassName,
-                      string ns,
+    internal EnumInfo(ISymbolName className,
+                      ISymbolName enumName,
                       EnumMemberInfo[] members,
                       IUnderlyingType underlyingType,
-                      IAccessibility accessibility)
+                      IAccessibility accessibility,
+                      ISymbolName @namespace)
     {
-        FullyQualifiedEnumName = fullyQualifiedEnumName;
-        Namespace = ns;
+        _className = className;
+        _enumName = enumName;
         Members = members;
         UnderlyingType = underlyingType;
         Accessibility = accessibility;
-        FullyQualifiedClassName = fullyQualifiedClassName;
-        ClassName = className;
+        _namespace = @namespace;
     }
     
     /// <summary>

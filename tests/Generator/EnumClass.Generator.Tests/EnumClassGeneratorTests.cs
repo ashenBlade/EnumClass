@@ -1,15 +1,14 @@
 using System.Reflection;
-using System.Runtime.InteropServices;
 using EnumClass.Attributes;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace EnumClass.Generator.Tests;
 
-public class EnumClassGenerationTests
+public class EnumClassGeneratorTests
 {
     [Fact]
-    public void WithSingleMember__ShouldGenerateCorrectly()
+    public void WithSingleMember__ShouldGenerateWithoutErrors()
     {
         var source = @"using EnumClass.Attributes;
 
@@ -28,27 +27,27 @@ public enum SampleEnum: byte
                 
                 MetadataReference.CreateFromFile(Assembly.GetCallingAssembly().Location),
                 MetadataReference.CreateFromFile(typeof(string).Assembly.Location),
-                // MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("System.Linq.Expressions")).Location),
                 MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("System.Runtime")).Location),
                 MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("netstandard")).Location),
             }, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         
-        var driver = CSharpGeneratorDriver.Create(new EnumClassIncrementalGenerator())
-                                          .RunGenerators(compilation);
+        CSharpGeneratorDriver.Create(new EnumClassIncrementalGenerator())
+                             .RunGeneratorsAndUpdateCompilation(compilation, out _, out var diagnostics);
+        Assert.Empty(diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error));
     }
     
     
     [Fact]
-    public void WithTwoMembers__ShouldGenerateCorrectly()
+    public void WithSpecifiedAttributeArguments__ShouldGenerateWithoutErrors()
     {
         var source = @"using EnumClass.Attributes;
 
 namespace Test;
 
 [EnumClass(Namespace = ""Test"", ClassName = ""SampleEnum"")]
-public enum SampleEnum: long
+public enum SampleEnum
 {
-    Manager = long.MaxValue - 4,
+    Manager,
     Programmer,
     Tester,
     CTO,
@@ -66,7 +65,8 @@ public enum SampleEnum: long
                 MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("netstandard")).Location),
             }, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         
-        var driver = CSharpGeneratorDriver.Create(new EnumClassIncrementalGenerator())
-                                          .RunGenerators(compilation);
+        CSharpGeneratorDriver.Create(new EnumClassIncrementalGenerator())
+                             .RunGeneratorsAndUpdateCompilation(compilation, out _, out var diagnostics);
+        Assert.Empty(diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error));
     }
 }

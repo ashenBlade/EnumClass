@@ -2,6 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using EnumClass.Core;
+using EnumClass.Core.Infrastructure;
+using EnumClass.Core.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -186,14 +188,14 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 // because usually we have only enum member name in string (my subjective opinion)
                 foreach (var member in enumInfo.Members)
                 {
-                    builder.Append($"            case \"{member.EnumMemberNameOnly}\":\n");
-                    builder.Append($"                {enumVariableName} = {member.EnumMemberNameOnly};\n");
+                    builder.Append($"            case \"{member.MemberName}\":\n");
+                    builder.Append($"                {enumVariableName} = {member.MemberName};\n");
                     builder.Append($"                return true;\n");
                 }
                 foreach (var member in enumInfo.Members)
                 {
                     builder.Append($"            case \"{member.EnumMemberNameWithEnumName}\":\n");
-                    builder.Append($"                {enumVariableName} = {member.EnumMemberNameOnly};\n");
+                    builder.Append($"                {enumVariableName} = {member.MemberName};\n");
                     builder.Append($"                return true;\n");
                 }
                 
@@ -222,7 +224,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 foreach (var member in enumInfo.Members)
                 {
                     builder.Append($"            case {member.IntegralValue}:\n");
-                    builder.Append($"                {enumVariableName} = {member.EnumMemberNameOnly};\n");
+                    builder.Append($"                {enumVariableName} = {member.MemberName};\n");
                     builder.Append($"                return true;\n");
                 }
                 
@@ -305,14 +307,14 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             {
                 builder.AppendLine();
                 // Generate static field for required Enum
-                builder.AppendFormat("    public static readonly {0} {1} = new {0}();\n", member.ClassName, member.EnumMemberNameOnly);
+                builder.AppendFormat("    public static readonly {0} {1} = new {0}();\n", member.ClassName, member.MemberName);
             
                 // Generate enum class for enum
                 builder.AppendFormat("    public partial class {0}: {1}\n", member.ClassName, enumInfo.ClassName);
                 builder.AppendLine("    {");
                 
                 // Generate constructor
-                builder.AppendFormat("        public {0}(): base({1}) {{ }}\n", member.ClassName, member.FullyQualifiedEnumValue);
+                builder.AppendFormat("        public {0}(): base({1}) {{ }}\n", member.ClassName, member.FullyQualifiedEnumMemberName);
                 
                 // Override default ToString() 
                 builder.AppendLine("        public override string ToString()");
@@ -369,7 +371,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             
             foreach (var member in enumInfo.Members)
             {
-                builder.AppendFormat("{0}, ", member.EnumMemberNameOnly);
+                builder.AppendFormat("{0}, ", member.MemberName);
             }
 
             builder.AppendLine("};\n");

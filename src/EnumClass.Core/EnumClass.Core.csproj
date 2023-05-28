@@ -12,7 +12,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <AdditionalFiles Include="../../docs/AnalyzerReleases.Shipped.md"/>
-        <AdditionalFiles Include="../../docs/AnalyzerReleases.Unshipped.md"/>
+        <AdditionalFiles Include="../../docs/AnalyzerReleases.Shipped.md" />
+        <AdditionalFiles Include="../../docs/AnalyzerReleases.Unshipped.md" />
     </ItemGroup>
 </Project>
