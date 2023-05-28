@@ -186,14 +186,14 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 // because usually we have only enum member name in string (my subjective opinion)
                 foreach (var member in enumInfo.Members)
                 {
-                    builder.Append($"            case \"{member.EnumMemberNameOnly}\":\n");
-                    builder.Append($"                {enumVariableName} = {member.EnumMemberNameOnly};\n");
+                    builder.Append($"            case \"{member.MemberName}\":\n");
+                    builder.Append($"                {enumVariableName} = {member.MemberName};\n");
                     builder.Append($"                return true;\n");
                 }
                 foreach (var member in enumInfo.Members)
                 {
                     builder.Append($"            case \"{member.EnumMemberNameWithEnumName}\":\n");
-                    builder.Append($"                {enumVariableName} = {member.EnumMemberNameOnly};\n");
+                    builder.Append($"                {enumVariableName} = {member.MemberName};\n");
                     builder.Append($"                return true;\n");
                 }
                 
@@ -222,7 +222,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 foreach (var member in enumInfo.Members)
                 {
                     builder.Append($"            case {member.IntegralValue}:\n");
-                    builder.Append($"                {enumVariableName} = {member.EnumMemberNameOnly};\n");
+                    builder.Append($"                {enumVariableName} = {member.MemberName};\n");
                     builder.Append($"                return true;\n");
                 }
                 
@@ -305,7 +305,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             {
                 builder.AppendLine();
                 // Generate static field for required Enum
-                builder.AppendFormat("    public static readonly {0} {1} = new {0}();\n", member.ClassName, member.EnumMemberNameOnly);
+                builder.AppendFormat("    public static readonly {0} {1} = new {0}();\n", member.ClassName, member.MemberName);
             
                 // Generate enum class for enum
                 builder.AppendFormat("    public partial class {0}: {1}\n", member.ClassName, enumInfo.ClassName);
@@ -369,7 +369,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             
             foreach (var member in enumInfo.Members)
             {
-                builder.AppendFormat("{0}, ", member.EnumMemberNameOnly);
+                builder.AppendFormat("{0}, ", member.MemberName);
             }
 
             builder.AppendLine("};\n");

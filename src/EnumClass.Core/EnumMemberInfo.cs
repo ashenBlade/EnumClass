@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Text;
+using EnumClass.Core.SymbolName;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -9,31 +10,33 @@ namespace EnumClass.Core;
 
 public class EnumMemberInfo
 {
+    private readonly ISymbolName _className;
+    private readonly ISymbolName _memberName;
     private readonly string _stringRepresentation;
-    
+
     /// <summary>
     /// Friendly name of class.
     /// To use in static fields for classes 
     /// </summary>
-    public string ClassName { get; }
-    
+    public string ClassName => _className.Plain;
+
     /// <summary>
     /// Class name of enum class starting with 'global::' prefix
     /// </summary>
-    public string FullyQualifiedClassName { get; }
-    
+    public string FullyQualifiedClassName => _className.FullyQualified;
+
     /// <summary>
     /// Name of enum value we constructing.
     /// This is fully qualified, with 'global::' prefix
     /// </summary>
-    public string FullyQualifiedEnumValue { get; }
+    public string FullyQualifiedEnumValue => _memberName.FullyQualified;
 
     /// <summary>
     /// Name of enum member we constructing.
     /// This is without 'global::' prefix and enum name
     /// </summary>
     /// <example>Cat</example>
-    public string EnumMemberNameOnly { get; }
+    public string MemberName => _memberName.Plain;
 
     /// <summary>
     /// Name of enum member with original enum name prefix.
@@ -48,18 +51,14 @@ public class EnumMemberInfo
     /// </summary>
     public string IntegralValue { get; }
 
-    internal EnumMemberInfo(string className,
-                            string fullyQualifiedClassName,
-                            string fullyQualifiedEnumValue,
-                            string enumMemberNameOnly,
+    internal EnumMemberInfo(ISymbolName className,
+                            ISymbolName memberName,
                             string stringRepresentation,
                             string enumMemberNameWithEnumName,
                             string integralValue)
     {
-        ClassName = className;
-        FullyQualifiedClassName = fullyQualifiedClassName; 
-        FullyQualifiedEnumValue = fullyQualifiedEnumValue;
-        EnumMemberNameOnly = enumMemberNameOnly;
+        _className = className;
+        _memberName = memberName;
         _stringRepresentation = stringRepresentation;
         EnumMemberNameWithEnumName = enumMemberNameWithEnumName;
         IntegralValue = integralValue;
@@ -76,8 +75,8 @@ public class EnumMemberInfo
         {
             return _switchArgName;
         }
-        var firstLetter = char.ToLowerInvariant(EnumMemberNameOnly[0]);
-        var switchArgName = $"{firstLetter}{EnumMemberNameOnly.Substring(1)}Switch";
+        var firstLetter = char.ToLowerInvariant(MemberName[0]);
+        var switchArgName = $"{firstLetter}{MemberName.Substring(1)}Switch";
         _switchArgName = switchArgName;
         return switchArgName;
     }

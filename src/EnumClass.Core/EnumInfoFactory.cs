@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using EnumClass.Core.Accessibility;
+using EnumClass.Core.SymbolName;
 using EnumClass.Core.UnderlyingType;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -38,14 +39,21 @@ public static class EnumInfoFactory
                          .Where(static i => i is not null)
                           // Finally, create array of members
                          .ToArray();
+        
         var attributeInfo = ExtractEnumClassAttributeCtorInfo(enumSymbol, enumClassAttribute);
         var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
         var className = GetClassName(enumSymbol, attributeInfo);
-        var ns = GetResultNamespace(enumSymbol, attributeInfo);
+        var resultNamespace = GetResultNamespace(enumSymbol, attributeInfo);
         var underlyingType = GetUnderlyingType(enumSymbol);
         var accessibility = GetAccessibility(enumSymbol);
-        var fullyQualifiedClassName = $"global::{ns}.{className}";
-        return new EnumInfo(fullyQualifiedEnumName, className, fullyQualifiedClassName, ns, memberInfos, underlyingType, accessibility);
+        var fullyQualifiedClassName = $"global::{resultNamespace}.{className}";
+        return new EnumInfo(
+            className: new ManuallySpecifiedSymbolName(fullyQualifiedClassName, className),
+            enumName: new ManuallySpecifiedSymbolName(fullyQualifiedEnumName, enumSymbol.Name),
+            memberInfos,
+            underlyingType,
+            accessibility,
+            @namespace: new ManuallySpecifiedSymbolName($"global::{resultNamespace}", resultNamespace));
     }
 
     private static IAccessibility GetAccessibility(INamedTypeSymbol enumSymbol)

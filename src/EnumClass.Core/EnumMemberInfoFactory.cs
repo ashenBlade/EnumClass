@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using EnumClass.Core.SymbolName;
 using Microsoft.CodeAnalysis;
 
 namespace EnumClass.Core;
@@ -12,7 +13,7 @@ namespace EnumClass.Core;
 /// </remarks>
 internal static class EnumMemberInfoFactory
 {
-      /// <summary>
+    /// <summary>
     /// Create enum value info with passed 'raw' values
     /// </summary>
     /// <returns>Instance of created enum value info</returns>
@@ -26,19 +27,19 @@ internal static class EnumMemberInfoFactory
         }
 
         // Class name is equivalent to enum member name
-        var className = $"{fieldSymbol.Name}EnumValue";
-        var fullyQualifiedClassName = $"{fieldSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.EnumClass.{className}";
+        var enumClassName = $"{fieldSymbol.Name}EnumValue";
+        var fullyQualifiedEnumClassName = $"{fieldSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.EnumClass.{enumClassName}";
         
-        var fullyQualifiedEnumValue = $"{fieldSymbol.ContainingType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.{fieldSymbol.Name}";
-        var enumMemberName = fieldSymbol.Name;
+        var fullyQualifiedMemberName = $"{fieldSymbol.ContainingType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.{fieldSymbol.Name}";
+        var memberName = fieldSymbol.Name;
+        
         var stringRepresentation = GetToStringFromValue();
         var enumMemberNameWithPrefix = $"{fieldSymbol.ContainingType.Name}.{fieldSymbol.Name}";
         var integralValue = fieldSymbol.ConstantValue?.ToString() ?? throw new ArgumentNullException();
         
-        return new EnumMemberInfo(className, 
-            fullyQualifiedClassName, 
-            fullyQualifiedEnumValue,
-            enumMemberName,
+        return new EnumMemberInfo(
+            className: new ManuallySpecifiedSymbolName(fullyQualifiedEnumClassName, enumClassName),
+            memberName: new ManuallySpecifiedSymbolName(fullyQualifiedMemberName, memberName),
             stringRepresentation,
             enumMemberNameWithPrefix, 
             integralValue);
@@ -46,7 +47,8 @@ internal static class EnumMemberInfoFactory
         string GetToStringFromValue()
         {
             // If no attributes specified, fallback to name of member
-            if (fieldSymbol.GetAttributes() is {Length: 0} attributes) 
+            var attributes = fieldSymbol.GetAttributes();
+            if (attributes is {Length: 0}) 
                 return fieldSymbol.Name;
             
             // Search string info in [EnumMemberInfo] 
