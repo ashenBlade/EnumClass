@@ -19,7 +19,7 @@ jobs:
       - name: Create EnumClass.Generator NuGet package
         run: dotnet pack src/EnumClass.Generator/EnumClass.Generator.csproj -c Release -v n -o packages 
       - name: Create EnumClass.JsonConverter.Generator NuGet package
-        run: dotnet pack src/EnumClass.JsonConverter.Generator.csproj -c Release -v n -o packages
+        run: dotnet pack src/EnumClass.JsonConverter.Generator/EnumClass.JsonConverter.Generator.csproj -c Release -v n -o packages
       - name: Push packages to NuGet
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
