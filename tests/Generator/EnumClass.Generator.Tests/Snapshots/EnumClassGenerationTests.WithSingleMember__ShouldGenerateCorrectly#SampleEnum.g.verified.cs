@@ -1,5 +1,6 @@
 ﻿//HintName: SampleEnum.g.cs
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Test.EnumClass
@@ -86,6 +87,19 @@ public abstract partial class SampleEnum: IEquatable<SampleEnum>, IEquatable<glo
                 sampleEnum = First;
                 return true;
             case "SampleEnum.First":
+                sampleEnum = First;
+                return true;
+        }
+        sampleEnum = null;
+        return false;
+    }
+
+
+    public static bool TryParse(byte value, out SampleEnum sampleEnum)
+    {
+        switch (value)
+        {
+            case 0:
                 sampleEnum = First;
                 return true;
         }
@@ -241,6 +255,10 @@ public abstract partial class SampleEnum: IEquatable<SampleEnum>, IEquatable<glo
         {
             return 0;
         }
+    }
+    public static IEnumerable<SampleEnum> GetAllMembers()
+    {
+        yield return First;
     }
 }
 }

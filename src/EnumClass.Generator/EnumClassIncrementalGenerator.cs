@@ -363,7 +363,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             }
 
             // Generate method for iterating over all instances
-            builder.AppendFormat("    public static IEnumerable<{0}> GetAllMembers()\n", enumInfo.ClassName);
+            builder.AppendFormat("    public static System.Collections.Generic.IEnumerable<{0}> GetAllMembers()\n", enumInfo.ClassName);
             builder.AppendLine("    {");
             {
                 // Otherwise - won't compile

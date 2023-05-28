@@ -82,7 +82,7 @@ public static class EnumInfoFactory
 
     private static string GetClassName(INamedTypeSymbol enumSymbol, EnumClassAttributeInfo info)
     {
-     return SymbolDisplay.FormatLiteral( info.TargetClassName ?? enumSymbol.Name, false );
+     return SymbolDisplay.FormatLiteral( info.ClassName ?? enumSymbol.Name, false );
     }
 
     private static string GetResultNamespace(INamedTypeSymbol enumSymbol, EnumClassAttributeInfo attributeInfo)
@@ -128,8 +128,8 @@ public static class EnumInfoFactory
                     case Constants.EnumClassAttributeInfo.NamedArguments.Namespace:
                         info = info with {Namespace = GetConstantStringValue(value)};
                         break;
-                    case Constants.EnumClassAttributeInfo.NamedArguments.TargetClassName:
-                        info = info with {TargetClassName = GetConstantStringValue(value)};
+                    case Constants.EnumClassAttributeInfo.NamedArguments.ClassName:
+                        info = info with {ClassName = GetConstantStringValue(value)};
                         break;
                 }
             }
@@ -149,7 +149,7 @@ public static class EnumInfoFactory
     /// <summary>
     /// Record that represents named arguments of [EnumClass] attribute
     /// </summary>
-    private readonly record struct EnumClassAttributeInfo(string? Namespace, string? TargetClassName);
+    private readonly record struct EnumClassAttributeInfo(string? Namespace, string? ClassName);
 
     /// <summary>
     /// Find ALL enums marked with [EnumClassAttribute] from all assemblies accessible in compilation

@@ -9,7 +9,7 @@ public static class Constants
         public static class NamedArguments
         {
             public const string Namespace = "Namespace";
-            public const string TargetClassName = "TargetClassName";
+            public const string ClassName = "ClassName";
         }
     }
     

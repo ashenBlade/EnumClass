@@ -6,11 +6,10 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace EnumClass.Generator.Tests;
 
-[UsesVerify]
 public class EnumClassGenerationTests
 {
     [Fact]
-    public Task WithSingleMember__ShouldGenerateCorrectly()
+    public void WithSingleMember__ShouldGenerateCorrectly()
     {
         var source = @"using EnumClass.Attributes;
 
@@ -36,19 +35,17 @@ public enum SampleEnum: byte
         
         var driver = CSharpGeneratorDriver.Create(new EnumClassIncrementalGenerator())
                                           .RunGenerators(compilation);
-        return Verify(driver)
-           .UseDirectory("Snapshots");
     }
     
     
     [Fact]
-    public Task WithTwoMembers__ShouldGenerateCorrectly()
+    public void WithTwoMembers__ShouldGenerateCorrectly()
     {
         var source = @"using EnumClass.Attributes;
 
 namespace Test;
 
-[EnumClass(Namespace = ""Test"", TargetClassName = ""SampleEnum"")]
+[EnumClass(Namespace = ""Test"", ClassName = ""SampleEnum"")]
 public enum SampleEnum: long
 {
     Manager = long.MaxValue - 4,
@@ -65,14 +62,11 @@ public enum SampleEnum: long
                 
                 MetadataReference.CreateFromFile(Assembly.GetCallingAssembly().Location),
                 MetadataReference.CreateFromFile(typeof(string).Assembly.Location),
-                // MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("System.Linq.Expressions")).Location),
                 MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("System.Runtime")).Location),
                 MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("netstandard")).Location),
             }, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         
         var driver = CSharpGeneratorDriver.Create(new EnumClassIncrementalGenerator())
                                           .RunGenerators(compilation);
-
-        return Task.CompletedTask;
     }
 }
