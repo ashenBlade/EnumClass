@@ -1,6 +1,6 @@
-# `enum class` Generator
+![logo](icon.png "Enum Class Generator Logo" )
 
-![](icon.png)
+# `enum class` Generator
 
 ## Summary
 

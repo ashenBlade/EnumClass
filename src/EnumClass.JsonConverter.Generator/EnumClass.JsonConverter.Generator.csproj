@@ -8,6 +8,12 @@
         <IsRoslynComponent>true</IsRoslynComponent>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <Title>EnumClass JsonConverter.Generator</Title>
+        <Authors>AshBlade</Authors>
+        <Description>Source generator for creating JsonConverters for already generated 'enum class'es</Description>
+        <PackageIcon>icon.png</PackageIcon>
+        <RepositoryUrl>https://github.com/ashenBlade/EnumClass</RepositoryUrl>
+        <PackageTags>generator json-converter json enum enum-class source-generator</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,6 +28,11 @@
     <ItemGroup>
         <None Include="$(OutputPath)\$(AssemblyName).dll" PackagePath="analyzers/dotnet/cs" Visible="false" Pack="true" />
         <None Include="$(OutputPath)\EnumClass.Core.dll" PackagePath="analyzers/dotnet/cs" Visible="false" Pack="true" />
+        <None Include="..\..\icon.png">
+          <Pack>True</Pack>
+          <PackagePath></PackagePath>
+          <Link>icon.png</Link>
+        </None>
     </ItemGroup>
 
 </Project>
