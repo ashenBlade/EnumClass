@@ -1,4 +1,4 @@
-namespace EnumClass.Core;
+namespace EnumClass.Core.Infrastructure;
 
 public static class Constants
 {

@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using EnumClass.Core.Infrastructure;
+using EnumClass.Core.Models;
 using EnumClass.Core.SymbolName;
 using Microsoft.CodeAnalysis;
 

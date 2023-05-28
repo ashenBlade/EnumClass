@@ -1,12 +1,9 @@
 #nullable enable
-using System;
-using System.Linq;
 using System.Text;
 using EnumClass.Core.SymbolName;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace EnumClass.Core;
+namespace EnumClass.Core.Models;
 
 public class EnumMemberInfo
 {

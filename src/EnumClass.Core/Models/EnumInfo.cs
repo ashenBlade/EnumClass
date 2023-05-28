@@ -6,7 +6,7 @@ using EnumClass.Core.Accessibility;
 using EnumClass.Core.SymbolName;
 using EnumClass.Core.UnderlyingType;
 
-namespace EnumClass.Core;
+namespace EnumClass.Core.Models;
 
 public class EnumInfo
 {

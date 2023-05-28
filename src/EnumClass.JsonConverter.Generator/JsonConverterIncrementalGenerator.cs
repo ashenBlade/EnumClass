@@ -1,5 +1,6 @@
 using System.Text;
 using EnumClass.Core;
+using EnumClass.Core.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 

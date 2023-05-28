@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using EnumClass.Core.Accessibility;
+using EnumClass.Core.Infrastructure;
+using EnumClass.Core.Models;
 using EnumClass.Core.SymbolName;
 using EnumClass.Core.UnderlyingType;
 using Microsoft.CodeAnalysis;
