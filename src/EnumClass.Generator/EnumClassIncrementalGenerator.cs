@@ -30,6 +30,10 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                                                ImmutableArray<EnumDeclarationSyntax> enums,
                                                SourceProductionContext               context)
     {
+        // Do not use EnumInfoFactory that accepts compilation, 
+        // because it will search for all enums in all assemblies
+        // but we need only enums from this assembly
+        
         // Why do i need to compile? Skip!
         if (enums.IsDefaultOrEmpty)
         {
@@ -56,6 +60,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 builder.Append("#nullable enable\n\n");
             }
             builder.AppendLine("using System;");
+            builder.AppendLine("using System.Collections.Generic;");
             builder.AppendLine("using System.Runtime.CompilerServices;");
             builder.AppendLine();
             builder.AppendFormat("namespace {0}\n{{\n", enumInfo.Namespace);
