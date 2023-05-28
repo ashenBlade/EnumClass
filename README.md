@@ -1,4 +1,6 @@
-# EnumClass
+# `enum class` Generator
+
+![](icon.png)
 
 ## Summary
 
@@ -18,25 +20,25 @@ These classes contain similar functionality as original enum, but behave as ordi
 - .NET CLI
 
 ```bash
-dotnet add package EnumClass --version 1.0.0
+dotnet add package EnumClass --version 1.2.0
 ```
 
 - Package Manager
 
 ```
-Install-Package EnumClass -Version 1.0.0
+Install-Package EnumClass -Version 1.2.0
 ```
 
 - PackageReference
 
 ```
-<PackageReference Include="EnumClass" Version="1.0.0" />
+<PackageReference Include="EnumClass" Version="1.2.0" />
 ```
 
 2. Specify _Analyzer_ property in `.csproj`
 
 ```
-<PackageReference Include="EnumClass" Version="1.0.0" OutputItemType="Analyzer"/>
+<PackageReference Include="EnumClass" Version="1.2.0" OutputItemType="Analyzer"/>
 ```
 
 
