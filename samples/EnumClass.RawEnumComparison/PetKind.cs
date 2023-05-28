@@ -22,7 +22,6 @@ namespace EnumClass.SimpleEnum.EnumClass
         /// Average weight of pet in kg
         /// </summary>
         public abstract double AverageWeight { get; }
-        // public double AverageWeight { get; } = 0;
 
 
         public partial class CatEnumValue

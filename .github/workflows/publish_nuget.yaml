@@ -1,0 +1,26 @@
+name: Publish packages to NuGet
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+      - name: Create packages folder
+        run: mkdir packages
+      - name: Create EnumClass.Generator NuGet package
+        run: dotnet pack src/EnumClass.Generator/EnumClass.Generator.csproj -c Release -v n -o packages 
+      - name: Create EnumClass.JsonConverter.Generator NuGet package
+        run: dotnet pack src/EnumClass.JsonConverter.Generator.csproj -c Release -v n -o packages
+      - name: Push packages to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push "packages/*.nupkg" --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" 

@@ -23,8 +23,7 @@ void PrintEnumClassComparison(string representationName, PetKind enumClassKind, 
     
     var result = enumClassKind.Switch(2, 2,
         static (dog,     i, j) => i + j * 2,
-        // static (cat,     i, j) => cat.CalculateValue(i, j),
-        static (cat,     i, j) => 0,
+        static (cat,     i, j) => cat.CalculateValue(i, j),
         static (parrot,  i, j) => i * j + 1,
         static (hamster, i, j) => i + j);
     Console.WriteLine($"It says that 2+2 is {result}");

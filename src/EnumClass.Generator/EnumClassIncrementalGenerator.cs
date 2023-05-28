@@ -30,6 +30,10 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                                                ImmutableArray<EnumDeclarationSyntax> enums,
                                                SourceProductionContext               context)
     {
+        // Do not use EnumInfoFactory that accepts compilation, 
+        // because it will search for all enums in all assemblies
+        // but we need only enums from this assembly
+        
         // Why do i need to compile? Skip!
         if (enums.IsDefaultOrEmpty)
         {
@@ -56,6 +60,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 builder.Append("#nullable enable\n\n");
             }
             builder.AppendLine("using System;");
+            builder.AppendLine("using System.Collections.Generic;");
             builder.AppendLine("using System.Runtime.CompilerServices;");
             builder.AppendLine();
             builder.AppendFormat("namespace {0}\n{{\n", enumInfo.Namespace);
@@ -165,7 +170,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             builder.AppendLine("    }");
             builder.AppendLine();
             
-            // Generate TryParse
+            // Generate TryParse for string representation
             {
                 var enumVariableName = enumInfo.GetVariableName();
                 builder.AppendLine(nullableEnabled
@@ -199,6 +204,36 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
             }
             builder.AppendLine();
             
+            // Generate TryParse for integral value
+            // Generate TryParse for string representation
+            {
+                var enumVariableName = enumInfo.GetVariableName();
+                builder.AppendLine(nullableEnabled
+                                       ? $"    public static bool TryParse({enumInfo.UnderlyingType.CSharpKeyword} value, out {enumInfo.ClassName}? {enumVariableName})"
+                                       : $"    public static bool TryParse({enumInfo.UnderlyingType.CSharpKeyword} value, out {enumInfo.ClassName} {enumVariableName})");
+                builder.AppendLine("    {");
+                builder.AppendLine("        switch (value)");
+                builder.AppendLine("        {");
+
+                // First, check for only enum member name. 
+                // Then when enum name added.
+                // We do it in that way (not merging with enum name together),
+                // because usually we have only enum member name in string (my subjective opinion)
+                foreach (var member in enumInfo.Members)
+                {
+                    builder.Append($"            case {member.IntegralValue}:\n");
+                    builder.Append($"                {enumVariableName} = {member.EnumMemberNameOnly};\n");
+                    builder.Append($"                return true;\n");
+                }
+                
+                builder.AppendLine("        }");
+                builder.AppendLine($"        {enumVariableName} = null;");
+                builder.AppendLine("        return false;");
+                builder.AppendLine("    }\n");
+            }
+            builder.AppendLine();
+
+
             // Implementations for IComparable interfaces
             
             // Enums implement IComparable.Compare(object) so there is allocation of value type (enum).
@@ -327,6 +362,23 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 builder.AppendLine("    }");
             }
 
+            builder.AppendLine();
+            
+            // Generate method for iterating over all instances
+            builder.AppendFormat("    private static readonly {0}[] _members = new {0}[{1}] {{ ", enumInfo.ClassName, enumInfo.Members.Length);
+            
+            foreach (var member in enumInfo.Members)
+            {
+                builder.AppendFormat("{0}, ", member.EnumMemberNameOnly);
+            }
+
+            builder.AppendLine("};\n");
+            
+            builder.AppendFormat("    public static System.Collections.Generic.IReadOnlyCollection<{0}> GetAllMembers()\n", enumInfo.ClassName);
+            builder.AppendLine("    {");
+            builder.AppendLine("        return _members;");
+            builder.AppendLine("    }");
+
             // Enum class
             builder.AppendLine("}");
             
@@ -411,7 +463,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 continue;
             }
             
-            var enumInfo = EnumInfoFactory.CreateFromNamedTypeSymbol(enumSymbol, enumClassAttributeSymbol, enumMemberInfoAttribute);
+            var enumInfo = EnumInfoFactory.CreateFromNamedTypeSymbol(enumSymbol, enumClassAttributeSymbol, enumMemberInfoAttribute!);
             ct.ThrowIfCancellationRequested();
             enumInfos.Add(enumInfo);
         }

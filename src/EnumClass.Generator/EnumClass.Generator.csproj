@@ -12,7 +12,7 @@
         <PackageId>EnumClass.Generator</PackageId>
         <Title>EnumClass</Title>
         <Authors>AshBlade</Authors>
-        <PackageTags>generator;source generator;smart enum;enum;enum class;type safety;kotlin;enumclass;</PackageTags>
+        <PackageTags>enumclass enum enum-class generator source-generator smart-enum type-safety kotlin</PackageTags>
         <Description>Inspired by kotlin's enum class, this package provides incremental generator that can create classes from enum declaration. 
 All you have to do is to add [EnumClass] attribute to your enum. 
 Features:
@@ -24,6 +24,7 @@ Features:
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <Version>1.1.0</Version>
+        <PackageIcon>icon.png</PackageIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -45,6 +46,11 @@ Features:
     </ItemGroup>
     
     <ItemGroup>
+        <None Include="..\..\icon.png">
+          <Pack>True</Pack>
+          <PackagePath/>
+          <Link>icon.png</Link>
+        </None>
         <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
     

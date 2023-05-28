@@ -13,6 +13,13 @@ public interface IUnderlyingType
     public string CSharpKeyword { get; }
     
     /// <summary>
+    /// Name of type as defined in CLR without "System" prefix
+    /// </summary>
+    /// <example>
+    /// Byte, Int32, Int64, UInt64
+    /// </example>
+    public string ClrTypeName { get; }
+    /// <summary>
     /// Try to compute hashcode for provider integral value.
     /// </summary>
     /// <exception cref="System.OverflowException">passed string represents a number less than MinValue or greater than MaxValue of given type</exception>

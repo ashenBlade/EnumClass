@@ -16,14 +16,22 @@ public class EnumInfo
     /// Only class name without namespace
     /// </summary>
     public string ClassName { get; }
+    
+    /// <summary>
+    /// Fully qualified name of generated class
+    /// </summary>
+    public string FullyQualifiedClassName { get; }
+    
     /// <summary>
     /// Fully qualified name of original enum
     /// </summary>
     public string FullyQualifiedEnumName { get; }
+    
     /// <summary>
     /// Namespace of original enum
     /// </summary>
     public string Namespace { get; }
+    
     /// <summary>
     /// Members of enum
     /// </summary>
@@ -40,13 +48,20 @@ public class EnumInfo
     /// </summary>
     public IAccessibility Accessibility { get; }
     
-    internal EnumInfo(string fullyQualifiedEnumName, string className, string ns, EnumMemberInfo[] members, IUnderlyingType underlyingType, IAccessibility accessibility)
+    internal EnumInfo(string fullyQualifiedEnumName,
+                      string className,
+                      string fullyQualifiedClassName,
+                      string ns,
+                      EnumMemberInfo[] members,
+                      IUnderlyingType underlyingType,
+                      IAccessibility accessibility)
     {
         FullyQualifiedEnumName = fullyQualifiedEnumName;
         Namespace = ns;
         Members = members;
         UnderlyingType = underlyingType;
         Accessibility = accessibility;
+        FullyQualifiedClassName = fullyQualifiedClassName;
         ClassName = className;
     }
     

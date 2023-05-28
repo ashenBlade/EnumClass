@@ -15,5 +15,5 @@ public class EnumClassAttribute : Attribute
     /// Name of class that will be generated.
     /// Defaults to the same name of enum
     /// </summary>
-    public string TargetClassName { get; set; } = null!;
+    public string ClassName { get; set; } = null!;
 }
