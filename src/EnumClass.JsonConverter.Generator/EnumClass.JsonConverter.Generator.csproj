@@ -30,9 +30,10 @@
         <None Include="$(OutputPath)\EnumClass.Core.dll" PackagePath="analyzers/dotnet/cs" Visible="false" Pack="true" />
         <None Include="..\..\icon.png">
           <Pack>True</Pack>
-          <PackagePath></PackagePath>
+          <PackagePath/>
           <Link>icon.png</Link>
         </None>
+        <None Include="README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>
