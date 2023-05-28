@@ -19,8 +19,9 @@ internal static class EnumMemberInfoFactory
     /// Create enum value info with passed 'raw' values
     /// </summary>
     /// <returns>Instance of created enum value info</returns>
-    public static EnumMemberInfo? CreateFromFieldSymbol(IFieldSymbol fieldSymbol, 
-                                                        INamedTypeSymbol? enumMemberInfoAttribute)
+    internal static EnumMemberInfo? CreateFromFieldSymbol(IFieldSymbol fieldSymbol,
+                                                          EnumMemberInfoCreationContext context,
+                                                          INamedTypeSymbol? enumMemberInfoAttribute)
     {
         // For enum member this must be true
         if (!fieldSymbol.IsConst)
@@ -32,11 +33,12 @@ internal static class EnumMemberInfoFactory
         var enumClassName = $"{fieldSymbol.Name}EnumValue";
         var fullyQualifiedEnumClassName = $"{fieldSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.EnumClass.{enumClassName}";
         
-        var fullyQualifiedMemberName = $"{fieldSymbol.ContainingType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.{fieldSymbol.Name}";
+        var fullyQualifiedMemberName = $"{context.EnumName.FullyQualified}.{fieldSymbol.Name}";
         var memberName = fieldSymbol.Name;
         
         var stringRepresentation = GetToStringFromValue();
         var enumMemberNameWithPrefix = $"{fieldSymbol.ContainingType.Name}.{fieldSymbol.Name}";
+        
         var integralValue = fieldSymbol.ConstantValue?.ToString() ?? throw new ArgumentNullException();
         
         return new EnumMemberInfo(
