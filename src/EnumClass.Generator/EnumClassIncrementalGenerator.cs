@@ -362,25 +362,23 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 builder.AppendLine("    }");
             }
 
-            // Generate method for iterating over all instances
-            builder.AppendFormat("    public static System.Collections.Generic.IEnumerable<{0}> GetAllMembers()\n", enumInfo.ClassName);
-            builder.AppendLine("    {");
-            {
-                // Otherwise - won't compile
-                if (enumInfo.Members.Length == 0)
-                {
-                    builder.AppendLine("        yield break;");
-                }
-                else
-                {
-                    foreach (var member in enumInfo.Members)
-                    {
-                        builder.AppendFormat("        yield return {0};\n", member.EnumMemberNameOnly);
-                    }
-                }
-            }
-            builder.AppendLine("    }");
+            builder.AppendLine();
             
+            // Generate method for iterating over all instances
+            builder.AppendFormat("    private static readonly {0}[] _members = new {0}[{1}] {{ ", enumInfo.ClassName, enumInfo.Members.Length);
+            
+            foreach (var member in enumInfo.Members)
+            {
+                builder.AppendFormat("{0}, ", member.EnumMemberNameOnly);
+            }
+
+            builder.AppendLine("};\n");
+            
+            builder.AppendFormat("    public static System.Collections.Generic.IReadOnlyCollection<{0}> GetAllMembers()\n", enumInfo.ClassName);
+            builder.AppendLine("    {");
+            builder.AppendLine("        return _members;");
+            builder.AppendLine("    }");
+
             // Enum class
             builder.AppendLine("}");
             
