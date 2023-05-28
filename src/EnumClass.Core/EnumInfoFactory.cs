@@ -31,17 +31,19 @@ public static class EnumInfoFactory
         var members = enumSymbol.GetMembers();
         
         var attributeInfo = ExtractEnumClassAttributeCtorInfo(enumSymbol, enumClassAttribute);
-        var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
-        var generatedClassName = GetClassName(enumSymbol, attributeInfo);
-        var resultNamespace = GetResultNamespace(enumSymbol, attributeInfo);
         var underlyingType = GetUnderlyingType(enumSymbol);
         var accessibility = GetAccessibility(enumSymbol);
-        var fullyQualifiedClassName = $"global::{resultNamespace}.{generatedClassName}";
         
-        var className = new ManuallySpecifiedSymbolName(fullyQualifiedClassName, generatedClassName);
-        var enumName = new ManuallySpecifiedSymbolName(fullyQualifiedEnumName, enumSymbol.Name);
+        var resultNamespace = GetResultNamespace(enumSymbol, attributeInfo);
         var @namespace = new ManuallySpecifiedSymbolName($"global::{resultNamespace}", resultNamespace);
         
+        var generatedClassName = GetClassName(enumSymbol, attributeInfo);
+        var fullyQualifiedClassName = $"global::{resultNamespace}.{generatedClassName}";
+        var className = new ManuallySpecifiedSymbolName(fullyQualifiedClassName, generatedClassName);
+        
+        var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
+        var enumName = new ManuallySpecifiedSymbolName(fullyQualifiedEnumName, enumSymbol.Name);
+
         var memberInfos = members
                          .OfType<IFieldSymbol>()
                          .Combine(new EnumMemberInfoCreationContext(className, @namespace, enumName))                 

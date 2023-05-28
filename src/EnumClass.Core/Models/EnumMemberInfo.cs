@@ -26,7 +26,7 @@ public class EnumMemberInfo
     /// Name of enum value we constructing.
     /// This is fully qualified, with 'global::' prefix
     /// </summary>
-    public string FullyQualifiedEnumValue => _memberName.FullyQualified;
+    public string FullyQualifiedEnumMemberName => _memberName.FullyQualified;
 
     /// <summary>
     /// Name of enum member we constructing.

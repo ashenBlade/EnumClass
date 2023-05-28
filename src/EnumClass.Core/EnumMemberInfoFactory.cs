@@ -31,7 +31,7 @@ internal static class EnumMemberInfoFactory
 
         // Class name is equivalent to enum member name
         var enumClassName = $"{fieldSymbol.Name}EnumValue";
-        var fullyQualifiedEnumClassName = $"{fieldSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.EnumClass.{enumClassName}";
+        var fullyQualifiedEnumClassName = $"{context.EnumClassName.FullyQualified}.{enumClassName}";
         
         var fullyQualifiedMemberName = $"{context.EnumName.FullyQualified}.{fieldSymbol.Name}";
         var memberName = fieldSymbol.Name;

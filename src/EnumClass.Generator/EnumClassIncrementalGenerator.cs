@@ -314,7 +314,7 @@ public class EnumClassIncrementalGenerator: IIncrementalGenerator
                 builder.AppendLine("    {");
                 
                 // Generate constructor
-                builder.AppendFormat("        public {0}(): base({1}) {{ }}\n", member.ClassName, member.FullyQualifiedEnumValue);
+                builder.AppendFormat("        public {0}(): base({1}) {{ }}\n", member.ClassName, member.FullyQualifiedEnumMemberName);
                 
                 // Override default ToString() 
                 builder.AppendLine("        public override string ToString()");
