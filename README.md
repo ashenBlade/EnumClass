@@ -215,6 +215,54 @@ using Domain;
 Console.WriteLine(SampleEnum.First);
 ```
 
+### Generate `enum class` for enum from another assembly
+
+If you do not have access to enum source code directly, you can generate `enum class` for enum in external assembly.
+For this use `[ExternalEnumClass]` attribute.
+
+```csharp
+// External assembly
+namespace Logic;
+
+public enum Word
+{
+    Single,
+    Double,
+    Triple
+}
+```
+
+```csharp
+// Our assembly
+using EnumClass.Attributes;
+using Logic;
+
+[assembly: ExternalEnumClass(typeof(Word), Namespace = "Another")]
+namespace Another;
+
+public partial class Word
+{
+    public abstract int WordsCount { get; }
+    
+    public partial class SingleEnumValue
+    {
+        public override int WordsCount => 1;    
+    }
+    
+    
+    public partial class DoubleEnumValue
+    {
+        public override int WordsCount => 2;    
+    }
+    
+    
+    public partial class TripleEnumValue
+    {
+        public override int WordsCount => 3;    
+    }
+}
+```
+
 ## Known limitations
 
 ### Same name of member and enum

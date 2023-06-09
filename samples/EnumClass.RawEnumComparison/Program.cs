@@ -1,5 +1,8 @@
 using System;
+using EnumClass.Attributes;
 using EnumClass.SimpleEnum.EnumClass;
+
+[assembly: ExternalEnumClass(typeof(PetKind))]
 // ReSharper disable UnusedParameter.Local
 
 PrintEnumClassComparison("Dog", PetKind.Dog, EnumClass.SimpleEnum.PetKind.Dog);
@@ -20,6 +23,7 @@ void PrintEnumClassComparison(string representationName, PetKind enumClassKind, 
     Console.WriteLine($"Equals: {enumClassKind.Equals(enumKind)}");
     Console.WriteLine($"==: {enumClassKind == enumKind}");
     Console.WriteLine($"!=: {enumClassKind == enumKind}");
+    // Console.WriteLine($"{enumClassKind == enumClassKind}");
     
     var result = enumClassKind.Switch(2, 2,
         static (dog,     i, j) => i + j * 2,
