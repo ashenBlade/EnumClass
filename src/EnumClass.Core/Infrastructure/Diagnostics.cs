@@ -19,4 +19,12 @@ public static class Diagnostics
             "Usage",
             DiagnosticSeverity.Warning,
             true);
+    
+    public static readonly DiagnosticDescriptor NoExternalEnumClassAttributeFound = 
+        new("ECG003",
+            "No ExternalEnumClassAttribute found",
+            "Could not find ExternalEnumClassAttribute: add reference to package with EnumClass.Generator, update nuget package to 1.3.0 or add package directly", 
+            "Usage",
+            DiagnosticSeverity.Warning,
+            true);
 }

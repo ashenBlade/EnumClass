@@ -188,18 +188,25 @@ public static class EnumInfoFactory
                                                                  SourceProductionContext context)
     {
         var enumClassAttribute = compilation.GetTypeByMetadataName(Constants.EnumClassAttributeInfo.AttributeFullName);
-        var enumMemberInfoAttribute = compilation.GetTypeByMetadataName(Constants.EnumMemberInfoAttributeInfo.AttributeFullName);
-        
         if (enumClassAttribute is null)
         {
             context.ReportDiagnostic(Diagnostic.Create(Diagnostics.NoEnumClassAttributeFound, Location.None));
             return null;
         }
 
+        var enumMemberInfoAttribute = compilation.GetTypeByMetadataName(Constants.EnumMemberInfoAttributeInfo.AttributeFullName);
         if (enumMemberInfoAttribute is null)
         {
             context.ReportDiagnostic(Diagnostic.Create(Diagnostics.NoEnumMemberInfoAttributeFound, Location.None));
             return null;
+        }
+
+        var externalEnumInfoAttribute =
+            compilation.GetTypeByMetadataName(Constants.ExternalEnumClassAttributeInfo.AttributeFullName);
+
+        if (externalEnumInfoAttribute is null)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(Diagnostics.NoExternalEnumClassAttributeFound, Location.None));
         }
 
         var parsed = new List<EnumInfo>();

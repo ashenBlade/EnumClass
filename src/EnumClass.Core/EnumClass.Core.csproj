@@ -10,9 +10,4 @@
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
     </ItemGroup>
-    
-    <ItemGroup>
-        <AdditionalFiles Include="../../docs/AnalyzerReleases.Shipped.md" />
-        <AdditionalFiles Include="../../docs/AnalyzerReleases.Unshipped.md" />
-    </ItemGroup>
 </Project>
