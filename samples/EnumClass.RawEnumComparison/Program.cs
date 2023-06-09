@@ -1,5 +1,8 @@
 using System;
+using EnumClass.Attributes;
 using EnumClass.SimpleEnum.EnumClass;
+
+[assembly: ExternalEnumClass(typeof(PetKind))]
 // ReSharper disable UnusedParameter.Local
 
 PrintEnumClassComparison("Dog", PetKind.Dog, EnumClass.SimpleEnum.PetKind.Dog);

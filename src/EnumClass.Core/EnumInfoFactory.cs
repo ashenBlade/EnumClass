@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -34,10 +33,10 @@ public static class EnumInfoFactory
         var underlyingType = GetUnderlyingType(enumSymbol);
         var accessibility = GetAccessibility(enumSymbol);
         
-        var resultNamespace = GetResultNamespace(enumSymbol, attributeInfo);
+        var resultNamespace = GetResultNamespace(enumSymbol, attributeInfo.Namespace);
         var @namespace = new ManuallySpecifiedSymbolName($"global::{resultNamespace}", resultNamespace);
         
-        var generatedClassName = GetClassName(enumSymbol, attributeInfo);
+        var generatedClassName = GetClassName(enumSymbol, attributeInfo.ClassName);
         var fullyQualifiedClassName = $"global::{resultNamespace}.{generatedClassName}";
         var className = new ManuallySpecifiedSymbolName(fullyQualifiedClassName, generatedClassName);
         
@@ -79,34 +78,34 @@ public static class EnumInfoFactory
     /// <returns>Interface of underlying type</returns>
     private static IUnderlyingType GetUnderlyingType(INamedTypeSymbol enumSymbol)
     {
-     // This can not be null because enumSymbol is enum
-     // and for enum property EnumUnderlyingType must not be null
-     return enumSymbol.EnumUnderlyingType!.Name switch
-            {
+        // This can not be null because enumSymbol is enum
+        // and for enum property EnumUnderlyingType must not be null
+        return enumSymbol.EnumUnderlyingType!.Name switch
+               {
                    
-             "Int32"  => UnderlyingTypes.Int,
-             "Byte"   => UnderlyingTypes.Byte,
-             "Int16"  => UnderlyingTypes.Short, 
-             "Int64"  => UnderlyingTypes.Long,
-             "UInt64" => UnderlyingTypes.Ulong,
-             "SByte"  => UnderlyingTypes.Sbyte, 
-             "UInt16" => UnderlyingTypes.Ushort,
-             "UInt32" => UnderlyingTypes.Uint,
+                   "Int32"  => UnderlyingTypes.Int,
+                   "Byte"   => UnderlyingTypes.Byte,
+                   "Int16"  => UnderlyingTypes.Short, 
+                   "Int64"  => UnderlyingTypes.Long,
+                   "UInt64" => UnderlyingTypes.Ulong,
+                   "SByte"  => UnderlyingTypes.Sbyte, 
+                   "UInt16" => UnderlyingTypes.Ushort,
+                   "UInt32" => UnderlyingTypes.Uint,
 
-             // Fallback.
-             // Maybe better to throw exception or display diagnostic?
-             _ => UnderlyingTypes.Int
-            };
+                   // Fallback.
+                   // Maybe better to throw exception or display diagnostic?
+                   _ => UnderlyingTypes.Int
+               };
     }
 
-    private static string GetClassName(INamedTypeSymbol enumSymbol, EnumClassAttributeInfo info)
+    private static string GetClassName(INamedTypeSymbol enumSymbol, string? userDefinedClassName)
     {
-     return SymbolDisplay.FormatLiteral( info.ClassName ?? enumSymbol.Name, false );
+        return SymbolDisplay.FormatLiteral( userDefinedClassName ?? enumSymbol.Name, false );
     }
 
-    private static string GetResultNamespace(INamedTypeSymbol enumSymbol, EnumClassAttributeInfo attributeInfo)
+    private static string GetResultNamespace(INamedTypeSymbol enumSymbol, string? userDefinedNamespace)
     {
-     return attributeInfo.Namespace ?? enumSymbol.ContainingNamespace
+        return userDefinedNamespace ?? enumSymbol.ContainingNamespace
                                                  .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                                                  .Replace("global::", "") + ".EnumClass";
     }
@@ -227,5 +226,46 @@ public static class EnumInfoFactory
 
             return false;
         }
+    }
+
+    public static EnumInfo CreateFromExternalEnumNamedTypeSymbol(ExternalEnumClassAttributeInfo attributeInfo)
+    {
+        var enumSymbol = attributeInfo.EnumSymbol;
+        var members = attributeInfo.EnumSymbol.GetMembers();
+        
+        var underlyingType = GetUnderlyingType(enumSymbol);
+        var accessibility = GetAccessibility(enumSymbol);
+        
+        var resultNamespace = GetResultNamespace(enumSymbol, attributeInfo.Namespace);
+        var @namespace = new ManuallySpecifiedSymbolName($"global::{resultNamespace}", resultNamespace);
+        
+        var generatedClassName = GetClassName(enumSymbol, attributeInfo.ClassName);
+        var fullyQualifiedClassName = $"global::{resultNamespace}.{generatedClassName}";
+        var className = new ManuallySpecifiedSymbolName(fullyQualifiedClassName, generatedClassName);
+        
+        var fullyQualifiedEnumName = SymbolDisplay.ToDisplayString(enumSymbol, SymbolDisplayFormat.FullyQualifiedFormat);
+        var enumName = new ManuallySpecifiedSymbolName(fullyQualifiedEnumName, enumSymbol.Name);
+
+        var memberInfos = members
+                         .OfType<IFieldSymbol>()
+                         .Combine(new EnumMemberInfoCreationContext(className, @namespace, enumName))                 
+                          // Skip all non enum fields declarations
+                          // Enum members are all const, according to docs
+                         .Where(static m => m.Left is {IsConst: true, HasConstantValue:true})
+                          // Try to convert them into EnumMemberInfo
+                         .Select(p => EnumMemberInfoFactory.CreateFromFieldSymbol(p.Left, p.Right, null)!)
+                          // And skip failed
+                         .Where(static i => i is not null)
+                          // Finally, create array of members
+                         .ToArray();
+
+
+        return new EnumInfo(
+            className,
+            enumName,
+            memberInfos,
+            underlyingType,
+            accessibility,
+            @namespace);
     }
 }
