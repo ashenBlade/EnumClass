@@ -43,7 +43,7 @@ public static class GeneratorHelpers
 
         // Cast to original enum
         builder.AppendLine("    [MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        builder.AppendFormat("    public static implicit operator {0}({1} value)\n", enumInfo.FullyQualifiedEnumName, enumInfo.ClassName);
+        builder.AppendFormat("    public static explicit operator {0}({1} value)\n", enumInfo.FullyQualifiedEnumName, enumInfo.ClassName);
         builder.AppendLine("    {");
         builder.AppendLine("        return value._realEnumValue;");
         builder.AppendLine("    }");
@@ -51,7 +51,7 @@ public static class GeneratorHelpers
             
         // Cast to integer 
         builder.AppendLine("    [MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        builder.AppendFormat("    public static explicit operator {0}({1} value)\n", enumInfo.UnderlyingType.CSharpKeyword, enumInfo.ClassName);
+        builder.AppendFormat("    public static implicit operator {0}({1} value)\n", enumInfo.UnderlyingType.CSharpKeyword, enumInfo.ClassName);
         builder.AppendLine("    {");
         builder.AppendFormat("        return ({0}) value._realEnumValue;\n", enumInfo.UnderlyingType.CSharpKeyword);
         builder.AppendLine("    }");
@@ -121,7 +121,20 @@ public static class GeneratorHelpers
         builder.AppendFormat("        return !right.Equals(left);\n");
         builder.AppendLine("    }");
         builder.AppendLine();
-            
+        
+        // Create ==/!= operators for both enum classes
+        builder.AppendFormat("    public static bool operator ==({0} left, {0} right)\n", enumInfo.ClassName);
+        builder.AppendLine("    {");
+        builder.AppendLine("        return !ReferenceEquals(left, null) && left.Equals(right);");
+        builder.AppendLine("    }");
+        builder.AppendLine();
+        
+        builder.AppendFormat("    public static bool operator !=({0} left, {0} right)\n", enumInfo.ClassName);
+        builder.AppendLine("    {");
+        builder.AppendLine("        return ReferenceEquals(left, null) || !left.Equals(right);");
+        builder.AppendLine("    }");
+        builder.AppendLine();
+
         // Generate GetHashCode
         builder.AppendLine("    [MethodImpl(MethodImplOptions.AggressiveInlining)]");
         builder.AppendLine("    public override int GetHashCode()");

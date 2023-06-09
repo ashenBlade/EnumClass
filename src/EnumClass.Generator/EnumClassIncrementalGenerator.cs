@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using EnumClass.Core;
 using EnumClass.Core.Infrastructure;
 using EnumClass.Core.Models;
